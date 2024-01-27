@@ -13,8 +13,8 @@ public class Character {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "character_id", nullable = false)
     private Long id;
-
-    // TODO 필드 추가 해야 할듯?
-
+    private Long categoryId;
+    private String name;
+    private Long level;
     protected Character(){}
 }

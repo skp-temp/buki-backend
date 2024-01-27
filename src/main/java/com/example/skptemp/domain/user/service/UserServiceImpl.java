@@ -1,20 +1,23 @@
 package com.example.skptemp.domain.user.service;
 
-import com.example.skptemp.domain.user.dto.SocialAuthResponse;
-import com.example.skptemp.domain.user.dto.SocialUserResponse;
-import com.example.skptemp.domain.user.dto.SocialUserResult;
+import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.entity.UserDetailsImpl;
 import com.example.skptemp.domain.user.repository.UserRepository;
 import com.example.skptemp.global.configuration.JwtProvider;
+import com.example.skptemp.global.error.GlobalErrorCode;
+import com.example.skptemp.global.error.GlobalException;
+import com.example.skptemp.global.util.GlobalConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class UserServiceImpl implements UserService{
     private final LoginService loginService;
@@ -37,19 +40,24 @@ public class UserServiceImpl implements UserService{
         return new SocialUserResponse(true, userResult);
     }
     @Override
-    public SocialUserResponse doSocialSignup(String token, String firstName, String lastName) {
+    public SocialUserResponse doSocialSignup(String token) {
         SocialAuthResponse authResponse = loginService.getAccessToken(token);
         SocialUserResult userResult = loginService.getUserInfo(authResponse.getAccessToken());
+        Long userKakaoId = userResult.getId();
+        User user = User.createUser(userKakaoId);
 
-        User user = User.createUser(firstName, lastName, userResult.getId());
+        assertDuplicateUser(userKakaoId);
         userRepository.save(user);
+
         return new SocialUserResponse(true, userResult);
     }
+    @Transactional(readOnly = true)
     @Override
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User findByKakaoId(Long kakaoId){
         return userRepository.findByKakaoId(kakaoId).orElseThrow();
@@ -60,7 +68,20 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException(""));
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
-        Long expiredMs = 1000 * 60 * 60 * 24 * 7L; //TODO: 토큰 만료 기간은 7일로 설정
-        return jwtProvider.createToken(userDetails, expiredMs);
+
+        return jwtProvider.createToken(userDetails, GlobalConstants.TOKEN_EXPIRATION_TIME);
+    }
+
+    @Override
+    public UserResponse changeUserName(UserChangeNameRequest request) {
+        User user = findById(request.getUserId());
+        user.changeName(request.getFirstName(), request.getLastName());
+        return new UserResponse(user);
+    }
+
+    private void assertDuplicateUser(Long kakaoId){
+        if(userRepository.findByKakaoId(kakaoId).isPresent()){
+            throw new GlobalException(GlobalErrorCode.USER_CONFLICT);
+        }
     }
 }

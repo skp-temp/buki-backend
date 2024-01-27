@@ -15,6 +15,5 @@ public class Item {
     private Long categoryId;
     private String grade;
     private int count;
-    @Column(name = "wearing_level")
     private int wearingLevel;
 }

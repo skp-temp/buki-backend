@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-//@Entity
+@Entity
 public class FriendRelationship {
     @Id @Column(name = "relationship_id")
     private Long id;
-//    @ManyToOne(fetch = FetchType.EAGER)
     private Long userA;
-//    @OneToMany
     private Long userB;
+
+    protected FriendRelationship(){}
+    private FriendRelationship(Long userA, Long userB){
+        this.userA = userA;
+        this.userB = userB;
+    }
 }

@@ -25,6 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if(authorization == null || !authorization.startsWith("Bearer ")){
             log.error("authorization token error");
+            log.error("authorization: " + authorization);
             filterChain.doFilter(request, response);
             return;
         }
