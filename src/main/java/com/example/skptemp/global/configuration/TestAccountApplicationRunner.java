@@ -13,6 +13,7 @@ public class TestAccountApplicationRunner implements ApplicationRunner {
     private final UserRepository userRepository;
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        userRepository.save(User.createUser("강", "동훈", 1L));
+        User user = userRepository.save(User.createUser(1L));
+        user.changeName("강", "동훈");
     }
 }
