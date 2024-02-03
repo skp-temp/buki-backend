@@ -52,7 +52,7 @@ public class User {
 
     private void assertName(String firstName, String lastName){
         if(firstName.isEmpty() || lastName.isEmpty()){
-            throw new GlobalException("이름 정보가 잘못되었습니다.", GlobalErrorCode.VALID_EXCEPTION);
+            throw new GlobalException("이름 정보가 잘못되었습니다.", GlobalErrorCode.USER_VALID_EXCEPTION);
         }
     }
 }
