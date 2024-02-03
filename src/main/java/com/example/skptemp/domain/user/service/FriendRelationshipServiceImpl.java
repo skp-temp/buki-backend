@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.user.dto.FriendResult;
 import com.example.skptemp.domain.user.entity.FriendRelationship;
 import com.example.skptemp.domain.user.repository.FriendRelationshipRepository;
 import com.example.skptemp.domain.user.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     private final FriendRelationshipRepository friendRelationshipRepository;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public void enrollFriendRelationship(Long userA, Long userB) {
         validateUserId(userA);
@@ -29,10 +31,30 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     }
 
     @Override
-    public List<FriendRelationship> findFriendRelationshipList(Long userId) {
+    public List<FriendResult> findFriendRelationshipList(Long userId) {
         validateUserId(userId);
         // userA 기준으로 친구 관계를 리스트로 조회한다.
-        return friendRelationshipRepository.findByUserA(userId);
+        return friendRelationshipRepository.findByUserA(userId).stream()
+                .map(FriendResult::new)
+                .toList();
+    }
+    @Transactional
+    @Override
+    public void deleteFriendRelationship(Long userId, Long friendId) {
+        validateUserId(userId);
+        validateUserId(friendId);
+        validateFriendRelationship(userId, friendId);
+
+        FriendRelationship relationship1 = friendRelationshipRepository.findByUserAAndUserB(userId, friendId).get();
+        FriendRelationship relationship2 = friendRelationshipRepository.findByUserAAndUserB(friendId, userId).get();
+
+        friendRelationshipRepository.delete(relationship1);
+        friendRelationshipRepository.delete(relationship2);
+    }
+
+    private void validateFriendRelationship(Long userId, Long friendId){
+        if(friendRelationshipRepository.findByUserAAndUserB(userId, friendId).isEmpty())
+            throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
     }
 
     private void validateUserId(Long userId){

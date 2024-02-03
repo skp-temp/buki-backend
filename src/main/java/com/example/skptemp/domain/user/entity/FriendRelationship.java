@@ -4,6 +4,7 @@ import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class FriendRelationship {
     @Id @Column(name = "relationship_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userA;
     private Long userB;

@@ -13,6 +13,7 @@ public enum GlobalErrorCode {
     USER_VALID_EXCEPTION(400, "G301", "유저가 유효하지 않습니다."),
     ITEM_VALID_EXCEPTION(400, "G302", "아이템이 유효하지 않습니다."),
     CHARM_VALID_EXCEPTION(400, "G303", "부적이 유효하지 않습니다."),
+    FRIEND_RELATIONSHIP_VALID_EXCEPTION(400, "G304", "친구 관계가 유효하지 않습니다."),
     ACCESS_DENIED(401, "G400", "허용되지 않은 사용자입니다"),
     TOKEN_EXPIRED(401, "G500", "토큰이 만료되었습니다."),
     USER_CONFLICT(409, "G600", "이미 가입된 내역이 있습니다."),
