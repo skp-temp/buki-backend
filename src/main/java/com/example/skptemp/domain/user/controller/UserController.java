@@ -14,16 +14,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/users")
 @RestController
 public class UserController {
     private final UserService userService;
 
     @Operation(summary = "kakaoSocialLogin", description = "redirection 전용")
-    @GetMapping("/kakao-login")
+    @PostMapping("/kakao-login")
     public ResponseEntity<ApiResponse<SocialUserResponse>> doKakaoLogin(HttpServletResponse response, @RequestParam String code){
         SocialUserResponse socialUserResponse = userService.doSocialLogin(code);
         //TODO: 회원 가입 없이 로그인 한 경우 별도 처리 예정
@@ -37,8 +38,8 @@ public class UserController {
     }
 
     @Operation(summary = "doKakaoSignup", description = "카카오 연동 회원 가입 API")
-    @GetMapping("/kakao-sign-up")
-    public ApiResponse<SocialUserResponse> doKakaoSignup(HttpServletResponse response, @RequestParam String code){
+    @PostMapping("/kakao-sign-up")
+    public ApiResponse<SocialUserResponse> doKakaoSignup(HttpServletResponse response, @RequestBody String code){
         //TODO: 카카오 서버 통신 및 사용자 정보 저장 API + changeUserName 분리 하는 방식 적절한지 고민...
         SocialUserResponse socialUserResponse = userService.doSocialSignup(code);
         Long kakaoId = socialUserResponse.getSocialUserResult().getId();
@@ -61,5 +62,12 @@ public class UserController {
     public ApiResponse<TokenResponse> createToken(){
         String jwt = userService.createJwt(1L);
         return new ApiResponse<>(new TokenResponse(jwt));
+    }
+
+    @Operation(summary = "getUser", description = "사용자 정보 조회")
+    @GetMapping("/{userId}")
+    public ApiResponse<UserResponse> getUser(Long userId){
+        User user = userService.findById(userId);
+        return new ApiResponse<>(new UserResponse(user));
     }
 }

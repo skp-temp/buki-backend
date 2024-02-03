@@ -18,8 +18,8 @@ class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    private static final String TEST_FIRST_NAME = "강";
-    private static final String TEST_LAST_NAME = "동훈";
+    private static final String TEST_LAST_NAME = "강";
+    private static final String TEST_FIRST_NAME = "동훈";
     private static final Long TEST_KAKAO_ID = 12341234L;
 
     @Test
