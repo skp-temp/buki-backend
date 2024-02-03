@@ -25,12 +25,16 @@ public class ApiResponse<T> {
 
     @Override
     public String toString() {
-        return "BaseResponse{" +
+        return "ApiResponse{" +
                 "status=" + status +
                 ", message='" + message + '\'' +
                 ", code='" + code + '\'' +
                 ", result=" + result +
                 '}';
+    }
+
+    public static ApiResponse<Void> ok(){
+        return new ApiResponse<>(SUCCESS);
     }
 
     // 요청에 성공한 경우
