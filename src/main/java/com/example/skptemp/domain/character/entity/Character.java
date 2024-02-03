@@ -16,5 +16,5 @@ public class Character {
     private Long categoryId;
     private String name;
     private Long level;
-    protected Character(){}
+    public Character(){}
 }

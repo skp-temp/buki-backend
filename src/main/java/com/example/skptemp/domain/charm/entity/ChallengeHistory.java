@@ -1,7 +1,7 @@
 package com.example.skptemp.domain.charm.entity;
 
-import com.example.skptemp.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,19 +10,28 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(name = "ChallengeHistory", indexes = {
+        @Index(name = "idx_challenge_history_user_id_charm_id", columnList = "user_id, charm_id")
+})
 public class ChallengeHistory {
     @Column(name = "history_id")
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
 
-    @JoinColumn(name = "charm_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Charm charm;
+    @Column(name = "charm_id", nullable = false)
+    private Long charmId;
+
+    @Builder
+    public ChallengeHistory(Long userId, Long charmId, LocalDate historyDate) {
+        this.userId = userId;
+        this.charmId = charmId;
+        this.historyDate = historyDate;
+    }
 
     private LocalDate historyDate;
 }
