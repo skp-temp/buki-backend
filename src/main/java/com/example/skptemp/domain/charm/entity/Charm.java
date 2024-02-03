@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.charm.entity;
 
+import com.example.skptemp.global.constant.AlarmDayType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import jakarta.persistence.*;
@@ -14,12 +15,17 @@ import java.time.LocalDateTime;
 @Entity
 public class Charm {
     @Builder
-    public Charm(Long categoryId, Long characterId, String finalGoal, String dailyGoal, boolean alarmOn, LocalDateTime alarmTime) {
+    public Charm(Long categoryId, Long characterId, String goal) {
+        this.categoryId = categoryId;
+        this.characterId = characterId;
+        this.goal = goal;
+    }
+    @Builder
+    public Charm(Long categoryId, Long characterId, String gol, boolean alarmOn, LocalDateTime alarmTime) {
         assertionAlarm(alarmOn, alarmTime);
         this.categoryId = categoryId;
         this.characterId = characterId;
-        this.finalGoal = finalGoal;
-        this.dailyGoal = dailyGoal;
+        this.goal = goal;
         this.alarmOn = alarmOn;
         this.alarmTime = alarmTime;
     }
@@ -32,10 +38,10 @@ public class Charm {
     private Long characterId;
     private LocalDateTime createdAt;
     private int charmLevel;
-    private String finalGoal;
-    private String dailyGoal;
+    private String goal;
     private boolean alarmOn;
     private LocalDateTime alarmTime;
+    private AlarmDayType alarmDayType;
 
     private void assertionAlarm(boolean alarmOn, LocalDateTime alarmTime){
         if(alarmOn && alarmTime == null){
