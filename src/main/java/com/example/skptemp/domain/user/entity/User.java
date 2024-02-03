@@ -21,7 +21,6 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
     private String token;
-    private Long point;
     @Column(name = "kakao_id")
     private Long kakaoId;
     private String authority;
@@ -30,7 +29,6 @@ public class User {
     }
     private User(String uuid, Long kakaoId, String authority){
         this.code = uuid;
-        this.point = 0L;
         this.kakaoId = kakaoId;
         this.authority = authority;
     }

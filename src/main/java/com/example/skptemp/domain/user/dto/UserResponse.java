@@ -10,7 +10,6 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String code;
-    private Long point;
     private Long kakaoId;
     private String authority;
 
@@ -19,7 +18,6 @@ public class UserResponse {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.code = user.getCode();
-        this.point = user.getPoint();
         this.kakaoId = user.getKakaoId();
         this.authority = user.getAuthority();
     }
