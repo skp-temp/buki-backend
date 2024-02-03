@@ -13,21 +13,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 public class Comment {
-    @Column(name = "comment_id")
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Column(name = "comment_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "charm_id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Charm charm;
-
-    @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private User user;
-
-    @JoinColumn(name = "item_id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Item item;
+//    @JoinColumn(name = "charm_id")
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    private Charm charm;
+    private Long charmId;
+//    @JoinColumn(name = "user_id")
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    private User user;
+    private Long userId;
+//    @JoinColumn(name = "item_id")
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    private Item item;
+    private Long itemId;
     private String content;
     private LocalDateTime createdAt;
 }

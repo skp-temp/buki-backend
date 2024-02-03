@@ -1,16 +1,17 @@
-package com.example.skptemp.domain.category.entity;
+package com.example.skptemp.domain.badge.entity;
+
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-public class Category {
-    @Id @Column(name = "category_id")
+public class Badge {
+    @Id
+    @Column(name = "badge_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    protected Category(){}
+    protected Badge(){}
 }

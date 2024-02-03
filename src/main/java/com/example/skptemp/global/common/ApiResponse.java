@@ -17,8 +17,6 @@ import static com.example.skptemp.global.error.GlobalErrorCode.SUCCESS;
 // @JsonPropertyOrder : json serialization 순서를 정의
 @JsonPropertyOrder({"status", "code", "message", "result"})
 public class ApiResponse<T> {
-
-
     private int status;
     private String message;
     private String code;
