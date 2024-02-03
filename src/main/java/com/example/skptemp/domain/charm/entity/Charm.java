@@ -39,7 +39,7 @@ public class Charm {
 
     private void assertionAlarm(boolean alarmOn, LocalDateTime alarmTime){
         if(alarmOn && alarmTime == null){
-            throw new GlobalException(GlobalErrorCode.VALID_EXCEPTION);
+            throw new GlobalException(GlobalErrorCode.CHARM_VALID_EXCEPTION);
         }
     }
 }

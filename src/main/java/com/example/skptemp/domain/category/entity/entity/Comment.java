@@ -1,4 +1,4 @@
-package com.example.skptemp.domain.comment.entity;
+package com.example.skptemp.domain.category.entity.entity;
 
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.item.entity.Item;
