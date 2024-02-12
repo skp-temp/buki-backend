@@ -1,16 +1,13 @@
 package com.example.skptemp.domain.user.service;
 
-import com.example.skptemp.domain.user.dto.FriendResult;
 import com.example.skptemp.domain.user.entity.FriendRelationship;
 import com.example.skptemp.domain.user.repository.FriendRelationshipRepository;
 import com.example.skptemp.global.error.GlobalException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +47,14 @@ class FriendRelationshipServiceTest {
     }
 
     @Test
+    void 친구_중복_추가_실패(){
+        //given
+        //when
+        //then
+        assertThrows(GlobalException.class, () -> friendRelationshipService.enrollFriendRelationship(TEST_USER_ID1, TEST_USER_ID1));
+    }
+
+    @Test
     void 친구_삭제_성공(){
         //given
         friendRelationshipService.enrollFriendRelationship(TEST_USER_ID1, TEST_USER_ID2);
@@ -71,5 +76,13 @@ class FriendRelationshipServiceTest {
         //then
         assertThrows(GlobalException.class,
                 () -> friendRelationshipService.deleteFriendRelationship(TEST_USER_ID1, TEST_USER_ID2));
+    }
+
+    @Test
+    void 친구_중복_삭제_실패(){
+        //given
+        //when
+        //then
+        assertThrows(GlobalException.class, () -> friendRelationshipService.deleteFriendRelationship(TEST_USER_ID1, TEST_USER_ID1));
     }
 }

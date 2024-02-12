@@ -54,14 +54,21 @@ public class UserServiceImpl implements UserService{
     @Transactional(readOnly = true)
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userRepository.findById(id).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
     }
 
     @Transactional(readOnly = true)
     @Override
     public User findByKakaoId(Long kakaoId){
-        return userRepository.findByKakaoId(kakaoId).orElseThrow();
+        return userRepository.findByKakaoId(kakaoId).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public User findByCode(String code) {
+        return userRepository.findByCode(code).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+    }
+
 
     @Override
     public String createJwt(Long id){

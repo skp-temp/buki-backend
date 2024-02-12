@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -24,8 +23,8 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     @Transactional
     @Override
     public void enrollFriendRelationship(Long userA, Long userB) {
-        validateUserId(userA);
-        validateUserId(userB);
+        validateUserId(userA, userB);
+        // 쌍방으로 친구 관계를 저장한다.
         friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userA, userB));
         friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userB, userA));
     }
@@ -41,8 +40,7 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     @Transactional
     @Override
     public void deleteFriendRelationship(Long userId, Long friendId) {
-        validateUserId(userId);
-        validateUserId(friendId);
+        validateUserId(userId, friendId);
         validateFriendRelationship(userId, friendId);
 
         FriendRelationship relationship1 = friendRelationshipRepository.findByUserAAndUserB(userId, friendId).get();
@@ -60,5 +58,11 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     private void validateUserId(Long userId){
         if(userRepository.findById(userId).isEmpty())
             throw new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION);
+    }
+    private void validateUserId(Long userA, Long userB){
+        if(userA.equals(userB))
+            throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
+        validateUserId(userA);
+        validateUserId(userB);
     }
 }
