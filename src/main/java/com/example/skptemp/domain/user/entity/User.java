@@ -15,7 +15,7 @@ public class User {
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String code;
+    private String code; // 친구 추가 용도 발급 코드를 의미
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -39,12 +39,13 @@ public class User {
     }
 
     public void changeName(String firstName, String lastName){
+        assertName(firstName, lastName);
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    private static String makeUuid(boolean isHyphen){
-        if(isHyphen)
+    private static String makeUuid(boolean hasHypen){
+        if(hasHypen)
             return UUID.randomUUID().toString();
         else
             return UUID.randomUUID().toString().replace("-", "");
@@ -52,7 +53,7 @@ public class User {
 
     private void assertName(String firstName, String lastName){
         if(firstName.isEmpty() || lastName.isEmpty()){
-            throw new GlobalException("이름 정보가 잘못되었습니다.", GlobalErrorCode.USER_VALID_EXCEPTION);
+            throw new GlobalException("이름 정보가 잘못됐습니다.", GlobalErrorCode.USER_VALID_EXCEPTION);
         }
     }
 }

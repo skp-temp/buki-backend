@@ -10,6 +10,7 @@ public interface UserService {
     SocialUserResponse doSocialSignup(String token);
     User findById(Long id);
     User findByKakaoId(Long kakaoId);
+    User findByCode(String code);
     String createJwt(Long id);
     UserResponse changeUserName(UserChangeNameRequest request);
 }
