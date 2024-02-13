@@ -9,5 +9,5 @@ public class UserItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     Long userId;
-    Long itmeId;
+    Long itemId;
 }
