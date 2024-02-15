@@ -16,8 +16,7 @@ public class Item {
     private Long id;
     private Long categoryId;
     private String grade;
-    private int count;
-    private int wearingLevel;
+
 
     public void addItem(Long count){
         this.count += count;
