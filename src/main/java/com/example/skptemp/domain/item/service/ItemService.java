@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface ItemService {
     List<Item> findItemListByUserId(Long userId); // 사용자의 아이템 리스트 조회
-    int itemCount(Long userId, Long itemId); // 사용자가 보유한 특정 아이템 개수 조회
+    int getItemCount(Long userId, Long itemId); // 사용자가 보유한 특정 아이템 개수 조회
+    int getTotalItemCount(Long userId);
+    void transferItem(Long userId, Long friendId, Long itemId, Long count);
 }

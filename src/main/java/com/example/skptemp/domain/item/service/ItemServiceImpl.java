@@ -19,6 +19,7 @@ import java.util.Optional;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserItemRepository userItemRepository;
+    private final UserItemService userItemService;
 
     @Override
     public List<Item> findItemListByUserId(Long userId) {
@@ -29,10 +30,36 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public int itemCount(Long userId, Long itemId) {
-        Optional<UserItem> userItemOpt = userItemRepository.findByUserIdAndItemId(userId, itemId);
+    public int getItemCount(Long userId, Long itemId) {
+        Optional<UserItem> userItemOpt = userItemService.findByUserIdAndItemId(userId, itemId);
 
         if(userItemOpt.isEmpty()) throw new GlobalException(GlobalErrorCode.ITEM_VALID_EXCEPTION);
         return userItemOpt.get().getCount();
     }
+
+    @Override
+    public int getTotalItemCount(Long userId) {
+        List<UserItem> userItem = userItemRepository.findByUserId(userId);
+        return userItem.size();
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void transferItem(Long userId, Long friendId, Long itemId, Long count) {
+        UserItem userItem = userItemService.getByUserIdAndItemId(userId, itemId);
+        userItem.removeItem(count);
+
+        Optional<UserItem> friendUserItemOpt = userItemService.findByUserIdAndItemId(friendId, itemId);
+
+        if(friendUserItemOpt.isEmpty()){
+            UserItem friendUserItem = userItemService.createUserItem(friendId, itemId, count);
+            friendUserItem.addItem(count);
+            return;
+        }
+
+        UserItem friendUserItem = friendUserItemOpt.get();
+        friendUserItem.addItem(count);
+    }
+
+
 }

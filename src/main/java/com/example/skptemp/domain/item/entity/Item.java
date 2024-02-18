@@ -15,18 +15,5 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long categoryId;
-    private String grade;
-
-
-    public void addItem(Long count){
-        this.count += count;
-    }
-
-    public void removeItem(Long count){
-        this.count -= count;
-    }
-
-    private void validateItemCount(Long count){
-        if(this.count < count) throw new GlobalException(GlobalErrorCode.ITEM_VALID_EXCEPTION);
-    }
+    private ItemType itemType;
 }
