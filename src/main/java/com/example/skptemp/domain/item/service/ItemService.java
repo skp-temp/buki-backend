@@ -5,6 +5,7 @@ import com.example.skptemp.domain.item.entity.Item;
 import java.util.List;
 
 public interface ItemService {
+    //TODO: Response 형태로 DTO 개발 필요
     List<Item> findItemListByUserId(Long userId); // 사용자의 아이템 리스트 조회
     int getItemCount(Long userId, Long itemId); // 사용자가 보유한 특정 아이템 개수 조회
     int getTotalItemCount(Long userId);
