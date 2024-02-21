@@ -21,10 +21,12 @@ public class ItemServiceImpl implements ItemService {
     private final UserItemRepository userItemRepository;
     private final UserItemService userItemService;
 
+
+
     @Override
     public List<Item> findItemListByUserId(Long userId) {
         List<UserItem> userItemList = userItemRepository.findByUserId(userId);
-        return itemRepository.findByItemIdIn(userItemList.stream()
+        return itemRepository.findByIdIn(userItemList.stream()
                 .map(UserItem::getItemId)
                 .toList());
     }
