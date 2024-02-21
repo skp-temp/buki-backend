@@ -16,4 +16,12 @@ public class Item {
     private Long id;
     private Long categoryId;
     private ItemType itemType;
+
+    private Item(Long categoryId, ItemType itemType){
+        this.categoryId = categoryId;
+        this.itemType = itemType;
+    }
+    public static Item create(Long categoryId, ItemType itemType){
+        return new Item(categoryId, itemType);
+    }
 }
