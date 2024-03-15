@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 import static com.example.skptemp.global.error.GlobalErrorCode.SUCCESS;
 
@@ -37,8 +38,19 @@ public class ApiResponse<T> {
         return new ApiResponse<>(SUCCESS);
     }
 
+    public static <T> ApiResponse<T> ok(T result){
+        return new ApiResponse<>(result);
+    }
+
+    public static ApiResponse<Void> error(GlobalErrorCode status){
+        return new ApiResponse<>(status);
+    }
+    public static ApiResponse<Void> error(GlobalErrorCode status, String message){
+        return new ApiResponse<>(status, message);
+    }
+
     // 요청에 성공한 경우
-    public ApiResponse(T result) {
+    private ApiResponse(T result) {
         this.status = SUCCESS.getStatus();
         this.message = SUCCESS.getMessage();
         this.code = SUCCESS.getCode();
@@ -46,14 +58,14 @@ public class ApiResponse<T> {
     }
 
     // 요청에 실패한 경우
-    public ApiResponse(GlobalErrorCode status) {
+    private ApiResponse(GlobalErrorCode status) {
         this.status = status.getStatus();
         this.message = status.getMessage();
         this.code = status.getCode();
     }
 
     // GlobalControllerAdvice에서 오류 설정
-    public ApiResponse(GlobalErrorCode status, String message) {
+    private ApiResponse(GlobalErrorCode status, String message) {
         this.status = status.getStatus();
         this.message = message;
         this.code = status.getCode();

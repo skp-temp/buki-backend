@@ -22,7 +22,6 @@ public class CharmController {
 
     @PostMapping("/charm")
     public ResponseEntity<ApiResponse<Void>> createCharm(@Valid @RequestBody CreateCharmRequest request) {
-
         charmService.createCharm(request);
         return ResponseEntity.ok(ApiResponse.ok());
     }
@@ -39,7 +38,7 @@ public class CharmController {
     @GetMapping("/charm/{charmId}")
     public ResponseEntity<ApiResponse<CharmDetailResponse>> getMyCharm(@PathVariable Long charmId) {
         CharmDetailResponse charm = charmService.getCharm(charmId);
-        return ResponseEntity.ok(new ApiResponse<>(charm));
+        return ResponseEntity.ok(ApiResponse.ok(charm));
     }
 
 
@@ -53,6 +52,7 @@ public class CharmController {
 
     @PutMapping("/charms/{charmId}")
     @Operation(summary = "부적 아이템 등등 변경")
+    @Deprecated
     //TODO 이미지 어떻게 뿌려야 할지 안정해서 나중에 해야함
     public ResponseEntity<Object> updateCharm(@Valid @RequestBody CharmUpdateRequest request) {
 
