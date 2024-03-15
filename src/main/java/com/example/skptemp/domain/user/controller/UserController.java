@@ -34,12 +34,12 @@ public class UserController {
         response.addHeader("authorization", jwt);
 
         return ResponseEntity.created(URI.create("/kakao-login"))
-                .body(new ApiResponse<>(socialUserResponse));
+                .body(ApiResponse.ok(socialUserResponse));
     }
 
     @Operation(summary = "doKakaoSignup", description = "카카오 연동 회원 가입 API")
     @PostMapping("/kakao-sign-up")
-    public ApiResponse<SocialUserResponse> doKakaoSignup(HttpServletResponse response, @RequestBody String code){
+    public ResponseEntity<ApiResponse<SocialUserResponse>> doKakaoSignup(HttpServletResponse response, @RequestBody String code){
         //TODO: 카카오 서버 통신 및 사용자 정보 저장 API + changeUserName 분리 하는 방식 적절한지 고민...
         SocialUserResponse socialUserResponse = userService.doSocialSignup(code);
         Long kakaoId = socialUserResponse.getSocialUserResult().getId();
@@ -47,27 +47,32 @@ public class UserController {
         String jwt = userService.createJwt(userByKakaoId.getId());
         response.addHeader("authorization", jwt);
 
-        return new ApiResponse<>(socialUserResponse);
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok(socialUserResponse));
     }
     @Operation(summary = "changeUserName", description = "사용자 이름 변경 API")
     @PostMapping("/name") //TODO: 성, 이름 정보를 별도로 입력 받기 위한 별도의 API
-    public ApiResponse<UserResponse> changeUserName(UserChangeNameRequest request){
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserName(UserChangeNameRequest request){
         UserResponse response = userService.changeUserName(request);
-        return new ApiResponse<>(response);
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok(response));
     }
 
     //TODO: 삭제 예정
     @Operation(summary = "createToken", description = "연동 로그인 과정 생략 후 임시 토큰 발급")
     @GetMapping("/create-token")
-    public ApiResponse<TokenResponse> createToken(){
+    public ResponseEntity<ApiResponse<TokenResponse>> createToken(){
         String jwt = userService.createJwt(1L);
-        return new ApiResponse<>(new TokenResponse(jwt));
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok(new TokenResponse(jwt)));
     }
 
     @Operation(summary = "getUser", description = "사용자 정보 조회")
     @GetMapping("/{userId}")
-    public ApiResponse<UserResponse> getUser(Long userId){
+    public ResponseEntity<ApiResponse<UserResponse>> getUser(Long userId){
         User user = userService.findById(userId);
-        return new ApiResponse<>(new UserResponse(user));
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok(new UserResponse(user)));
     }
 }

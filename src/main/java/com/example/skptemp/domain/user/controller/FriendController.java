@@ -14,6 +14,7 @@ import com.example.skptemp.global.error.GlobalException;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,14 +29,16 @@ public class FriendController {
 
     @Operation(summary = "getFriendList", description = "사용자 친구 리스트 조회 API")
     @GetMapping("/{user-id}")
-    ApiResponse<FriendResponse> getFriendList(@Valid Long userId){
+    ResponseEntity<ApiResponse<FriendResponse>> getFriendList(@Valid Long userId){
         List<FriendResult> friendRelationshipList = friendRelationshipService.findFriendRelationshipList(userId);
-        return new ApiResponse<>(new FriendResponse(friendRelationshipList));
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok(new FriendResponse(friendRelationshipList)));
     }
 
     @Operation(summary = "createFriend", description = "친구 추가 API")
     @PostMapping
-    ApiResponse<Void> createFriend(@RequestBody FriendCreateRequest request){
+    ResponseEntity<ApiResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = securityUtil.getUserIdFromContext();
         User user = userService.findById(userId);
 
@@ -46,15 +49,15 @@ public class FriendController {
         User friendUser = userService.findByCode(request.getUserCode());
 
         friendRelationshipService.enrollFriendRelationship(userId, friendUser.getId());
-        return ApiResponse.ok();
+        return ResponseEntity.ok(ApiResponse.ok());
     }
 
     @Operation(summary = "deleteFriend", description = "친구 삭제 API")
     @DeleteMapping("/{friend-id}")
-    ApiResponse<Void> deleteFriend(@RequestBody FriendDeleteRequest request){
+    ResponseEntity<ApiResponse<Void>> deleteFriend(@RequestBody FriendDeleteRequest request){
         Long userId = securityUtil.getUserIdFromContext();
         friendRelationshipService.deleteFriendRelationship(userId, request.getFriendId());
-        return ApiResponse.ok();
+        return ResponseEntity.ok(ApiResponse.ok());
     }
 
 }
