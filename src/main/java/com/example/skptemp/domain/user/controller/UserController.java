@@ -4,6 +4,7 @@ import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.ApiResponse;
+import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,36 +24,35 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "kakaoSocialLogin", description = "redirection 전용")
-    @PostMapping("/kakao-login")
-    public ResponseEntity<ApiResponse<SocialUserResponse>> doKakaoLogin(HttpServletResponse response, @RequestParam String code){
-        SocialUserResponse socialUserResponse = userService.doSocialLogin(code);
-        //TODO: 회원 가입 없이 로그인 한 경우 별도 처리 예정
-        Long kakaoId = socialUserResponse.getSocialUserResult().getId();
-        User userByKakaoId = userService.findByKakaoId(kakaoId);
-        String jwt = userService.createJwt(userByKakaoId.getId());
-        response.addHeader("authorization", jwt);
+    @Operation(summary = "doLogin", description = "Login 작업을 수행합니다.")
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<LoginResponse>> doLogin(HttpServletResponse response, LoginType loginType, String authProviderId){
+        LoginResponse loginResponse = userService.doLogin(loginType, authProviderId);
+        User findUser = userService.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
 
-        return ResponseEntity.created(URI.create("/kakao-login"))
-                .body(ApiResponse.ok(socialUserResponse));
-    }
-
-    @Operation(summary = "doKakaoSignup", description = "카카오 연동 회원 가입 API")
-    @PostMapping("/kakao-sign-up")
-    public ResponseEntity<ApiResponse<SocialUserResponse>> doKakaoSignup(HttpServletResponse response, @RequestBody String code){
-        //TODO: 카카오 서버 통신 및 사용자 정보 저장 API + changeUserName 분리 하는 방식 적절한지 고민...
-        SocialUserResponse socialUserResponse = userService.doSocialSignup(code);
-        Long kakaoId = socialUserResponse.getSocialUserResult().getId();
-        User userByKakaoId = userService.findByKakaoId(kakaoId);
-        String jwt = userService.createJwt(userByKakaoId.getId());
+        String jwt = userService.createJwt(findUser.getId());
         response.addHeader("authorization", jwt);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.ok(socialUserResponse));
+                .body(ApiResponse.ok(loginResponse));
+    }
+
+    @Operation(summary = "doSignUp", description = "카카오 연동 회원 가입 API")
+    @PostMapping("/sign-up")
+    public ResponseEntity<ApiResponse<SignUpResponse>> doSignup(HttpServletResponse response, LoginType loginType, String authProviderId){
+        //TODO: 카카오 서버 통신 및 사용자 정보 저장 API + changeUserName 분리 하는 방식 적절한지 고민...
+        SignUpResponse signUpResponse = userService.doSignup(loginType, authProviderId);
+
+        User findUser = userService.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
+        String jwt = userService.createJwt(findUser.getId()); // 부키 DB 식별자 정보를 담아 jwt 발급 (access code)
+        response.addHeader("authorization", jwt);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok(signUpResponse));
     }
     @Operation(summary = "changeUserName", description = "사용자 이름 변경 API")
     @PostMapping("/name") //TODO: 성, 이름 정보를 별도로 입력 받기 위한 별도의 API
-    public ResponseEntity<ApiResponse<UserResponse>> changeUserName(UserChangeNameRequest request){
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserName(@RequestBody UserChangeNameRequest request){
         UserResponse response = userService.changeUserName(request);
         return ResponseEntity.ok()
                 .body(ApiResponse.ok(response));
@@ -70,9 +70,9 @@ public class UserController {
     @Operation(summary = "getUser", description = "사용자 정보 조회")
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<UserResponse>> getUser(Long userId){
-        User user = userService.findById(userId);
+        UserResponse userResponse = userService.findById(userId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.ok(new UserResponse(user)));
+                .body(ApiResponse.ok(userResponse));
     }
 }

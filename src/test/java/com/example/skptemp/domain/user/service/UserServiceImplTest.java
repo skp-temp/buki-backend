@@ -1,7 +1,12 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.user.dto.LoginResponse;
+import com.example.skptemp.domain.user.dto.SignUpResponse;
+import com.example.skptemp.domain.user.repository.UserRepository;
 import com.example.skptemp.global.configuration.JwtProvider;
+import com.example.skptemp.global.constant.LoginType;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,9 +19,15 @@ class UserServiceImplTest {
     @Autowired
     UserService userService;
     @Autowired
+    UserRepository userRepository;
+    @Autowired
     JwtProvider jwtProvider;
 
     final Long USER_ID = 1L;
+
+    final String TEST_AUTH_PROVIDER_ID_KAKAO = "kakao_test";
+    final String TEST_AUTH_PROVIDER_ID_NAVER = "naver_test";
+    final String TEST_AUTH_PROVIDER_ID_APPLE = "apple_test";
 
     @Test
     void 토큰_발급_성공(){
@@ -37,4 +48,28 @@ class UserServiceImplTest {
         //then
         assertThat(userId).isEqualTo(USER_ID);
     }
+
+    @Test
+    void 회원가입_성공(){
+        //given
+        //when
+        SignUpResponse signUpResponse = userService.doSignup(LoginType.KAKAO, TEST_AUTH_PROVIDER_ID_KAKAO);
+
+        //then
+        assertThat(signUpResponse.loginType()).isEqualTo(LoginType.KAKAO);
+        assertThat(signUpResponse.authProviderId()).isEqualTo(TEST_AUTH_PROVIDER_ID_KAKAO);
+    }
+
+    @Test
+    void 로그인_성공(){
+        //given
+        SignUpResponse signUpResponse = userService.doSignup(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE);
+
+        //when
+        LoginResponse loginResponse = userService.doLogin(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE);
+        //then
+        assertThat(loginResponse.loginType()).isEqualTo(LoginType.APPLE);
+        assertThat(loginResponse.authProviderId()).isEqualTo(TEST_AUTH_PROVIDER_ID_APPLE);
+    }
+
 }

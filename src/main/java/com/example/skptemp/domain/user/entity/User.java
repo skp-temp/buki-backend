@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.user.entity;
 
+import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import jakarta.persistence.*;
@@ -21,21 +22,23 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
     private String token;
-    @Column(name = "kakao_id")
-    private Long kakaoId;
+    @Enumerated(EnumType.STRING)
+    private LoginType loginType;    // authentication 플랫폼 타입
+    private String authProviderId;  // authentication 플랫폼 제공 identifier
     private String authority;
 
     protected User(){
     }
-    private User(String uuid, Long kakaoId, String authority){
+    private User(String uuid, LoginType loginType, String authProviderId, String authority){
         this.code = uuid;
-        this.kakaoId = kakaoId;
+        this.loginType = loginType;
+        this.authProviderId = authProviderId;
         this.authority = authority;
     }
 
-    public static User createUser(Long kakaoId){
+    public static User createUser(LoginType loginType, String authProviderId){
         String uuid = makeUuid(false);
-        return new User(uuid, kakaoId, "USER");
+        return new User(uuid, loginType, authProviderId, "USER");
     }
 
     public void changeName(String firstName, String lastName){
@@ -53,7 +56,7 @@ public class User {
 
     private void assertName(String firstName, String lastName){
         if(firstName.isEmpty() || lastName.isEmpty()){
-            throw new GlobalException("이름 정보가 잘못됐습니다.", GlobalErrorCode.USER_VALID_EXCEPTION);
+            throw new GlobalException("이름 정보가 잘못 됐습니다.", GlobalErrorCode.USER_VALID_EXCEPTION);
         }
     }
 }

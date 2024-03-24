@@ -1,6 +1,7 @@
 package com.example.skptemp.domain.user.repository;
 
 import com.example.skptemp.domain.user.entity.User;
+import com.example.skptemp.global.constant.LoginType;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,13 +21,14 @@ class UserRepositoryTest {
 
     private static final String TEST_LAST_NAME = "강";
     private static final String TEST_FIRST_NAME = "동훈";
-    private static final Long TEST_KAKAO_ID = 12341234L;
+    private static final LoginType TEST_LOGIN_TYPE = LoginType.KAKAO;
+    private static final String TEST_AUTH_PROVIDER_ID = "123456789";
 
     @Test
     void 코드_생성_성공(){
         //given
         //when
-        User testUser = User.createUser(TEST_KAKAO_ID);
+        User testUser = User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID);
         testUser.changeName(TEST_FIRST_NAME, TEST_LAST_NAME);
         userRepository.save(testUser);
         User findUser = userRepository.findById(testUser.getId()).get();
