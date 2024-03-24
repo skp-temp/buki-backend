@@ -1,9 +1,6 @@
 package com.example.skptemp.domain.user.controller;
 
-import com.example.skptemp.domain.user.dto.FriendCreateRequest;
-import com.example.skptemp.domain.user.dto.FriendDeleteRequest;
-import com.example.skptemp.domain.user.dto.FriendResponse;
-import com.example.skptemp.domain.user.dto.FriendResult;
+import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.service.FriendRelationshipService;
 import com.example.skptemp.domain.user.service.UserService;
@@ -40,10 +37,10 @@ public class FriendController {
     @PostMapping
     ResponseEntity<ApiResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = securityUtil.getUserIdFromContext();
-        User user = userService.findById(userId);
+        UserResponse userResponse = userService.findById(userId);
 
         // 자기 자신과 친구 관계 생성 불가.
-        if(user.getCode().equals(request.getUserCode())){
+        if(userResponse.getCode().equals(request.getUserCode())){
             throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
         }
         User friendUser = userService.findByCode(request.getUserCode());

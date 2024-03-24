@@ -10,7 +10,7 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String code;
-    private Long kakaoId;
+    private String authProviderId;
     private String authority;
 
     public UserResponse(User user){
@@ -18,7 +18,7 @@ public class UserResponse {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.code = user.getCode();
-        this.kakaoId = user.getKakaoId();
+        this.authProviderId = user.getAuthProviderId();
         this.authority = user.getAuthority();
     }
 }

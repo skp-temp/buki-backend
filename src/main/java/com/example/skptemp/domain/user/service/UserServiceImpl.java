@@ -5,6 +5,7 @@ import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.entity.UserDetailsImpl;
 import com.example.skptemp.domain.user.repository.UserRepository;
 import com.example.skptemp.global.configuration.JwtProvider;
+import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import com.example.skptemp.global.util.GlobalConstants;
@@ -17,78 +18,92 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class UserServiceImpl implements UserService{
-    private final LoginService loginService;
+    //private final LoginService loginService;
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
+    //TODO: login, signup 연동 플랫폼 상관 없도록 구현 변경해야
     @Override
-    public SocialUserResponse doSocialLogin(String token) {
-        SocialAuthResponse authResponse = loginService.getAccessToken(token);
-        log.info("service auth response token: {}", authResponse.getAccessToken());
-        SocialUserResult userResult = loginService.getUserInfo(authResponse.getAccessToken());
+    public LoginResponse doLogin(LoginType loginType, String authProviderId) {
+//        SocialAuthResponse authResponse = loginService.getAccessToken(token);
+//        log.info("service auth response token: {}", authResponse.getAccessToken());
+//        SocialUserResult userResult = loginService.getUserInfo(authResponse.getAccessToken());
+//
+//        Long authProviderId = userResult.getId();
+//
+//        Optional<User> userOpt = userRepository.findByAuthProviderId(authProviderId);
+//
+//        if(userOpt.isEmpty())
+//            return new SocialUserResponse(false, null);
+        Optional<User> findUser = userRepository.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
+        findUser.orElseThrow(() -> new GlobalException("존재 하지 않는 사용자 입니다.", GlobalErrorCode.USER_VALID_EXCEPTION));
 
-        Long kakaoId = userResult.getId();
-        // TODO: DB에 없는 유저의 경우 어떻게 처리할 지
-        Optional<User> userOpt = userRepository.findByKakaoId(kakaoId);
-
-        if(userOpt.isEmpty())
-            return new SocialUserResponse(false, null);
-
-        return new SocialUserResponse(true, userResult);
+        return new LoginResponse(loginType, authProviderId);
     }
+    @Transactional
     @Override
-    public SocialUserResponse doSocialSignup(String token) {
-        SocialAuthResponse authResponse = loginService.getAccessToken(token);
-        SocialUserResult userResult = loginService.getUserInfo(authResponse.getAccessToken());
-        Long userKakaoId = userResult.getId();
-        User user = User.createUser(userKakaoId);
+    public SignUpResponse doSignup(LoginType loginType, String authProviderId) {
+//        SocialAuthResponse authResponse = loginService.getAccessToken(token);
+//        SocialUserResult userResult = loginService.getUserInfo(authResponse.getAccessToken());
+//        Long authProviderId = userResult.getId();
+        User user = User.createUser(loginType, authProviderId);
 
-        assertDuplicateUser(userKakaoId);
+        assertDuplicateUser(loginType, authProviderId);
         userRepository.save(user);
 
-        return new SocialUserResponse(true, userResult);
-    }
-    @Transactional(readOnly = true)
-    @Override
-    public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        return new SignUpResponse(loginType, authProviderId);
     }
 
-    @Transactional(readOnly = true)
     @Override
-    public User findByKakaoId(Long kakaoId){
-        return userRepository.findByKakaoId(kakaoId).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+    public UserResponse findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        return new UserResponse(user);
     }
 
-    @Transactional(readOnly = true)
+
+    @Override
+    public User findByLoginTypeAndAuthProviderId(LoginType loginType, String authProviderId){
+        return userRepository.findByLoginTypeAndAuthProviderId(loginType, authProviderId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+    }
+
+
     @Override
     public User findByCode(String code) {
         return userRepository.findByCode(code).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
     }
 
-
     @Override
     public String createJwt(Long id){
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new IllegalStateException(""));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(""));
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
 
         return jwtProvider.createToken(userDetails, GlobalConstants.TOKEN_EXPIRATION_TIME);
     }
 
+    @Transactional
     @Override
     public UserResponse changeUserName(UserChangeNameRequest request) {
-        User user = findById(request.getUserId());
+        assertUserId(request.getUserId());
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
         user.changeName(request.getFirstName(), request.getLastName());
         return new UserResponse(user);
     }
 
-    private void assertDuplicateUser(Long kakaoId){
-        if(userRepository.findByKakaoId(kakaoId).isPresent()){
+    private void assertDuplicateUser(LoginType loginType, String authProviderId){
+        if(userRepository.findByLoginTypeAndAuthProviderId(loginType, authProviderId).isPresent()){
             throw new GlobalException(GlobalErrorCode.USER_CONFLICT);
+        }
+    }
+
+    private void assertUserId(Long userId){
+        if(userId == null){
+            throw new GlobalException(GlobalErrorCode.VALID_EXCEPTION);
         }
     }
 }
