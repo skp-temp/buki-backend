@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 public class SecurityConfiguration {
     private final JwtProvider jwtProvider;
-    private final String[] permittedPatterns = { "/api/v1/users/kakao-login", "/api/v1/users/create-token", "/test", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-config" };
+    private final String[] permittedPatterns = { "/api/v1/users/login", "/api/v1/users/sign-up", "/api/v1/users/create-token", "/test", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-config" };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

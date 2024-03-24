@@ -74,6 +74,7 @@ public class GlobalControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<ApiResponse<Void>> handleGlobalBaseException(final GlobalException e) {
         log.error("{} Exception {}: {}", e.getErrorCode(), e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+        // TODO: Exception type에 따라 HTTP status code 정리 필요
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(e.getErrorCode()));
     }
