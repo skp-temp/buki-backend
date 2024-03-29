@@ -27,10 +27,10 @@ public class UserController {
     @Operation(summary = "doLogin", description = "Login 작업을 수행합니다.")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> doLogin(HttpServletResponse response, LoginType loginType, String authProviderId){
-        LoginResponse loginResponse = userService.doLogin(loginType, authProviderId);
         User findUser = userService.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
 
         String jwt = userService.createJwt(findUser.getId());
+        LoginResponse loginResponse = userService.doLogin(loginType, authProviderId, jwt);
         response.addHeader("authorization", jwt);
 
         return ResponseEntity.ok()

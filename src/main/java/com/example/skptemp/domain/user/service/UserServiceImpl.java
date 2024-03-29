@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService{
 
     //TODO: login, signup 연동 플랫폼 상관 없도록 구현 변경해야
     @Override
-    public LoginResponse doLogin(LoginType loginType, String authProviderId) {
+    public LoginResponse doLogin(LoginType loginType, String authProviderId, String jwt) {
 //        SocialAuthResponse authResponse = loginService.getAccessToken(token);
 //        log.info("service auth response token: {}", authResponse.getAccessToken());
 //        SocialUserResult userResult = loginService.getUserInfo(authResponse.getAccessToken());
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService{
         Optional<User> findUser = userRepository.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
         findUser.orElseThrow(() -> new GlobalException("존재 하지 않는 사용자 입니다.", GlobalErrorCode.USER_VALID_EXCEPTION));
 
-        return new LoginResponse(loginType, authProviderId);
+        return new LoginResponse(loginType, authProviderId, jwt);
     }
     @Transactional
     @Override
@@ -54,7 +54,10 @@ public class UserServiceImpl implements UserService{
         assertDuplicateUser(loginType, authProviderId);
         userRepository.save(user);
 
-        return new SignUpResponse(loginType, authProviderId);
+        User findUser = findByLoginTypeAndAuthProviderId(loginType, authProviderId);
+        String jwt = createJwt(findUser.getId());
+
+        return new SignUpResponse(loginType, authProviderId, jwt);
     }
 
     @Override
