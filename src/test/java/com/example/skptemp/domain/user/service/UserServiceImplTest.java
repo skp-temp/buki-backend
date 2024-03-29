@@ -66,7 +66,7 @@ class UserServiceImplTest {
         SignUpResponse signUpResponse = userService.doSignup(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE);
 
         //when
-        LoginResponse loginResponse = userService.doLogin(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE);
+        LoginResponse loginResponse = userService.doLogin(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, userService.createJwt(USER_ID));
         //then
         assertThat(loginResponse.loginType()).isEqualTo(LoginType.APPLE);
         assertThat(loginResponse.authProviderId()).isEqualTo(TEST_AUTH_PROVIDER_ID_APPLE);
