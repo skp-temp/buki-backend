@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.user.entity;
 
+import com.example.skptemp.domain.common.BaseEntity;
 import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @Entity
-public class User {
+public class User extends BaseEntity {
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
