@@ -21,23 +21,11 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @Service
 public class UserServiceImpl implements UserService{
-    //private final LoginService loginService;
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
-    //TODO: login, signup 연동 플랫폼 상관 없도록 구현 변경해야
     @Override
     public LoginResponse doLogin(LoginType loginType, String authProviderId, String jwt) {
-//        SocialAuthResponse authResponse = loginService.getAccessToken(token);
-//        log.info("service auth response token: {}", authResponse.getAccessToken());
-//        SocialUserResult userResult = loginService.getUserInfo(authResponse.getAccessToken());
-//
-//        Long authProviderId = userResult.getId();
-//
-//        Optional<User> userOpt = userRepository.findByAuthProviderId(authProviderId);
-//
-//        if(userOpt.isEmpty())
-//            return new SocialUserResponse(false, null);
         Optional<User> findUser = userRepository.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
         findUser.orElseThrow(() -> new GlobalException("존재 하지 않는 사용자 입니다.", GlobalErrorCode.USER_VALID_EXCEPTION));
 
@@ -45,11 +33,13 @@ public class UserServiceImpl implements UserService{
     }
     @Transactional
     @Override
-    public SignUpResponse doSignup(LoginType loginType, String authProviderId) {
-//        SocialAuthResponse authResponse = loginService.getAccessToken(token);
-//        SocialUserResult userResult = loginService.getUserInfo(authResponse.getAccessToken());
-//        Long authProviderId = userResult.getId();
-        User user = User.createUser(loginType, authProviderId);
+    public SignUpResponse doSignup(SignupRequest request) {
+        LoginType loginType = request.loginType();
+        String authProviderId = request.authProviderId();
+        String firstName = request.firstName();
+        String lastName = request.lastName();
+
+        User user = User.createUser(loginType, authProviderId, firstName, lastName);
 
         assertDuplicateUser(loginType, authProviderId);
         userRepository.save(user);

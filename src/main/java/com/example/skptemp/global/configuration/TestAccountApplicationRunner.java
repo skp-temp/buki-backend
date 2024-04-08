@@ -14,9 +14,7 @@ public class TestAccountApplicationRunner implements ApplicationRunner {
     private final UserRepository userRepository;
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        User user1 = userRepository.save(User.createUser(LoginType.KAKAO, "1"));
-        user1.changeName("강1", "동훈");
-        User user2 = userRepository.save(User.createUser(LoginType.KAKAO, "2"));
-        user2.changeName("강2", "동훈");
+        User user1 = userRepository.save(User.createUser(LoginType.KAKAO, "1", "강1", "동훈"));
+        User user2 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "강2", "동훈"));
     }
 }

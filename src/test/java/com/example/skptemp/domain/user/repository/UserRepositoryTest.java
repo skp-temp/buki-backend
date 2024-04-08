@@ -28,7 +28,7 @@ class UserRepositoryTest {
     void 코드_생성_성공(){
         //given
         //when
-        User testUser = User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID);
+        User testUser = User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID, TEST_FIRST_NAME, TEST_LAST_NAME);
         testUser.changeName(TEST_FIRST_NAME, TEST_LAST_NAME);
         userRepository.save(testUser);
         User findUser = userRepository.findById(testUser.getId()).get();

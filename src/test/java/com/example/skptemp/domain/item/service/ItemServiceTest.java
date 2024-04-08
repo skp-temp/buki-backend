@@ -22,11 +22,13 @@ class ItemServiceTest {
 
     private static final LoginType TEST_LOGIN_TYPE = LoginType.KAKAO;
     private static final String TEST_AUTH_PROVIDER_ID = "123456789";
+    private static final String TEST_FIRST_NAME = "강";
+    private static final String TEST_LAST_NAME = "동훈";
     @BeforeEach
     void beforeEach(){
         //given
-        User user1 = userRepository.save(User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID));
-        User user2 = userRepository.save(User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID));
+        User user1 = userRepository.save(User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID, TEST_FIRST_NAME, TEST_LAST_NAME));
+        User user2 = userRepository.save(User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID, TEST_FIRST_NAME, TEST_LAST_NAME));
 
         Item item1 = itemRepository.save(Item.create(0L, ItemType.CLOTHE));
 

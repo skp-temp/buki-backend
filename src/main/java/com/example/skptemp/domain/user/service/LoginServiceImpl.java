@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
+@Deprecated
 @Slf4j
 @RequiredArgsConstructor
 @Service

@@ -5,7 +5,7 @@ import com.example.skptemp.domain.user.dto.SocialUserResponse;
 import com.example.skptemp.domain.user.dto.SocialUserResult;
 
 import java.util.Map;
-
+@Deprecated
 public interface LoginService {
     SocialAuthResponse getAccessToken(String authorizationCode);
     SocialUserResult getUserInfo(String accessToken);

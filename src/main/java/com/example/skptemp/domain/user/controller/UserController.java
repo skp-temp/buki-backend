@@ -26,11 +26,11 @@ public class UserController {
 
     @Operation(summary = "doLogin", description = "Login 작업을 수행합니다.")
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> doLogin(HttpServletResponse response, LoginType loginType, String authProviderId){
-        User findUser = userService.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
+    public ResponseEntity<ApiResponse<LoginResponse>> doLogin(HttpServletResponse response, LoginRequest request){
+        User findUser = userService.findByLoginTypeAndAuthProviderId(request.loginType(), request.authProviderId());
 
         String jwt = userService.createJwt(findUser.getId());
-        LoginResponse loginResponse = userService.doLogin(loginType, authProviderId, jwt);
+        LoginResponse loginResponse = userService.doLogin(request.loginType(), request.authProviderId(), jwt);
         response.addHeader("authorization", jwt);
 
         return ResponseEntity.ok()
@@ -39,11 +39,11 @@ public class UserController {
 
     @Operation(summary = "doSignUp", description = "카카오 연동 회원 가입 API")
     @PostMapping("/sign-up")
-    public ResponseEntity<ApiResponse<SignUpResponse>> doSignup(HttpServletResponse response, LoginType loginType, String authProviderId){
+    public ResponseEntity<ApiResponse<SignUpResponse>> doSignup(HttpServletResponse response, @RequestBody SignupRequest signupRequest){
         //TODO: 카카오 서버 통신 및 사용자 정보 저장 API + changeUserName 분리 하는 방식 적절한지 고민...
-        SignUpResponse signUpResponse = userService.doSignup(loginType, authProviderId);
+        SignUpResponse signUpResponse = userService.doSignup(signupRequest);
 
-        User findUser = userService.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
+        User findUser = userService.findByLoginTypeAndAuthProviderId(signupRequest.loginType(), signupRequest.authProviderId());
         String jwt = userService.createJwt(findUser.getId()); // 부키 DB 식별자 정보를 담아 jwt 발급 (access code)
         response.addHeader("authorization", jwt);
 

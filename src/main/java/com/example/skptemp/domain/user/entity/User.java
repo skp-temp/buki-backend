@@ -36,7 +36,7 @@ public class User {
         this.authority = authority;
     }
 
-    public static User createUser(LoginType loginType, String authProviderId){
+    public static User createUser(LoginType loginType, String authProviderId, String firstName, String lastName){
         String uuid = makeUuid(false);
         return new User(uuid, loginType, authProviderId, "USER");
     }

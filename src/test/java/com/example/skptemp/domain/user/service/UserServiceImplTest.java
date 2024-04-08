@@ -2,6 +2,7 @@ package com.example.skptemp.domain.user.service;
 
 import com.example.skptemp.domain.user.dto.LoginResponse;
 import com.example.skptemp.domain.user.dto.SignUpResponse;
+import com.example.skptemp.domain.user.dto.SignupRequest;
 import com.example.skptemp.domain.user.repository.UserRepository;
 import com.example.skptemp.global.configuration.JwtProvider;
 import com.example.skptemp.global.constant.LoginType;
@@ -28,7 +29,8 @@ class UserServiceImplTest {
     final String TEST_AUTH_PROVIDER_ID_KAKAO = "kakao_test";
     final String TEST_AUTH_PROVIDER_ID_NAVER = "naver_test";
     final String TEST_AUTH_PROVIDER_ID_APPLE = "apple_test";
-
+    final String TEST_FIRST_NAME = "강";
+    final String TEST_LAST_NAME = "동훈";
     @Test
     void 토큰_발급_성공(){
         //given
@@ -53,7 +55,9 @@ class UserServiceImplTest {
     void 회원가입_성공(){
         //given
         //when
-        SignUpResponse signUpResponse = userService.doSignup(LoginType.KAKAO, TEST_AUTH_PROVIDER_ID_KAKAO);
+        SignUpResponse signUpResponse = userService.doSignup(
+                new SignupRequest(LoginType.KAKAO, TEST_AUTH_PROVIDER_ID_KAKAO, TEST_FIRST_NAME, TEST_LAST_NAME)
+        );
 
         //then
         assertThat(signUpResponse.loginType()).isEqualTo(LoginType.KAKAO);
@@ -63,7 +67,9 @@ class UserServiceImplTest {
     @Test
     void 로그인_성공(){
         //given
-        SignUpResponse signUpResponse = userService.doSignup(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE);
+        SignUpResponse signUpResponse = userService.doSignup(
+                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, TEST_FIRST_NAME, TEST_LAST_NAME)
+        );
 
         //when
         LoginResponse loginResponse = userService.doLogin(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, userService.createJwt(USER_ID));
