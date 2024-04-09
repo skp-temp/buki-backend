@@ -21,7 +21,7 @@ public class User {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    private String token;
+    private String pushToken;       // firebase 토큰
     @Enumerated(EnumType.STRING)
     private LoginType loginType;    // authentication 플랫폼 타입
     private String authProviderId;  // authentication 플랫폼 제공 identifier
@@ -36,9 +36,17 @@ public class User {
         this.authority = authority;
     }
 
-    public static User createUser(LoginType loginType, String authProviderId, String firstName, String lastName){
+    private User(String uuid, LoginType loginType, String authProviderId, String authority, String pushToken){
+        this.code = uuid;
+        this.loginType = loginType;
+        this.authProviderId = authProviderId;
+        this.authority = authority;
+        this.pushToken = pushToken;
+    }
+
+    public static User createUser(LoginType loginType, String authProviderId, String firstName, String lastName, String pushToken){
         String uuid = makeUuid(false);
-        return new User(uuid, loginType, authProviderId, "USER");
+        return new User(uuid, loginType, authProviderId, "USER", pushToken);
     }
 
     public void changeName(String firstName, String lastName){

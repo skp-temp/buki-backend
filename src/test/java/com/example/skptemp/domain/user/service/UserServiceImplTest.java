@@ -29,6 +29,7 @@ class UserServiceImplTest {
     final String TEST_AUTH_PROVIDER_ID_KAKAO = "kakao_test";
     final String TEST_AUTH_PROVIDER_ID_NAVER = "naver_test";
     final String TEST_AUTH_PROVIDER_ID_APPLE = "apple_test";
+    final String TEST_PUSH_TOKEN = "..";
     final String TEST_FIRST_NAME = "강";
     final String TEST_LAST_NAME = "동훈";
     @Test
@@ -56,7 +57,7 @@ class UserServiceImplTest {
         //given
         //when
         SignUpResponse signUpResponse = userService.doSignup(
-                new SignupRequest(LoginType.KAKAO, TEST_AUTH_PROVIDER_ID_KAKAO, TEST_FIRST_NAME, TEST_LAST_NAME)
+                new SignupRequest(LoginType.KAKAO, TEST_AUTH_PROVIDER_ID_KAKAO, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
         );
 
         //then
@@ -68,7 +69,7 @@ class UserServiceImplTest {
     void 로그인_성공(){
         //given
         SignUpResponse signUpResponse = userService.doSignup(
-                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, TEST_FIRST_NAME, TEST_LAST_NAME)
+                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
         );
 
         //when

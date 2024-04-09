@@ -38,8 +38,9 @@ public class UserServiceImpl implements UserService{
         String authProviderId = request.authProviderId();
         String firstName = request.firstName();
         String lastName = request.lastName();
+        String pushToken = request.pushToken();
 
-        User user = User.createUser(loginType, authProviderId, firstName, lastName);
+        User user = User.createUser(loginType, authProviderId, firstName, lastName, pushToken);
 
         assertDuplicateUser(loginType, authProviderId);
         userRepository.save(user);

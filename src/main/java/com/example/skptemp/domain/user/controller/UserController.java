@@ -24,7 +24,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "doLogin", description = "Login 작업을 수행합니다.")
+    @Operation(summary = "login", description = "Login 작업을 수행합니다.")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> doLogin(HttpServletResponse response, LoginRequest request){
         User findUser = userService.findByLoginTypeAndAuthProviderId(request.loginType(), request.authProviderId());
@@ -37,10 +37,9 @@ public class UserController {
                 .body(ApiResponse.ok(loginResponse));
     }
 
-    @Operation(summary = "doSignUp", description = "카카오 연동 회원 가입 API")
+    @Operation(summary = "signup", description = "카카오 연동 회원 가입 API")
     @PostMapping("/sign-up")
     public ResponseEntity<ApiResponse<SignUpResponse>> doSignup(HttpServletResponse response, @RequestBody SignupRequest signupRequest){
-        //TODO: 카카오 서버 통신 및 사용자 정보 저장 API + changeUserName 분리 하는 방식 적절한지 고민...
         SignUpResponse signUpResponse = userService.doSignup(signupRequest);
 
         User findUser = userService.findByLoginTypeAndAuthProviderId(signupRequest.loginType(), signupRequest.authProviderId());
@@ -51,7 +50,7 @@ public class UserController {
                 .body(ApiResponse.ok(signUpResponse));
     }
     @Operation(summary = "changeUserName", description = "사용자 이름 변경 API")
-    @PostMapping("/name") //TODO: 성, 이름 정보를 별도로 입력 받기 위한 별도의 API
+    @PostMapping("/name")
     public ResponseEntity<ApiResponse<UserResponse>> changeUserName(@RequestBody UserChangeNameRequest request){
         UserResponse response = userService.changeUserName(request);
         return ResponseEntity.ok()
