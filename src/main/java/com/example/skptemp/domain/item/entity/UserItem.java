@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.item.entity;
 
+import com.example.skptemp.domain.common.BaseEntity;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import jakarta.persistence.*;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class UserItem {
+public class UserItem extends BaseEntity {
     @Id @Column(name = "user_item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
