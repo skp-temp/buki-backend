@@ -1,9 +1,6 @@
 package com.example.skptemp.domain.user.service;
 
-import com.example.skptemp.domain.user.dto.LoginResponse;
-import com.example.skptemp.domain.user.dto.SignUpResponse;
-import com.example.skptemp.domain.user.dto.UserChangeNameRequest;
-import com.example.skptemp.domain.user.dto.UserResponse;
+import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.global.constant.LoginType;
 
