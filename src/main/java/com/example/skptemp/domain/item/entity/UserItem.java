@@ -17,6 +17,7 @@ public class UserItem extends BaseEntity {
     private Long userId;
     private Long itemId;
     private int count;
+    private int equippedItemCount; //TODO: 장착 중인 아이템의 수를 별도로 관리해줘야 한다.
 
     public void addItem(int count){
         this.count += count;
