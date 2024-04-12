@@ -29,10 +29,10 @@ public class UserItemServiceImpl implements UserItemService{
     }
 
     @Override
-    public UserItem createUserItem(Long userId, Long itemId, Long count) {
+    public UserItem createUserItem(Long userId, Long itemId, int count) {
         UserItem userItem = UserItem.create(userId, itemId);
         userItem.addItem(count);
-
+        userItemRepository.save(userItem);
         return userItem;
     }
 }

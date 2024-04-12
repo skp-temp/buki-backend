@@ -72,9 +72,9 @@ public class ItemServiceImpl implements ItemService {
         return userItem.size();
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
-    public void transferItem(Long userId, Long friendId, Long itemId, Long count) {
+    public void transferItem(Long userId, Long friendId, Long itemId, int count) {
         UserItem userItem = userItemService.getByUserIdAndItemId(userId, itemId);
         userItem.removeItem(count);
 
@@ -90,10 +90,16 @@ public class ItemServiceImpl implements ItemService {
         friendUserItem.addItem(count);
     }
 
+    @Transactional
     @Override
-    public Long giveItemToUser(Long itemId, Long userId) {
-        UserItem userItem = UserItem.create(userId, itemId);
-        userItemRepository.save(userItem);
-        return itemId;
+    public void giveItem(Long itemId, Long userId, int count) {
+        Optional<UserItem> userItemOpt = userItemService.findByUserIdAndItemId(userId, itemId);
+
+        if(userItemOpt.isEmpty()){
+            userItemService.createUserItem(userId, itemId, count);
+            return;
+        }
+        UserItem userItem = userItemOpt.get();
+        userItem.addItem(1);
     }
 }
