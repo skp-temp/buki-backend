@@ -26,7 +26,7 @@ public class UserController {
 
     @Operation(summary = "login", description = "Login 작업을 수행합니다.")
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> doLogin(HttpServletResponse response, LoginRequest request){
+    public ResponseEntity<ApiResponse<LoginResponse>> doLogin(HttpServletResponse response, @RequestBody LoginRequest request){
         User findUser = userService.findByLoginTypeAndAuthProviderId(request.loginType(), request.authProviderId());
 
         String jwt = userService.createJwt(findUser.getId());
@@ -42,7 +42,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<SignUpResponse>> doSignup(HttpServletResponse response, @RequestBody SignupRequest signupRequest){
         SignUpResponse signUpResponse = userService.doSignup(signupRequest);
 
-        User findUser = userService.findByLoginTypeAndAuthProviderId(signupRequest.loginType(), signupRequest.authProviderId());
+        User findUser = userService.findByLoginTypeAndAuthProviderId(signupRequest.loginType(), signupRequest.platformProviderId());
         String jwt = userService.createJwt(findUser.getId()); // 부키 DB 식별자 정보를 담아 jwt 발급 (access code)
         response.addHeader("authorization", jwt);
 
@@ -77,7 +77,7 @@ public class UserController {
 
     @Operation(summary = "deleteUser", description = "사용자 삭제, 개발용 입니다.")
     @PostMapping("/delete-for-dev")
-    public ResponseEntity<ApiResponse<Void>> deleteUserForDev(Long userId){
+    public ResponseEntity<ApiResponse<Void>> deleteUserForDev(@RequestBody Long userId){
         userService.deleteUser(userId);
 
         return ResponseEntity.ok()

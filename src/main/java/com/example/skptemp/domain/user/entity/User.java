@@ -24,25 +24,25 @@ public class User extends BaseEntity {
     private String lastName;
     private String pushToken;       // firebase 토큰
     @Enumerated(EnumType.STRING)
-    private LoginType loginType;    // authentication 플랫폼 타입
-    private String authProviderId;  // authentication 플랫폼 제공 identifier
+    private LoginType loginType;         // authentication 플랫폼 타입
+    private String platformProviderId ;  // authentication 플랫폼 제공 identifier
     private String authority;
     private boolean isValid;        // 논리적 삭제 처리를 위함
 
     protected User(){
     }
-    private User(String uuid, LoginType loginType, String authProviderId, String authority){
+    private User(String uuid, LoginType loginType, String platformProviderId, String authority){
         this.code = uuid;
         this.loginType = loginType;
-        this.authProviderId = authProviderId;
+        this.platformProviderId = platformProviderId;
         this.authority = authority;
         this.isValid = true;
     }
 
-    private User(String uuid, LoginType loginType, String authProviderId, String authority, String pushToken){
+    private User(String uuid, LoginType loginType, String platformProviderId, String authority, String pushToken){
         this.code = uuid;
         this.loginType = loginType;
-        this.authProviderId = authProviderId;
+        this.platformProviderId = platformProviderId;
         this.authority = authority;
         this.pushToken = pushToken;
         this.isValid = true;
