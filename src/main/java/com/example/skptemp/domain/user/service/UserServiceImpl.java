@@ -26,8 +26,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public LoginResponse doLogin(LoginType loginType, String authProviderId, String jwt) {
-        Optional<User> findUser = userRepository.findByLoginTypeAndAuthProviderId(loginType, authProviderId);
-        findUser.orElseThrow(() -> new GlobalException("존재 하지 않는 사용자 입니다.", GlobalErrorCode.USER_VALID_EXCEPTION));
+        User findUser = findByLoginTypeAndAuthProviderId(loginType, authProviderId);
 
         return new LoginResponse(loginType, authProviderId, jwt);
     }
@@ -53,21 +52,22 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponse findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        User user = userRepository.findByIdAndIsValidIsTrue(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
         return new UserResponse(user);
     }
 
 
     @Override
     public User findByLoginTypeAndAuthProviderId(LoginType loginType, String authProviderId){
-        return userRepository.findByLoginTypeAndAuthProviderId(loginType, authProviderId)
+        return userRepository.findByLoginTypeAndAuthProviderIdAndIsValidIsTrue(loginType, authProviderId)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
     }
 
 
     @Override
     public User findByCode(String code) {
-        return userRepository.findByCode(code).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        return userRepository.findByCodeAndIsValidIsTrue(code).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
     }
 
     @Override
@@ -89,8 +89,16 @@ public class UserServiceImpl implements UserService{
         return new UserResponse(user);
     }
 
+    @Transactional
+    @Override
+    public void deleteUser(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        user.deleteUser();
+    }
+
     private void assertDuplicateUser(LoginType loginType, String authProviderId){
-        if(userRepository.findByLoginTypeAndAuthProviderId(loginType, authProviderId).isPresent()){
+        if(userRepository.findByLoginTypeAndAuthProviderIdAndIsValidIsTrue(loginType, authProviderId).isPresent()){
             throw new GlobalException(GlobalErrorCode.USER_CONFLICT);
         }
     }
