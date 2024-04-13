@@ -16,13 +16,15 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long categoryId;
+    private String itemName;
     private ItemType itemType;
 
-    private Item(Long categoryId, ItemType itemType){
+    private Item(Long categoryId, String itemName, ItemType itemType){
         this.categoryId = categoryId;
+        this.itemName = itemName;
         this.itemType = itemType;
     }
-    public static Item create(Long categoryId, ItemType itemType){
-        return new Item(categoryId, itemType);
+    public static Item create(Long categoryId, String itemName, ItemType itemType){
+        return new Item(categoryId, itemName, itemType);
     }
 }

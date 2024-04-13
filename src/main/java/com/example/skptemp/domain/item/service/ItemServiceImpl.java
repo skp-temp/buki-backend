@@ -1,5 +1,7 @@
 package com.example.skptemp.domain.item.service;
 
+import com.example.skptemp.domain.item.dto.GetUserItemResponse;
+import com.example.skptemp.domain.item.dto.UserItemResult;
 import com.example.skptemp.domain.item.entity.Item;
 import com.example.skptemp.domain.item.entity.UserItem;
 import com.example.skptemp.domain.item.repository.ItemRepository;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,11 +27,35 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public List<Item> findItemListByUserId(Long userId) {
+    public GetUserItemResponse findItemListByUserId(Long userId) {
         List<UserItem> userItemList = userItemRepository.findByUserId(userId);
-        return itemRepository.findByIdIn(userItemList.stream()
+        List<Item> itemList = itemRepository.findByIdIn(userItemList.stream()
                 .map(UserItem::getItemId)
                 .toList());
+
+        List<UserItemResult> userItemResultList = new ArrayList<>();
+
+        for(UserItem userItem : userItemList){
+            Item findItem = itemList.stream()
+                    .filter((Item item) -> item.getId().equals(userItem.getItemId()))
+                    .findAny()
+                    .get();
+
+
+            UserItemResult userItemResult =
+                    UserItemResult.builder()
+                            .itemType(findItem.getItemType())
+                            .itemName(findItem.getItemName())
+                            .count(userItem.getCount())
+                            .itemId(findItem.getId())
+                            .build();
+            userItemResultList.add(userItemResult);
+        }
+
+        return GetUserItemResponse.builder()
+                .userId(userId)
+                .result(userItemResultList)
+                .build();
     }
 
     @Override
@@ -45,9 +72,9 @@ public class ItemServiceImpl implements ItemService {
         return userItem.size();
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
-    public void transferItem(Long userId, Long friendId, Long itemId, Long count) {
+    public void transferItem(Long userId, Long friendId, Long itemId, int count) {
         UserItem userItem = userItemService.getByUserIdAndItemId(userId, itemId);
         userItem.removeItem(count);
 
@@ -63,5 +90,16 @@ public class ItemServiceImpl implements ItemService {
         friendUserItem.addItem(count);
     }
 
+    @Transactional
+    @Override
+    public void giveItem(Long itemId, Long userId, int count) {
+        Optional<UserItem> userItemOpt = userItemService.findByUserIdAndItemId(userId, itemId);
 
+        if(userItemOpt.isEmpty()){
+            userItemService.createUserItem(userId, itemId, count);
+            return;
+        }
+        UserItem userItem = userItemOpt.get();
+        userItem.addItem(1);
+    }
 }
