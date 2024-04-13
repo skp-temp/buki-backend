@@ -27,6 +27,7 @@ public class User extends BaseEntity {
     private LoginType loginType;    // authentication 플랫폼 타입
     private String authProviderId;  // authentication 플랫폼 제공 identifier
     private String authority;
+    private boolean isValid;        // 논리적 삭제 처리를 위함
 
     protected User(){
     }
@@ -35,6 +36,7 @@ public class User extends BaseEntity {
         this.loginType = loginType;
         this.authProviderId = authProviderId;
         this.authority = authority;
+        this.isValid = true;
     }
 
     private User(String uuid, LoginType loginType, String authProviderId, String authority, String pushToken){
@@ -43,11 +45,16 @@ public class User extends BaseEntity {
         this.authProviderId = authProviderId;
         this.authority = authority;
         this.pushToken = pushToken;
+        this.isValid = true;
     }
 
     public static User createUser(LoginType loginType, String authProviderId, String firstName, String lastName, String pushToken){
         String uuid = makeUuid(false);
         return new User(uuid, loginType, authProviderId, "USER", pushToken);
+    }
+
+    public void deleteUser(){
+        this.isValid = false;
     }
 
     public void changeName(String firstName, String lastName){

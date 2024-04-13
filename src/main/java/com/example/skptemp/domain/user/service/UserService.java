@@ -12,5 +12,5 @@ public interface UserService {
     User findByCode(String code);
     String createJwt(Long id);
     UserResponse changeUserName(UserChangeNameRequest request);
-
+    void deleteUser(Long id);
 }

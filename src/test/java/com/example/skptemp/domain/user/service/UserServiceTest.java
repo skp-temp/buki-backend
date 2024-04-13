@@ -3,11 +3,13 @@ package com.example.skptemp.domain.user.service;
 import com.example.skptemp.domain.user.dto.LoginResponse;
 import com.example.skptemp.domain.user.dto.SignUpResponse;
 import com.example.skptemp.domain.user.dto.SignupRequest;
+import com.example.skptemp.domain.user.dto.UserResponse;
 import com.example.skptemp.domain.user.repository.UserRepository;
 import com.example.skptemp.global.configuration.JwtProvider;
 import com.example.skptemp.global.constant.LoginType;
+import com.example.skptemp.global.error.GlobalException;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,11 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest
-class UserServiceImplTest {
+class UserServiceTest {
     @Autowired
     UserService userService;
-    @Autowired
-    UserRepository userRepository;
     @Autowired
     JwtProvider jwtProvider;
 
@@ -29,6 +29,7 @@ class UserServiceImplTest {
     final String TEST_AUTH_PROVIDER_ID_KAKAO = "kakao_test";
     final String TEST_AUTH_PROVIDER_ID_NAVER = "naver_test";
     final String TEST_AUTH_PROVIDER_ID_APPLE = "apple_test";
+    final String TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV = "apple_test1";
     final String TEST_PUSH_TOKEN = "..";
     final String TEST_FIRST_NAME = "강";
     final String TEST_LAST_NAME = "동훈";
@@ -77,6 +78,22 @@ class UserServiceImplTest {
         //then
         assertThat(loginResponse.loginType()).isEqualTo(LoginType.APPLE);
         assertThat(loginResponse.authProviderId()).isEqualTo(TEST_AUTH_PROVIDER_ID_APPLE);
+    }
+
+    @Test
+    void 사용자_삭제_for_dev_성공(){
+        //given
+        SignUpResponse signUpResponse = userService.doSignup(
+                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
+        );
+        String jwt = signUpResponse.jwt();
+        Long userId = Long.parseLong(jwtProvider.getUserId(jwt));
+
+        //when
+        userService.deleteUser(userId);
+
+        //then
+        Assertions.assertThrows(GlobalException.class, () -> userService.findById(userId));
     }
 
 }

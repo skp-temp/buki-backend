@@ -74,4 +74,13 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(ApiResponse.ok(userResponse));
     }
+
+    @Operation(summary = "deleteUser", description = "사용자 삭제, 개발용 입니다.")
+    @PostMapping("/delete-for-dev")
+    public ResponseEntity<ApiResponse<Void>> deleteUserForDev(Long userId){
+        userService.deleteUser(userId);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok());
+    }
 }
