@@ -17,11 +17,12 @@ public class UserItem extends BaseEntity {
     private Long userId;
     private Long itemId;
     private int count;
+    private int equippedItemCount; //TODO: 장착 중인 아이템의 수를 별도로 관리해줘야 한다.
 
-    public void addItem(Long count){
+    public void addItem(int count){
         this.count += count;
     }
-    public void removeItem(Long count){
+    public void removeItem(int count){
         validate(count);
         this.count -= count;
     }
@@ -36,7 +37,7 @@ public class UserItem extends BaseEntity {
         return new UserItem(userId, itemId, 0);
     }
 
-    private void validate(Long count){
+    private void validate(int count){
         if(this.count < count) throw new GlobalException(GlobalErrorCode.ITEM_COUNT_EXCEPTION);
     }
 }

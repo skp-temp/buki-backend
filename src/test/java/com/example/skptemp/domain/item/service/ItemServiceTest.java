@@ -45,17 +45,16 @@ class ItemServiceTest {
         Item 테스트_아이템6 = itemRepository.save(Item.create(1L, "테스트 아이템", ItemType.EQUIPMENT));
 
         //when
-        itemService.giveItemToUser(테스트_아이템1.getId(), user1.getId());
-        itemService.giveItemToUser(테스트_아이템1.getId(), user1.getId());
-        itemService.giveItemToUser(테스트_아이템2.getId(), user1.getId());
-        itemService.giveItemToUser(테스트_아이템3.getId(), user1.getId());
-        itemService.giveItemToUser(테스트_아이템4.getId(), user1.getId());
-        itemService.giveItemToUser(테스트_아이템5.getId(), user1.getId());
-        itemService.giveItemToUser(테스트_아이템6.getId(), user1.getId());
+        itemService.giveItem(테스트_아이템1.getId(), user1.getId(), 2);
+        itemService.giveItem(테스트_아이템2.getId(), user1.getId(), 1);
+        itemService.giveItem(테스트_아이템3.getId(), user1.getId(), 1);
+        itemService.giveItem(테스트_아이템4.getId(), user1.getId(), 1);
+        itemService.giveItem(테스트_아이템5.getId(), user1.getId(), 1);
+        itemService.giveItem(테스트_아이템6.getId(), user1.getId(), 1);
 
         //then
         GetUserItemResponse response = itemService.findItemListByUserId(user1.getId());
-        Assertions.assertThat(response.getResult().size()).isEqualTo(7);
+        Assertions.assertThat(response.getResult().size()).isEqualTo(6);
     }
 
     @Test
