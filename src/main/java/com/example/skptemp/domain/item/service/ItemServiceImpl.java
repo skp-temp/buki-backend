@@ -48,6 +48,7 @@ public class ItemServiceImpl implements ItemService {
                             .itemName(findItem.getItemName())
                             .count(userItem.getCount())
                             .itemId(findItem.getId())
+                            .categoryId(findItem.getCategoryId())
                             .build();
             userItemResultList.add(userItemResult);
         }
