@@ -25,29 +25,29 @@ public class UserServiceImpl implements UserService{
     private final JwtProvider jwtProvider;
 
     @Override
-    public LoginResponse doLogin(LoginType loginType, String authProviderId, String jwt) {
-        User findUser = findByLoginTypeAndAuthProviderId(loginType, authProviderId);
+    public LoginResponse doLogin(LoginType loginType, String platformProviderId, String jwt) {
+        User findUser = findByLoginTypeAndAuthProviderId(loginType, platformProviderId);
 
-        return new LoginResponse(loginType, authProviderId, jwt);
+        return new LoginResponse(loginType, platformProviderId, jwt);
     }
     @Transactional
     @Override
     public SignUpResponse doSignup(SignupRequest request) {
         LoginType loginType = request.loginType();
-        String authProviderId = request.authProviderId();
+        String platformProviderId = request.platformProviderId();
         String firstName = request.firstName();
         String lastName = request.lastName();
         String pushToken = request.pushToken();
 
-        User user = User.createUser(loginType, authProviderId, firstName, lastName, pushToken);
+        User user = User.createUser(loginType, platformProviderId, firstName, lastName, pushToken);
 
-        assertDuplicateUser(loginType, authProviderId);
+        assertDuplicateUser(loginType, platformProviderId);
         userRepository.save(user);
 
-        User findUser = findByLoginTypeAndAuthProviderId(loginType, authProviderId);
+        User findUser = findByLoginTypeAndAuthProviderId(loginType, platformProviderId);
         String jwt = createJwt(findUser.getId());
 
-        return new SignUpResponse(loginType, authProviderId, jwt);
+        return new SignUpResponse(loginType, platformProviderId, jwt);
     }
 
     @Override
@@ -59,8 +59,8 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public User findByLoginTypeAndAuthProviderId(LoginType loginType, String authProviderId){
-        return userRepository.findByLoginTypeAndAuthProviderIdAndIsValidIsTrue(loginType, authProviderId)
+    public User findByLoginTypeAndAuthProviderId(LoginType loginType, String platformProviderId){
+        return userRepository.findByLoginTypeAndPlatformProviderIdAndIsValidIsTrue(loginType, platformProviderId)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
     }
 
@@ -97,8 +97,8 @@ public class UserServiceImpl implements UserService{
         user.deleteUser();
     }
 
-    private void assertDuplicateUser(LoginType loginType, String authProviderId){
-        if(userRepository.findByLoginTypeAndAuthProviderIdAndIsValidIsTrue(loginType, authProviderId).isPresent()){
+    private void assertDuplicateUser(LoginType loginType, String platformProviderId){
+        if(userRepository.findByLoginTypeAndPlatformProviderIdAndIsValidIsTrue(loginType, platformProviderId).isPresent()){
             throw new GlobalException(GlobalErrorCode.USER_CONFLICT);
         }
     }
