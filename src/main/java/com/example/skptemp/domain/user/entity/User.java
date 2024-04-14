@@ -31,26 +31,21 @@ public class User extends BaseEntity {
 
     protected User(){
     }
-    private User(String uuid, LoginType loginType, String platformProviderId, String authority){
-        this.code = uuid;
-        this.loginType = loginType;
-        this.platformProviderId = platformProviderId;
-        this.authority = authority;
-        this.isValid = true;
-    }
 
-    private User(String uuid, LoginType loginType, String platformProviderId, String authority, String pushToken){
+    private User(String uuid, LoginType loginType, String platformProviderId, String firstName, String lastName, String authority, String pushToken){
         this.code = uuid;
         this.loginType = loginType;
         this.platformProviderId = platformProviderId;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.authority = authority;
         this.pushToken = pushToken;
         this.isValid = true;
     }
 
-    public static User createUser(LoginType loginType, String authProviderId, String firstName, String lastName, String pushToken){
+    public static User createUser(LoginType loginType, String platformProviderId, String firstName, String lastName, String pushToken){
         String uuid = makeUuid(false);
-        return new User(uuid, loginType, authProviderId, "USER", pushToken);
+        return new User(uuid, loginType, platformProviderId, firstName, lastName, "USER", pushToken);
     }
 
     public void deleteUser(){

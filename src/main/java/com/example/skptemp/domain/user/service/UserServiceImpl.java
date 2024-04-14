@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,7 +24,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public LoginResponse doLogin(LoginType loginType, String platformProviderId, String jwt) {
-        User findUser = findByLoginTypeAndAuthProviderId(loginType, platformProviderId);
+        findByLoginTypeAndAuthProviderId(loginType, platformProviderId);
 
         return new LoginResponse(loginType, platformProviderId, jwt);
     }
@@ -52,6 +50,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponse findById(Long id) {
+        assertUserId(id);
         User user = userRepository.findByIdAndIsValidIsTrue(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
         return new UserResponse(user);
@@ -72,18 +71,26 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public String createJwt(Long id){
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException(""));
+        assertUserId(id);
+        User user = userRepository.findByIdAndIsValidIsTrue(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        return jwtProvider.createDefaultToken(userDetails);
+    }
 
-        return jwtProvider.createToken(userDetails, GlobalConstants.TOKEN_EXPIRATION_TIME);
+    @Override
+    public String createTestJwt() {
+        User user = userRepository.findByIdAndIsValidIsTrue(GlobalConstants.TEST_ACCOUNT_ID)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.TEST_ACCOUNT_INVALID));
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        return jwtProvider.createTestToken(userDetails);
     }
 
     @Transactional
     @Override
     public UserResponse changeUserName(UserChangeNameRequest request) {
         assertUserId(request.getUserId());
-        User user = userRepository.findById(request.getUserId())
+        User user = userRepository.findByIdAndIsValidIsTrue(request.getUserId())
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
         user.changeName(request.getFirstName(), request.getLastName());
         return new UserResponse(user);
@@ -92,9 +99,20 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public void deleteUser(Long id){
-        User user = userRepository.findById(id)
+        assertUserId(id);
+        User user = userRepository.findByIdAndIsValidIsTrue(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
         user.deleteUser();
+    }
+
+    @Override
+    public void validateUserOrThrow(Long id){
+        assertUserId(id);
+        User findUser = userRepository.findById(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+
+        if(!findUser.isValid())
+            throw new GlobalException(GlobalErrorCode.USER_DELETED_EXCEPTION);
     }
 
     private void assertDuplicateUser(LoginType loginType, String platformProviderId){
@@ -105,7 +123,7 @@ public class UserServiceImpl implements UserService{
 
     private void assertUserId(Long userId){
         if(userId == null){
-            throw new GlobalException(GlobalErrorCode.VALID_EXCEPTION);
+            throw new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION);
         }
     }
 }
