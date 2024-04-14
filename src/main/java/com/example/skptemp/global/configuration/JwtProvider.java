@@ -1,8 +1,10 @@
 package com.example.skptemp.global.configuration;
 
+import com.example.skptemp.global.util.GlobalConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +22,25 @@ import java.util.Date;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class JwtProvider {
-    @Value("${jwt.password}")
-    private String secretKey;
-    private static final String userNameKey = "userName";
+
+    private final SecretKey secretKey;
+    private static final String userIdKey = "userId";
     private final UserDetailsService userDetailsService;
+
+    public JwtProvider(@Value("${jwt.password}") String secretKey, UserDetailsService userDetailsService){
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
+        this.userDetailsService = userDetailsService;
+    }
+
+    public String createDefaultToken(UserDetails userDetails){
+        return createToken(userDetails, GlobalConstants.TOKEN_EXPIRATION_TIME);
+    }
+
+    public String createTestToken(UserDetails userDetails){
+        return createToken(userDetails, GlobalConstants.TEST_TOKEN_EXPIRATION_TIME);
+    }
 
     public String createToken(UserDetails userDetails, Long expiredMs){
         Date now = new Date();
@@ -36,34 +51,33 @@ public class JwtProvider {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         String role = isAdmin ? "ADMIN" : "USER";
-        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        Long userId = Long.parseLong(userDetails.getUsername());
 
         return Jwts.builder()
                 .claims()
                 .add("role", role)
-                .add("userName", userDetails.getUsername())
+                .add("userId", userId)
                 .issuedAt(now)
                 .expiration(expiration)
                 .subject(userDetails.getUsername())
                 .and()
-                .signWith(key)
+                .signWith(secretKey)
                 .compact();
     }
 
-    public String getUserId(String token){
-        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
-
-        return Jwts.parser()
-                .verifyWith(key)
+    public Long getUserId(String token){
+        return Long.parseLong(
+                Jwts.parser()
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get(userNameKey)
-                .toString();
+                .get(userIdKey)
+                .toString());
     }
     public Authentication getAuthentication(String token){
-        String userId = this.getUserId(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+        Long userId = getUserId(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userId.toString());
         // UsernamePasswordAuthenticaionToken 만들어 반환
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
@@ -76,9 +90,9 @@ public class JwtProvider {
     }
 
     public boolean isExpired(String token){
-        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
+//        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Date expiration = Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
