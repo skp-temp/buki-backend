@@ -4,7 +4,7 @@ import com.example.skptemp.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+@Deprecated
 @Getter
 @Setter
 @Entity

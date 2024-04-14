@@ -4,10 +4,7 @@ import com.example.skptemp.domain.common.BaseEntity;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Generated;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
