@@ -7,6 +7,7 @@ import com.example.skptemp.domain.item.entity.ItemType;
 import com.example.skptemp.domain.item.repository.ItemRepository;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.repository.UserRepository;
+import com.example.skptemp.global.constant.Category;
 import com.example.skptemp.global.constant.LoginType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,12 +38,12 @@ class ItemServiceTest {
         //given
         User user1 = userRepository.save(User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN));
 
-        Item 테스트_아이템1 = itemRepository.save(Item.create(0L, "테스트 아이템", ItemType.CLOTHE));
-        Item 테스트_아이템2 = itemRepository.save(Item.create(1L, "테스트 아이템", ItemType.EQUIPMENT));
-        Item 테스트_아이템3 = itemRepository.save(Item.create(1L, "테스트 아이템", ItemType.EQUIPMENT));
-        Item 테스트_아이템4 = itemRepository.save(Item.create(1L, "테스트 아이템", ItemType.EQUIPMENT));
-        Item 테스트_아이템5 = itemRepository.save(Item.create(1L, "테스트 아이템", ItemType.EQUIPMENT));
-        Item 테스트_아이템6 = itemRepository.save(Item.create(1L, "테스트 아이템", ItemType.EQUIPMENT));
+        Item 테스트_아이템1 = itemRepository.save(Item.create(Category.BEAUTY, "테스트 아이템", ItemType.CLOTHE));
+        Item 테스트_아이템2 = itemRepository.save(Item.create(Category.DIET, "테스트 아이템", ItemType.EQUIPMENT));
+        Item 테스트_아이템3 = itemRepository.save(Item.create(Category.DIET, "테스트 아이템", ItemType.EQUIPMENT));
+        Item 테스트_아이템4 = itemRepository.save(Item.create(Category.DIET, "테스트 아이템", ItemType.EQUIPMENT));
+        Item 테스트_아이템5 = itemRepository.save(Item.create(Category.DIET, "테스트 아이템", ItemType.EQUIPMENT));
+        Item 테스트_아이템6 = itemRepository.save(Item.create(Category.DIET, "테스트 아이템", ItemType.EQUIPMENT));
 
         //when
         itemService.giveItem(테스트_아이템1.getId(), user1.getId(), 2);

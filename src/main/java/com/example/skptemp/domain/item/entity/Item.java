@@ -1,6 +1,7 @@
 package com.example.skptemp.domain.item.entity;
 
 import com.example.skptemp.domain.common.BaseEntity;
+import com.example.skptemp.global.constant.Category;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,16 +13,16 @@ public class Item extends BaseEntity {
     @Id @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long categoryId;
+    private Category category;
     private String itemName;
     private ItemType itemType;
 
-    private Item(Long categoryId, String itemName, ItemType itemType){
-        this.categoryId = categoryId;
+    private Item(Category category, String itemName, ItemType itemType){
+        this.category = category;
         this.itemName = itemName;
         this.itemType = itemType;
     }
-    public static Item create(Long categoryId, String itemName, ItemType itemType){
-        return new Item(categoryId, itemName, itemType);
+    public static Item create(Category category, String itemName, ItemType itemType){
+        return new Item(category, itemName, itemType);
     }
 }

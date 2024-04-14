@@ -7,7 +7,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import static com.example.skptemp.domain.category.entity.QCategory.category;
 import static com.example.skptemp.domain.charm.entity.QChallengeHistory.challengeHistory;
 import static com.example.skptemp.domain.charm.entity.QCharm.charm;
 
@@ -25,9 +24,8 @@ public class QuerydslCharmRepositoryImpl implements QuerydslCharmRepository {
                 .from(challengeHistory)
                 .where(challengeHistory.charmId.eq(charmId), challengeHistory.userId.eq(userId))
                 .fetchFirst();
-        CharmDetailResponse response = queryFactory.select(new QCharmDetailResponse(category.name, charm.goal, charm.characterId))
+        CharmDetailResponse response = queryFactory.select(new QCharmDetailResponse(charm.category, charm.goal))
                 .from(charm)
-                .innerJoin(category).on(charm.categoryId.eq(category.id))
                 .where(charm.id.eq(charmId))
                 .fetchOne();
 
