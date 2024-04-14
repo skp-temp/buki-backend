@@ -1,13 +1,10 @@
 package com.example.skptemp.global.configuration;
 
 import com.example.skptemp.global.util.GlobalConstants;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +23,6 @@ import java.util.Date;
 public class JwtProvider {
 
     private final SecretKey secretKey;
-    private static final String userIdKey = "userId";
     private final UserDetailsService userDetailsService;
 
     public JwtProvider(@Value("${jwt.password}") String secretKey, UserDetailsService userDetailsService){
@@ -55,8 +51,8 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .claims()
-                .add("role", role)
-                .add("userId", userId)
+                .add(GlobalConstants.JWT_USER_ROLE, role)
+                .add(GlobalConstants.JWT_USER_ID_KEY, userId)
                 .issuedAt(now)
                 .expiration(expiration)
                 .subject(userDetails.getUsername())
@@ -72,7 +68,7 @@ public class JwtProvider {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get(userIdKey)
+                .get(GlobalConstants.JWT_USER_ID_KEY)
                 .toString());
     }
     public Authentication getAuthentication(String token){
