@@ -11,6 +11,8 @@ public interface UserService {
     User findByLoginTypeAndAuthProviderId(LoginType loginType, String authProviderId);
     User findByCode(String code);
     String createJwt(Long id);
+    String createTestJwt();
     UserResponse changeUserName(UserChangeNameRequest request);
     void deleteUser(Long id);
+    void validateUserOrThrow(Long id);
 }

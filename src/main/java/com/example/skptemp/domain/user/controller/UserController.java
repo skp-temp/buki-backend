@@ -4,8 +4,7 @@ import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.ApiResponse;
-import com.example.skptemp.global.constant.LoginType;
-import com.example.skptemp.global.error.GlobalErrorCode;
+import com.example.skptemp.global.configuration.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,15 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.util.List;
-
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 @RestController
 public class UserController {
     private final UserService userService;
+    private final JwtProvider jwtProvider;
 
     @Operation(summary = "login", description = "Login 작업을 수행합니다.")
     @PostMapping("/login")
@@ -58,10 +55,18 @@ public class UserController {
     }
 
     //TODO: 삭제 예정
-    @Operation(summary = "createToken", description = "연동 로그인 과정 생략 후 임시 토큰 발급")
-    @GetMapping("/create-token")
-    public ResponseEntity<ApiResponse<TokenResponse>> createToken(){
+    @Operation(summary = "createToken100Days", description = "개발 용 access 토큰 발급 (유효 기간 100일)")
+    @PostMapping("/create-token-100days")
+    public ResponseEntity<ApiResponse<TokenResponse>> createToken100Days(){
         String jwt = userService.createJwt(1L);
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok(new TokenResponse(jwt)));
+    }
+
+    @Operation(summary = "createToken10Min", description = "테스트 용 access 토큰 발급 (유효 기간 3시간)")
+    @PostMapping("/create-token-10min")
+    public ResponseEntity<ApiResponse<TokenResponse>> createToken3Hours(){
+        String jwt = userService.createTestJwt();
         return ResponseEntity.ok()
                 .body(ApiResponse.ok(new TokenResponse(jwt)));
     }
@@ -75,9 +80,22 @@ public class UserController {
                 .body(ApiResponse.ok(userResponse));
     }
 
-    @Operation(summary = "deleteUser", description = "사용자 삭제, 개발용 입니다.")
-    @PostMapping("/delete-for-dev")
+    @Operation(summary = "deleteUserForDev", description = "사용자 삭제, 개발용 입니다.")
+    @DeleteMapping("/delete-for-dev")
     public ResponseEntity<ApiResponse<Void>> deleteUserForDev(@RequestBody Long userId){
+        userService.deleteUser(userId);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.ok());
+    }
+
+    @Operation(summary = "deleteUser", description = "사용자 계정 탈퇴")
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletRequest request){
+        final String authorization = jwtProvider.resolveTokenFromRequest(request);
+        String token = jwtProvider.bearerRemove(authorization);
+
+        Long userId = jwtProvider.getUserId(token);
         userService.deleteUser(userId);
 
         return ResponseEntity.ok()

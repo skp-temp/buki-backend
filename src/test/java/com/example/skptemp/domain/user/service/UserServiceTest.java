@@ -3,8 +3,6 @@ package com.example.skptemp.domain.user.service;
 import com.example.skptemp.domain.user.dto.LoginResponse;
 import com.example.skptemp.domain.user.dto.SignUpResponse;
 import com.example.skptemp.domain.user.dto.SignupRequest;
-import com.example.skptemp.domain.user.dto.UserResponse;
-import com.example.skptemp.domain.user.repository.UserRepository;
 import com.example.skptemp.global.configuration.JwtProvider;
 import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalException;
@@ -48,7 +46,7 @@ class UserServiceTest {
         //given
         String jwt = userService.createJwt(USER_ID);
         //when
-        Long userId = Long.parseLong(jwtProvider.getUserId(jwt));
+        Long userId = jwtProvider.getUserId(jwt);
         //then
         assertThat(userId).isEqualTo(USER_ID);
     }
@@ -69,7 +67,7 @@ class UserServiceTest {
     @Test
     void 로그인_성공(){
         //given
-        SignUpResponse signUpResponse = userService.doSignup(
+        userService.doSignup(
                 new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
         );
 
@@ -81,13 +79,13 @@ class UserServiceTest {
     }
 
     @Test
-    void 사용자_삭제_for_dev_성공(){
+    void 사용자_삭제_성공(){
         //given
         SignUpResponse signUpResponse = userService.doSignup(
                 new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
         );
         String jwt = signUpResponse.jwt();
-        Long userId = Long.parseLong(jwtProvider.getUserId(jwt));
+        Long userId = jwtProvider.getUserId(jwt);
 
         //when
         userService.deleteUser(userId);
@@ -96,4 +94,19 @@ class UserServiceTest {
         Assertions.assertThrows(GlobalException.class, () -> userService.findById(userId));
     }
 
+    @Test
+    void 사용자_삭제_중복_삭제_실패(){
+        //given
+        SignUpResponse signUpResponse = userService.doSignup(
+                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
+        );
+        String jwt = signUpResponse.jwt();
+        Long userId = jwtProvider.getUserId(jwt);
+
+        //when
+        userService.deleteUser(userId);
+
+        //then
+        Assertions.assertThrows(GlobalException.class, () -> userService.deleteUser(userId)); // 중복 삭제한 경우 Exception Throw
+    }
 }

@@ -13,6 +13,8 @@ public enum GlobalErrorCode {
     VALID_EXCEPTION(400, "G300", "유효 하지 않은 요청입니다."),
 
     USER_VALID_EXCEPTION(400, "G310", "유저가 유효하지 않습니다."),
+    USER_DELETED_EXCEPTION(400, "G311", "삭제된 계정입니다."),
+    TEST_ACCOUNT_INVALID(500, "G312", "테스트용 계정 오류입니다."),
 
     ITEM_VALID_EXCEPTION(400, "G320", "아이템이 유효하지 않습니다."),
     ITEM_COUNT_EXCEPTION(400, "G321", "아이템 개수가 유효하지 않습니다."),
@@ -25,7 +27,6 @@ public enum GlobalErrorCode {
     TOKEN_EXPIRED(401, "G500", "토큰이 만료되었습니다."),
 
     USER_CONFLICT(409, "G600", "이미 가입된 내역이 있습니다."),
-
 
     ;
     private final String code;
