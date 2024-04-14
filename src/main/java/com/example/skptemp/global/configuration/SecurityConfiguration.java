@@ -1,5 +1,6 @@
 package com.example.skptemp.global.configuration;
 
+import com.example.skptemp.domain.user.service.UserService;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,16 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 public class SecurityConfiguration {
     private final JwtProvider jwtProvider;
-    private final String[] permittedPatterns = { "/api/v1/users/login", "/api/v1/users/sign-up", "/api/v1/users/create-token", "/test", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-config" };
+    private final UserService userService;
+    private final String[] permittedPatterns = {
+            "/api/v1/users/login",
+            "/api/v1/users/sign-up",
+            "/api/v1/users/create-token-100days",
+            "/api/v1/users/create-token-10min",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/swagger-config" };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -26,7 +36,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(permittedPatterns).permitAll()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtFilter(jwtProvider), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtProvider, userService), BasicAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();
