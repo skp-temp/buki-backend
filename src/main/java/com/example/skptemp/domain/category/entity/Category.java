@@ -3,8 +3,8 @@ package com.example.skptemp.domain.category.entity;
 import com.example.skptemp.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
+@Deprecated
 @Getter
 @Entity
 public class Category extends BaseEntity {
