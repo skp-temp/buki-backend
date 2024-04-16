@@ -24,7 +24,7 @@ public class FriendController {
     private final UserService userService;
     private final SecurityUtil securityUtil;
 
-    @Operation(summary = "getFriendList", description = "사용자 친구 리스트 조회 API")
+    @Operation(summary = "getFriendList", description = "사용자 친구 리스트 조회 API") //TODO: 친구의 부적 정보 같이 전달해야
     @GetMapping("/{user-id}")
     ResponseEntity<ApiResponse<FriendResponse>> getFriendList(@Valid Long userId){
         List<FriendResult> friendRelationshipList = friendRelationshipService.findFriendRelationshipList(userId);
@@ -55,6 +55,13 @@ public class FriendController {
         Long userId = securityUtil.getUserIdFromContext();
         friendRelationshipService.deleteFriendRelationship(userId, request.getFriendId());
         return ResponseEntity.ok(ApiResponse.ok());
+    }
+
+    @Operation(summary = "getFriendsCount", description = "친구 수 조회 API")
+    @GetMapping("/count")
+    ResponseEntity<ApiResponse<Integer>> getFriendsCount(@RequestBody Long userId){
+        int friendsCount = friendRelationshipService.getFriendsCount(userId);
+        return ResponseEntity.ok(ApiResponse.ok(friendsCount));
     }
 
 }

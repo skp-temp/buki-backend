@@ -21,6 +21,7 @@ class FriendRelationshipServiceTest {
 
     final Long TEST_USER_ID1 = 1L;
     final Long TEST_USER_ID2 = 2L;
+    final Long TEST_USER_ID3 = 3L;
     final Long UNKNOWN_TEST_USER = 10000000L;
 
     @AfterEach
@@ -84,5 +85,22 @@ class FriendRelationshipServiceTest {
         //when
         //then
         assertThrows(GlobalException.class, () -> friendRelationshipService.deleteFriendRelationship(TEST_USER_ID1, TEST_USER_ID1));
+    }
+
+    @Test
+    void 친구_수_조회_성공(){
+        //given
+        friendRelationshipService.enrollFriendRelationship(TEST_USER_ID1, TEST_USER_ID2);
+        friendRelationshipService.enrollFriendRelationship(TEST_USER_ID1, TEST_USER_ID3);
+
+        //when
+        int friendsCount1 = friendRelationshipService.getFriendsCount(TEST_USER_ID1);
+        int friendsCount2 = friendRelationshipService.getFriendsCount(TEST_USER_ID2);
+        int friendsCount3 = friendRelationshipService.getFriendsCount(TEST_USER_ID3);
+
+        //then
+        assertThat(friendsCount1).isEqualTo(2);
+        assertThat(friendsCount2).isEqualTo(1);
+        assertThat(friendsCount3).isEqualTo(1);
     }
 }

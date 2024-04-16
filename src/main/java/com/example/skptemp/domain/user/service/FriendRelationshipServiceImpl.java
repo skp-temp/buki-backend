@@ -50,6 +50,11 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
         friendRelationshipRepository.delete(relationship2);
     }
 
+    @Override
+    public int getFriendsCount(Long userId) {
+        return friendRelationshipRepository.findByUserA(userId).size();
+    }
+
     private void validateFriendRelationship(Long userId, Long friendId){
         if(friendRelationshipRepository.findByUserAAndUserB(userId, friendId).isEmpty())
             throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
