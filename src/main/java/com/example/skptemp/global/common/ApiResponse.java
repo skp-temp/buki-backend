@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static com.example.skptemp.global.error.GlobalErrorCode.SUCCESS;
@@ -18,7 +19,7 @@ import static com.example.skptemp.global.error.GlobalErrorCode.SUCCESS;
 // @JsonPropertyOrder : json serialization 순서를 정의
 @JsonPropertyOrder({"status", "code", "message", "result"})
 public class ApiResponse<T> {
-    private int status;
+    private HttpStatus status;
     private String message;
     private String code;
     @JsonInclude(JsonInclude.Include.NON_NULL) // 결과값이 공백일 경우 json에 포함하지 않도록

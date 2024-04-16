@@ -1,39 +1,40 @@
 package com.example.skptemp.global.error;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public enum GlobalErrorCode {
 
 
-    SUCCESS(200, "G000", "요청에 성공했습니다."),
-    OTHER(500, "G100", "서버에 오류가 발생했습니다"),
-    METHOD_NOT_ALLOWED(405, "G200", "허용되지 않은 메서드입니다"),
+    SUCCESS(HttpStatus.OK, "G000", "요청에 성공했습니다."),
+    OTHER(HttpStatus.INTERNAL_SERVER_ERROR, "G100", "서버에 오류가 발생했습니다"),
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "G200", "허용되지 않은 메서드입니다"),
 
-    VALID_EXCEPTION(400, "G300", "유효 하지 않은 요청입니다."),
+    VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G300", "유효 하지 않은 요청입니다."),
 
-    USER_VALID_EXCEPTION(400, "G310", "유저가 유효하지 않습니다."),
-    USER_DELETED_EXCEPTION(400, "G311", "삭제된 계정입니다."),
-    TEST_ACCOUNT_INVALID(500, "G312", "테스트용 계정 오류입니다."),
+    USER_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G310", "유저가 유효하지 않습니다."),
+    USER_DELETED_EXCEPTION(HttpStatus.BAD_REQUEST, "G311", "삭제된 계정입니다."),
+    TEST_ACCOUNT_INVALID(HttpStatus.INTERNAL_SERVER_ERROR, "G312", "테스트용 계정 오류입니다."),
 
-    ITEM_VALID_EXCEPTION(400, "G320", "아이템이 유효하지 않습니다."),
-    ITEM_COUNT_EXCEPTION(400, "G321", "아이템 개수가 유효하지 않습니다."),
+    ITEM_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G320", "아이템이 유효하지 않습니다."),
+    ITEM_COUNT_EXCEPTION(HttpStatus.BAD_REQUEST, "G321", "아이템 개수가 유효하지 않습니다."),
 
-    CHARM_VALID_EXCEPTION(400, "G330", "부적이 유효하지 않습니다."),
-    FRIEND_RELATIONSHIP_VALID_EXCEPTION(400, "G340", "친구 관계가 유효하지 않습니다."),
-    USER_ITEM_VALID_EXCEPTION(400, "G350", "유저 혹은 아이템 정보가 유효하지 않습니다."),
-    ACCESS_DENIED(401, "G400", "허용되지 않은 사용자입니다"),
+    CHARM_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G330", "부적이 유효하지 않습니다."),
+    FRIEND_RELATIONSHIP_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G340", "친구 관계가 유효하지 않습니다."),
+    USER_ITEM_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G350", "유저 혹은 아이템 정보가 유효하지 않습니다."),
+    ACCESS_DENIED(HttpStatus.UNAUTHORIZED, "G400", "허용되지 않은 사용자입니다"),
 
-    TOKEN_EXPIRED(401, "G500", "토큰이 만료되었습니다."),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "G500", "토큰이 만료되었습니다."),
 
-    USER_CONFLICT(409, "G600", "이미 가입된 내역이 있습니다."),
+    USER_CONFLICT(HttpStatus.CONFLICT, "G600", "이미 가입된 내역이 있습니다."),
 
     ;
     private final String code;
     private final String message;
-    private final int status;
+    private final HttpStatus status;
 
-    GlobalErrorCode(final int status, final String code, final String message) {
+    GlobalErrorCode(final HttpStatus status, final String code, final String message) {
         this.status = status;
         this.code = code;
         this.message = message;
