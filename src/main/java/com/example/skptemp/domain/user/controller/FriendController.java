@@ -59,7 +59,7 @@ public class FriendController {
 
     @Operation(summary = "getFriendsCount", description = "친구 수 조회 API")
     @GetMapping("/count")
-    ResponseEntity<ApiResponse<Integer>> getFriendsCount(@RequestBody Long userId){
+    ResponseEntity<ApiResponse<Integer>> getFriendsCount(Long userId){
         int friendsCount = friendRelationshipService.getFriendsCount(userId);
         return ResponseEntity.ok(ApiResponse.ok(friendsCount));
     }
