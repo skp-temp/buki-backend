@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FriendRelationshipRepository extends JpaRepository<FriendRelationship, Long> {
-    List<FriendRelationship> findByUserA(Long userA);
-    Optional<FriendRelationship> findByUserAAndUserB(Long userA, Long userB);
+    Optional<FriendRelationship> findByIdAndIsValidIsTrue(Long id);
+    List<FriendRelationship> findByUserAAndIsValidIsTrue(Long userA);
+    Optional<FriendRelationship> findByUserAAndUserBAndIsValidIsTrue(Long userA, Long userB);
 }

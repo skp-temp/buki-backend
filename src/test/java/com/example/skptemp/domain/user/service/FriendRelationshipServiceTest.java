@@ -35,8 +35,8 @@ class FriendRelationshipServiceTest {
         //when
         friendRelationshipService.enrollFriendRelationship(TEST_USER_ID1, TEST_USER_ID2);
         //then
-        assertThat(friendRelationshipRepository.findByUserAAndUserB(TEST_USER_ID1, TEST_USER_ID2)).isNotEmpty();
-        assertThat(friendRelationshipRepository.findByUserAAndUserB(TEST_USER_ID2, TEST_USER_ID1)).isNotEmpty();
+        assertThat(friendRelationshipRepository.findByUserAAndUserBAndIsValidIsTrue(TEST_USER_ID1, TEST_USER_ID2)).isNotEmpty();
+        assertThat(friendRelationshipRepository.findByUserAAndUserBAndIsValidIsTrue(TEST_USER_ID2, TEST_USER_ID1)).isNotEmpty();
     }
 
     @Test
@@ -64,9 +64,9 @@ class FriendRelationshipServiceTest {
         friendRelationshipService.deleteFriendRelationship(TEST_USER_ID1, TEST_USER_ID2);
 
         //then
-        Optional<FriendRelationship> findFriendRelationship = friendRelationshipRepository.findByUserAAndUserB(TEST_USER_ID1, TEST_USER_ID2);
+        Optional<FriendRelationship> findFriendRelationship = friendRelationshipRepository.findByUserAAndUserBAndIsValidIsTrue(TEST_USER_ID1, TEST_USER_ID2);
         assertThat(findFriendRelationship).isEmpty();
-        findFriendRelationship = friendRelationshipRepository.findByUserAAndUserB(TEST_USER_ID2, TEST_USER_ID1);
+        findFriendRelationship = friendRelationshipRepository.findByUserAAndUserBAndIsValidIsTrue(TEST_USER_ID2, TEST_USER_ID1);
         assertThat(findFriendRelationship).isEmpty();
     }
 

@@ -28,7 +28,7 @@ public class UserController {
 
         String jwt = userService.createJwt(findUser.getId());
         LoginResponse loginResponse = userService.doLogin(request.loginType(), request.authProviderId(), jwt);
-        response.addHeader("authorization", jwt);
+        response.addHeader("authorization", jwt); //TODO: 삭제 해도 문제 없는지 테스트 필요
 
         return ResponseEntity.ok()
                 .body(ApiResponse.ok(loginResponse));

@@ -33,7 +33,7 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     public List<FriendResult> findFriendRelationshipList(Long userId) {
         validateUserId(userId);
         // userA 기준으로 친구 관계를 리스트로 조회한다.
-        return friendRelationshipRepository.findByUserA(userId).stream()
+        return friendRelationshipRepository.findByUserAAndIsValidIsTrue(userId).stream()
                 .map(FriendResult::new)
                 .toList();
     }
@@ -43,25 +43,27 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
         validateUserId(userId, friendId);
         validateFriendRelationship(userId, friendId);
 
-        FriendRelationship relationship1 = friendRelationshipRepository.findByUserAAndUserB(userId, friendId).get();
-        FriendRelationship relationship2 = friendRelationshipRepository.findByUserAAndUserB(friendId, userId).get();
+        FriendRelationship relationship1 = friendRelationshipRepository.findByUserAAndUserBAndIsValidIsTrue(userId, friendId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION));
+        FriendRelationship relationship2 = friendRelationshipRepository.findByUserAAndUserBAndIsValidIsTrue(friendId, userId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION));
 
-        friendRelationshipRepository.delete(relationship1);
-        friendRelationshipRepository.delete(relationship2);
+        relationship1.delete();
+        relationship2.delete();
     }
 
     @Override
     public int getFriendsCount(Long userId) {
-        return friendRelationshipRepository.findByUserA(userId).size();
+        return friendRelationshipRepository.findByUserAAndIsValidIsTrue(userId).size();
     }
 
     private void validateFriendRelationship(Long userId, Long friendId){
-        if(friendRelationshipRepository.findByUserAAndUserB(userId, friendId).isEmpty())
+        if(friendRelationshipRepository.findByUserAAndUserBAndIsValidIsTrue(userId, friendId).isEmpty())
             throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
     }
 
     private void validateUserId(Long userId){
-        if(userRepository.findById(userId).isEmpty())
+        if(userRepository.findByIdAndIsValidIsTrue(userId).isEmpty())
             throw new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION);
     }
     private void validateUserId(Long userA, Long userB){

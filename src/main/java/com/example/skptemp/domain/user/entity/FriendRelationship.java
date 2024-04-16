@@ -14,17 +14,23 @@ public class FriendRelationship extends BaseEntity {
     private Long id;
     private Long userA;
     private Long userB;
+    private boolean isValid;
 
     protected FriendRelationship(){}
     private FriendRelationship(Long userA, Long userB){
         this.userA = userA;
         this.userB = userB;
+        this.isValid = true;
     }
 
     public static FriendRelationship createFriendRelationship(Long userA, Long userB){
         validate(userA);
         validate(userB);
         return new FriendRelationship(userA, userB);
+    }
+
+    public void delete(){
+        this.isValid = false;
     }
 
     private static void validate(Long userId){
