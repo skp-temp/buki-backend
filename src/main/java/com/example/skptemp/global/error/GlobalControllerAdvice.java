@@ -1,6 +1,6 @@
 package com.example.skptemp.global.error;
 
-import com.example.skptemp.global.common.ApiResponse;
+import com.example.skptemp.global.common.CustomResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +25,10 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ApiResponse<Void>> invalidArgumentValidResponse(MethodArgumentNotValidException e) {
+    public ResponseEntity<CustomResponse<Void>> invalidArgumentValidResponse(MethodArgumentNotValidException e) {
         log.error("Exception : {}, 입력값 : {}", e.getBindingResult().getFieldError(), e.getBindingResult().getFieldError());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(GlobalErrorCode.VALID_EXCEPTION, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
+                .body(CustomResponse.error(GlobalErrorCode.VALID_EXCEPTION, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
     }
 
 
@@ -37,10 +37,10 @@ public class GlobalControllerAdvice {
      **/
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ApiResponse<Void>> invalidArgumentBindResponse(BindException e) {
+    public ResponseEntity<CustomResponse<Void>> invalidArgumentBindResponse(BindException e) {
         log.error("Exception : {}, 입력값 : {}", e.getBindingResult().getFieldError(), e.getBindingResult().getFieldError());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(GlobalErrorCode.VALID_EXCEPTION, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
+                .body(CustomResponse.error(GlobalErrorCode.VALID_EXCEPTION, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
     }
 
 
@@ -49,19 +49,19 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ResponseEntity<ApiResponse<Void>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    protected ResponseEntity<CustomResponse<Void>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(GlobalErrorCode.METHOD_NOT_ALLOWED));
+                .body(CustomResponse.error(GlobalErrorCode.METHOD_NOT_ALLOWED));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    protected ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException e) {
+    protected ResponseEntity<CustomResponse<Void>> handleAccessDeniedException(AccessDeniedException e) {
         log.info("{}", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(GlobalErrorCode.ACCESS_DENIED));
+                .body(CustomResponse.error(GlobalErrorCode.ACCESS_DENIED));
     }
 
     /**
@@ -71,13 +71,12 @@ public class GlobalControllerAdvice {
      * @return 예외를 처리해서 반환한다.
      */
     @ExceptionHandler(GlobalException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ResponseEntity<ApiResponse<Void>> handleGlobalBaseException(final GlobalException e) {
+    protected ResponseEntity<CustomResponse<Void>> handleGlobalBaseException(final GlobalException e) {
         log.error("{} Exception {}: {}", e.getErrorCode(), e.getErrorCode().getCode(), e.getErrorCode().getMessage());
 
         // TODO: Exception type에 따라 HTTP status code 정리 필요
         return ResponseEntity.status(e.getErrorCode().getStatus())
-                .body(ApiResponse.error(e.getErrorCode()));
+                .body(CustomResponse.error(e.getErrorCode(), e.getMessage()));
     }
 
 
@@ -89,9 +88,9 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
+    protected ResponseEntity<CustomResponse<Void>> handleException(Exception e) {
         log.error("Exception : {}", GlobalErrorCode.OTHER.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(GlobalErrorCode.OTHER));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(CustomResponse.error(GlobalErrorCode.OTHER));
     }
 }

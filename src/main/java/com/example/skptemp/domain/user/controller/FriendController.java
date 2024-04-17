@@ -4,7 +4,7 @@ import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.service.FriendRelationshipService;
 import com.example.skptemp.domain.user.service.UserService;
-import com.example.skptemp.global.common.ApiResponse;
+import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.common.SecurityUtil;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -26,16 +26,16 @@ public class FriendController {
 
     @Operation(summary = "getFriendList", description = "사용자 친구 리스트 조회 API")
     @GetMapping("/{user-id}")
-    ResponseEntity<ApiResponse<FriendResponse>> getFriendList(@Valid Long userId){
+    ResponseEntity<CustomResponse<FriendResponse>> getFriendList(@Valid Long userId){
         List<FriendResult> friendRelationshipList = friendRelationshipService.findFriendRelationshipList(userId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.ok(new FriendResponse(friendRelationshipList)));
+                .body(CustomResponse.ok(new FriendResponse(friendRelationshipList)));
     }
 
     @Operation(summary = "createFriend", description = "친구 추가 API")
     @PostMapping
-    ResponseEntity<ApiResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
+    ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = securityUtil.getUserIdFromContext();
         UserResponse userResponse = userService.findById(userId);
 
@@ -46,15 +46,15 @@ public class FriendController {
         User friendUser = userService.findByCode(request.getUserCode());
 
         friendRelationshipService.enrollFriendRelationship(userId, friendUser.getId());
-        return ResponseEntity.ok(ApiResponse.ok());
+        return ResponseEntity.ok(CustomResponse.ok());
     }
 
     @Operation(summary = "deleteFriend", description = "친구 삭제 API")
     @DeleteMapping("/{friend-id}")
-    ResponseEntity<ApiResponse<Void>> deleteFriend(@RequestBody FriendDeleteRequest request){
+    ResponseEntity<CustomResponse<Void>> deleteFriend(@RequestBody FriendDeleteRequest request){
         Long userId = securityUtil.getUserIdFromContext();
         friendRelationshipService.deleteFriendRelationship(userId, request.getFriendId());
-        return ResponseEntity.ok(ApiResponse.ok());
+        return ResponseEntity.ok(CustomResponse.ok());
     }
 
 }

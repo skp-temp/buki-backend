@@ -47,7 +47,7 @@ public class Charm extends BaseEntity {
             throw new GlobalException(GlobalErrorCode.CHARM_VALID_EXCEPTION);
         }
     }
-    public void deleteCharm(){
+    public void delete(){
         if(isValid) throw new GlobalException(GlobalErrorCode.CHARM_VALID_EXCEPTION);
         this.isValid = false;
     }

@@ -2,7 +2,7 @@ package com.example.skptemp.domain.item.controller;
 
 import com.example.skptemp.domain.item.dto.GetUserItemResponse;
 import com.example.skptemp.domain.item.service.ItemService;
-import com.example.skptemp.global.common.ApiResponse;
+import com.example.skptemp.global.common.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,29 +16,29 @@ public class ItemController {
 
     @Operation(summary = "getUserItemList", description = "특정 사용자가 보유한 아이템 정보 조회 API")
     @GetMapping("/user-item-list") //TODO: paging 적용 필요
-    public ResponseEntity<ApiResponse<GetUserItemResponse>> getUserItemList(@RequestParam Long userId){
+    public ResponseEntity<CustomResponse<GetUserItemResponse>> getUserItemList(@RequestParam Long userId){
         GetUserItemResponse response = itemService.findItemListByUserId(userId);
-        return ResponseEntity.ok(ApiResponse.ok(response));
+        return ResponseEntity.ok(CustomResponse.ok(response));
     }
 
     //TODO: 뽑기 API 개발
     @Operation(summary = "doGacha", description = "뽑기 API")
     @PostMapping("/gacha")
-    public ResponseEntity<ApiResponse<Void>> doGacha(){
-        return ResponseEntity.ok(ApiResponse.ok());
+    public ResponseEntity<CustomResponse<Void>> doGacha(){
+        return ResponseEntity.ok(CustomResponse.ok());
     }
 
     //TODO: 뽑기 가능 여부 조회 API 개발
     @Operation(summary = "getGachaCondition", description = "뽑기 가능 여부 조회")
     @GetMapping("/gacha-condition")
-    public ResponseEntity<ApiResponse<Void>> getGachaCondition(){
-        return ResponseEntity.ok(ApiResponse.ok());
+    public ResponseEntity<CustomResponse<Void>> getGachaCondition(){
+        return ResponseEntity.ok(CustomResponse.ok());
     }
 
     @Operation(summary = "giveItem for dev, manager", description = "개발 및 운영자용 아이템 지급 API")
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> giveItem(Long userId, Long itemId, int count){
+    public ResponseEntity<CustomResponse<Void>> giveItem(Long userId, Long itemId, int count){
         itemService.giveItem(userId, itemId, count);
-        return ResponseEntity.ok(ApiResponse.ok());
+        return ResponseEntity.ok(CustomResponse.ok());
     }
 }

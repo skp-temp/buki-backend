@@ -8,7 +8,7 @@ public interface UserService {
     LoginResponse doLogin(LoginType loginType, String authProviderId, String jwt);
     SignUpResponse doSignup(SignupRequest request);
     UserResponse findById(Long id);
-    User findByLoginTypeAndAuthProviderId(LoginType loginType, String authProviderId);
+    User findByLoginTypeAndAuthProviderId(LoginType loginType, String platformProviderId);
     User findByCode(String code);
     String createJwt(Long id);
     String createTestJwt();
