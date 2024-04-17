@@ -5,9 +5,6 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum GlobalErrorCode {
-
-
-    SUCCESS(HttpStatus.OK, "G000", "요청에 성공했습니다."),
     OTHER(HttpStatus.INTERNAL_SERVER_ERROR, "G100", "서버에 오류가 발생했습니다"),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "G200", "허용되지 않은 메서드입니다"),
 
