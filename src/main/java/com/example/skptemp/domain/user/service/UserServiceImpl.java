@@ -23,10 +23,10 @@ public class UserServiceImpl implements UserService{
     private final JwtProvider jwtProvider;
 
     @Override
-    public LoginResponse doLogin(LoginType loginType, String platformProviderId, String jwt) {
-        findByLoginTypeAndAuthProviderId(loginType, platformProviderId);
-
-        return new LoginResponse(loginType, platformProviderId, jwt);
+    public LoginResponse doLogin(LoginType loginType, String platformProviderId) {
+        User user = findByLoginTypeAndAuthProviderId(loginType, platformProviderId);
+        String jwt = createJwt(user.getId());
+        return new LoginResponse(loginType, platformProviderId, user.getPushToken(), jwt);
     }
     @Transactional
     @Override

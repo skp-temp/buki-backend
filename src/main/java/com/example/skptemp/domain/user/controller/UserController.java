@@ -34,9 +34,7 @@ public class UserController {
     public ResponseEntity<CustomResponse<LoginResponse>> doLogin(HttpServletResponse response, @RequestBody LoginRequest request){
         User findUser = userService.findByLoginTypeAndAuthProviderId(request.loginType(), request.platformProviderId());
 
-        String jwt = userService.createJwt(findUser.getId());
-        LoginResponse loginResponse = userService.doLogin(request.loginType(), request.platformProviderId(), jwt);
-        response.addHeader("authorization", jwt);
+        LoginResponse loginResponse = userService.doLogin(request.loginType(), request.platformProviderId());
 
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(loginResponse));
@@ -44,12 +42,9 @@ public class UserController {
 
     @Operation(summary = "signup", description = "카카오 연동 회원 가입 API")
     @PostMapping("/sign-up")
-    public ResponseEntity<CustomResponse<SignUpResponse>> doSignup(HttpServletResponse response, @RequestBody SignupRequest signupRequest){
+    public ResponseEntity<CustomResponse<SignUpResponse>> doSignup(@RequestBody SignupRequest signupRequest){
         SignUpResponse signUpResponse = userService.doSignup(signupRequest);
-
-        User findUser = userService.findByLoginTypeAndAuthProviderId(signupRequest.loginType(), signupRequest.platformProviderId());
-        String jwt = userService.createJwt(findUser.getId()); // 부키 DB 식별자 정보를 담아 jwt 발급 (access code)
-        response.addHeader("authorization", jwt);
+        userService.findByLoginTypeAndAuthProviderId(signupRequest.loginType(), signupRequest.platformProviderId());
 
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(signUpResponse));

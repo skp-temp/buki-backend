@@ -72,7 +72,7 @@ class UserServiceTest {
         );
 
         //when
-        LoginResponse loginResponse = userService.doLogin(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, userService.createJwt(USER_ID));
+        LoginResponse loginResponse = userService.doLogin(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE);
         //then
         assertThat(loginResponse.loginType()).isEqualTo(LoginType.APPLE);
         assertThat(loginResponse.authProviderId()).isEqualTo(TEST_AUTH_PROVIDER_ID_APPLE);
