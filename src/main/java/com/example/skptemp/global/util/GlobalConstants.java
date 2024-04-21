@@ -6,4 +6,5 @@ public class GlobalConstants {
     public static final Long TEST_ACCOUNT_ID = 1L;                                  // 테스트 토큰 발급용 계정 ID
     public static final String JWT_USER_ID_KEY = "user_id";                         // jwt key user id 생성 및 조회 용도
     public static final String JWT_USER_ROLE = "role";                              // jwt key role 생성 및 조회 용도
+    public static final int MAX_LEVEL = 21;                                         // 부적 최고 레벨 제한
 }

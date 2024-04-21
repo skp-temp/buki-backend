@@ -38,10 +38,11 @@ public class CharmController {
     }
 
     @Operation(summary = "daily goal complete", description = "일일 목표 달성 처리 API")
-    @PostMapping("/completion")
+    @PostMapping("/complete")
     public ResponseEntity<CustomResponse<CharmDailyGoalCompleteResponse>> dailyGoalComplete(@RequestBody CharmDailyGoalCompleteRequest request) {
         Long userId = securityUtil.getUserIdFromContext();
-        CharmDailyGoalCompleteResponse response = charmService.dailyGoalDone(
+
+        CharmDailyGoalCompleteResponse response = charmService.dailyGoalComplete(
                 request.getCharmId(),
                 userId,
                 EmotionType.get(request.getEmotionIndex()),

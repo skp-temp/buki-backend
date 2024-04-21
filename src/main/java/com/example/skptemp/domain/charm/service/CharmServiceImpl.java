@@ -49,8 +49,12 @@ public class CharmServiceImpl implements CharmService {
 
     @Override
     @Transactional
-    public CharmDailyGoalCompleteResponse dailyGoalDone(Long charmId, Long userId, EmotionType emotionType, String comment) {
+    public CharmDailyGoalCompleteResponse dailyGoalComplete(Long charmId, Long userId, EmotionType emotionType, String comment) {
         LocalDate date = LocalDate.now();
+
+        // 일일 목표 완료 처리
+        Charm charm = findById(charmId);
+        charm.complete();
 
         ChallengeHistory challengeHistory = ChallengeHistory.builder()
                 .historyDate(date)
@@ -61,12 +65,7 @@ public class CharmServiceImpl implements CharmService {
                 .build();
         challengeHistoryRepository.save(challengeHistory);
 
-        return CharmDailyGoalCompleteResponse.builder()
-                .id(challengeHistory.getId())
-                .emotionType(emotionType)
-                .comment(comment)
-                .charmId(charmId)
-                .build();
+        return new CharmDailyGoalCompleteResponse(challengeHistory.getId(), charmId, charm.getCharmLevel());
     }
 
     @Override

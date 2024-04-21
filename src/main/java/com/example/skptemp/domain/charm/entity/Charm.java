@@ -5,6 +5,7 @@ import com.example.skptemp.global.constant.AlarmDayType;
 import com.example.skptemp.global.constant.Category;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
+import com.example.skptemp.global.util.GlobalConstants;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,14 +33,22 @@ public class Charm extends BaseEntity {
     @Id @Column(name = "charm_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    // 부적 정보
     private Long userId;
     private Category category;
     private int charmLevel;
     private String goal;
+    
+    // 부적 알림 정보
     private Boolean alarmOn;
     private LocalDateTime alarmTime;
     @Enumerated(EnumType.STRING)
     private AlarmDayType alarmDayType;
+
+    // 일일 목표 완료 여부 판단
+    private boolean todayComplete;
+
+    // 논리적 삭제 처리 여부 판단
     private boolean isValid;
 
     private void assertionAlarm(boolean alarmOn, LocalDateTime alarmTime){
@@ -52,7 +61,15 @@ public class Charm extends BaseEntity {
         this.isValid = false;
     }
     public void levelUp(){
-        if(this.charmLevel >= 21) return;
+        if(this.charmLevel >= GlobalConstants.MAX_LEVEL) return;
         charmLevel++;
+    }
+    public void complete(){
+        if(!todayComplete) {
+            this.todayComplete = true;
+            levelUp();
+        }
+        else
+            throw new GlobalException(GlobalErrorCode.CHARM_TODAY_ALREADY_COMPLETE);
     }
 }

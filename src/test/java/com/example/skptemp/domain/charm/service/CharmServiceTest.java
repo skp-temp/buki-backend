@@ -2,9 +2,11 @@ package com.example.skptemp.domain.charm.service;
 
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.request.CreateCharmRequest;
+import com.example.skptemp.domain.charm.response.CharmDailyGoalCompleteResponse;
 import com.example.skptemp.domain.charm.response.CreateCharmResponse;
 import com.example.skptemp.global.constant.AlarmDayType;
 import com.example.skptemp.global.constant.Category;
+import com.example.skptemp.global.constant.EmotionType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -47,8 +49,17 @@ class CharmServiceTest {
     @Test
     void 일일_목표_완료_성공(){
         //given
-//        charmService.
+        CreateCharmResponse createResponse = charmService.createCharm(TEST_USER_ID,
+                new CreateCharmRequest(Category.BEAUTY, TEST_GOAL, AlarmDayType.EVERYDAY, TEST_ALARM_ON, TEST_ALARM_TIME));
+        Charm charm = charmService.findById(createResponse.getCharmId());
+        int levelBeforeComplete = charm.getCharmLevel();
+
         //when
+        CharmDailyGoalCompleteResponse response = charmService.dailyGoalComplete(charm.getId(), TEST_USER_ID, EmotionType.ANGRY, "오늘은 화나는 날!");
+        charm = charmService.findById(response.charmId());
+
         //then
+        Assertions.assertThat(charm.isTodayComplete()).isEqualTo(true);
+        Assertions.assertThat(response.charmLevel()).isEqualTo(levelBeforeComplete + 1);
     }
 }
