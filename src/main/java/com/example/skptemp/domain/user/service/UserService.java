@@ -5,7 +5,7 @@ import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.global.constant.LoginType;
 
 public interface UserService {
-    LoginResponse doLogin(LoginType loginType, String authProviderId);
+    LoginResponse doLogin(LoginType loginType, String authProviderId, String pushToken);
     SignUpResponse doSignup(SignupRequest request);
     UserResponse findById(Long id);
     User findByLoginTypeAndAuthProviderId(LoginType loginType, String platformProviderId);

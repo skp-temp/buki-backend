@@ -16,6 +16,7 @@ public class UserResponse {
     private String authority;
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdatedAt;
+    private String pushToken;
 
 
     public UserResponse(User user){
@@ -27,5 +28,6 @@ public class UserResponse {
         this.authority = user.getAuthority();
         this.createdAt = user.getCreatedAt();
         this.lastUpdatedAt = user.getLastUpdatedAt();
+        this.pushToken = user.getPushToken();
     }
 }

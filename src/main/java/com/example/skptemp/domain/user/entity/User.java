@@ -58,6 +58,11 @@ public class User extends BaseEntity {
         this.lastName = lastName;
     }
 
+    public void changePushToken(String pushToken){
+        assertPushToken(pushToken);
+        this.pushToken = pushToken;
+    }
+
     private static String makeUuid(boolean hasHypen){
         if(hasHypen)
             return UUID.randomUUID().toString();
@@ -69,5 +74,10 @@ public class User extends BaseEntity {
         if(firstName.isEmpty() || lastName.isEmpty()){
             throw new GlobalException("이름 정보가 잘못 됐습니다.", GlobalErrorCode.USER_VALID_EXCEPTION);
         }
+    }
+
+    private void assertPushToken(String pushToken){
+        if(pushToken == null)
+            throw new GlobalException("push token이 유효하지 않습니다.", GlobalErrorCode.VALID_EXCEPTION);
     }
 }

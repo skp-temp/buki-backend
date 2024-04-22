@@ -31,10 +31,10 @@ public class UserController {
     )
     @Operation(summary = "login", description = "Login 작업을 수행합니다.")
     @PostMapping("/login")
-    public ResponseEntity<CustomResponse<LoginResponse>> doLogin(HttpServletResponse response, @RequestBody LoginRequest request){
-        User findUser = userService.findByLoginTypeAndAuthProviderId(request.loginType(), request.platformProviderId());
+    public ResponseEntity<CustomResponse<LoginResponse>> doLogin(@RequestBody LoginRequest request){
+        userService.findByLoginTypeAndAuthProviderId(request.loginType(), request.platformProviderId());
 
-        LoginResponse loginResponse = userService.doLogin(request.loginType(), request.platformProviderId());
+        LoginResponse loginResponse = userService.doLogin(request.loginType(), request.platformProviderId(), request.pushToken());
 
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(loginResponse));

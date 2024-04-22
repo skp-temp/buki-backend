@@ -29,6 +29,7 @@ class UserServiceTest {
     final String TEST_AUTH_PROVIDER_ID_APPLE = "apple_test";
     final String TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV = "apple_test1";
     final String TEST_PUSH_TOKEN = "..";
+    final String TEST_PUSH_TOKEN_AFTER_CHANGE = "changed_token";
     final String TEST_FIRST_NAME = "강";
     final String TEST_LAST_NAME = "동훈";
     @Test
@@ -72,10 +73,12 @@ class UserServiceTest {
         );
 
         //when
-        LoginResponse loginResponse = userService.doLogin(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE);
+        LoginResponse loginResponse = userService.doLogin(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, TEST_PUSH_TOKEN_AFTER_CHANGE);
+
         //then
         assertThat(loginResponse.loginType()).isEqualTo(LoginType.APPLE);
         assertThat(loginResponse.authProviderId()).isEqualTo(TEST_AUTH_PROVIDER_ID_APPLE);
+        assertThat(loginResponse.pushToken()).isEqualTo(TEST_PUSH_TOKEN_AFTER_CHANGE);
     }
 
     @Test
