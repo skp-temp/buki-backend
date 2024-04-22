@@ -56,8 +56,9 @@ public class CharmController {
     @GetMapping("/{charmId}")
     public ResponseEntity<CustomResponse<CharmDetailResponse>> getMyCharm(@PathVariable Long charmId) {
         Long userId = securityUtil.getUserIdFromContext();
-        CharmDetailResponse charm = charmService.getCharm(charmId, userId);
-        return ResponseEntity.ok(CustomResponse.ok(charm));
+        CharmDetailResponse response = charmService.getCharm(charmId, userId);
+
+        return ResponseEntity.ok(CustomResponse.ok(response));
     }
 
 
