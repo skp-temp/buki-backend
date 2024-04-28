@@ -76,7 +76,7 @@ public class UserController {
 
     @Operation(summary = "getUser", description = "사용자 정보 조회")
     @GetMapping("/{userId}")
-    public ResponseEntity<CustomResponse<UserResponse>> getUser(Long userId){
+    public ResponseEntity<CustomResponse<UserResponse>> getUser(@PathVariable Long userId){
         UserResponse userResponse = userService.findById(userId);
 
         return ResponseEntity.ok()

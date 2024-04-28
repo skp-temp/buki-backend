@@ -1,6 +1,7 @@
 package com.example.skptemp.domain.item.controller;
 
 import com.example.skptemp.domain.item.dto.GetUserItemResponse;
+import com.example.skptemp.domain.item.dto.GiveItemRequest;
 import com.example.skptemp.domain.item.service.ItemService;
 import com.example.skptemp.global.common.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +17,7 @@ public class ItemController {
 
     @Operation(summary = "getUserItemList", description = "특정 사용자가 보유한 아이템 정보 조회 API")
     @GetMapping("/user-item-list") //TODO: paging 적용 필요
-    public ResponseEntity<CustomResponse<GetUserItemResponse>> getUserItemList(@RequestParam Long userId){
+    public ResponseEntity<CustomResponse<GetUserItemResponse>> getUserItemList(@RequestBody Long userId){
         GetUserItemResponse response = itemService.findItemListByUserId(userId);
         return ResponseEntity.ok(CustomResponse.ok(response));
     }
@@ -37,8 +38,8 @@ public class ItemController {
 
     @Operation(summary = "giveItem for dev, manager", description = "개발 및 운영자용 아이템 지급 API")
     @PostMapping
-    public ResponseEntity<CustomResponse<Void>> giveItem(Long userId, Long itemId, int count){
-        itemService.giveItem(userId, itemId, count);
+    public ResponseEntity<CustomResponse<Void>> giveItem(@RequestBody GiveItemRequest request){
+        itemService.giveItem(request.userId(), request.itemId(), request.count());
         return ResponseEntity.ok(CustomResponse.ok());
     }
 }
