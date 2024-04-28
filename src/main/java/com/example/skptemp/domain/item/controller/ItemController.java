@@ -39,7 +39,7 @@ public class ItemController {
     @Operation(summary = "giveItem for dev, manager", description = "개발 및 운영자용 아이템 지급 API")
     @PostMapping
     public ResponseEntity<CustomResponse<Void>> giveItem(@RequestBody GiveItemRequest request){
-        itemService.giveItem(request.userId(), request.itemId(), request.count());
+        itemService.giveItem(request);
         return ResponseEntity.ok(CustomResponse.ok());
     }
 }

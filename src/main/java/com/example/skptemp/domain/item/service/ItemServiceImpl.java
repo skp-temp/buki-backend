@@ -1,6 +1,7 @@
 package com.example.skptemp.domain.item.service;
 
 import com.example.skptemp.domain.item.dto.GetUserItemResponse;
+import com.example.skptemp.domain.item.dto.GiveItemRequest;
 import com.example.skptemp.domain.item.dto.UserItemResult;
 import com.example.skptemp.domain.item.entity.Item;
 import com.example.skptemp.domain.item.entity.UserItem;
@@ -93,11 +94,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public void giveItem(Long itemId, Long userId, int count) {
-        Optional<UserItem> userItemOpt = userItemService.findByUserIdAndItemId(userId, itemId);
+    public void giveItem(GiveItemRequest request) {
+        Optional<UserItem> userItemOpt = userItemService.findByUserIdAndItemId(request.userId(), request.itemId());
 
         if(userItemOpt.isEmpty()){
-            userItemService.createUserItem(userId, itemId, count);
+            userItemService.createUserItem(request.userId(), request.itemId(), request.count());
             return;
         }
         UserItem userItem = userItemOpt.get();

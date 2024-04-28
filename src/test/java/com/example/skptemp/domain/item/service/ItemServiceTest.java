@@ -2,6 +2,7 @@ package com.example.skptemp.domain.item.service;
 
 
 import com.example.skptemp.domain.item.dto.GetUserItemResponse;
+import com.example.skptemp.domain.item.dto.GiveItemRequest;
 import com.example.skptemp.domain.item.entity.Item;
 import com.example.skptemp.domain.item.entity.ItemType;
 import com.example.skptemp.domain.item.repository.ItemRepository;
@@ -46,12 +47,12 @@ class ItemServiceTest {
         Item 테스트_아이템6 = itemRepository.save(Item.create(Category.DIET, "테스트 아이템", ItemType.EQUIPMENT));
 
         //when
-        itemService.giveItem(테스트_아이템1.getId(), user1.getId(), 2);
-        itemService.giveItem(테스트_아이템2.getId(), user1.getId(), 1);
-        itemService.giveItem(테스트_아이템3.getId(), user1.getId(), 1);
-        itemService.giveItem(테스트_아이템4.getId(), user1.getId(), 1);
-        itemService.giveItem(테스트_아이템5.getId(), user1.getId(), 1);
-        itemService.giveItem(테스트_아이템6.getId(), user1.getId(), 1);
+        itemService.giveItem(new GiveItemRequest(user1.getId(), 테스트_아이템1.getId(), 2));
+        itemService.giveItem(new GiveItemRequest(user1.getId(), 테스트_아이템2.getId(), 1));
+        itemService.giveItem(new GiveItemRequest(user1.getId(), 테스트_아이템3.getId(), 1));
+        itemService.giveItem(new GiveItemRequest(user1.getId(), 테스트_아이템4.getId(), 1));
+        itemService.giveItem(new GiveItemRequest(user1.getId(), 테스트_아이템5.getId(), 1));
+        itemService.giveItem(new GiveItemRequest(user1.getId(), 테스트_아이템6.getId(), 1));
 
         //then
         GetUserItemResponse response = itemService.findItemListByUserId(user1.getId());
