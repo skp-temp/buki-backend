@@ -1,4 +1,4 @@
-package com.example.skptemp.domain.cheer;
+package com.example.skptemp.domain.cheer.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;

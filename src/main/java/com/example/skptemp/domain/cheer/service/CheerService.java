@@ -1,5 +1,7 @@
-package com.example.skptemp.domain.cheer;
+package com.example.skptemp.domain.cheer.service;
 
+import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
+import com.example.skptemp.domain.cheer.repository.CheerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

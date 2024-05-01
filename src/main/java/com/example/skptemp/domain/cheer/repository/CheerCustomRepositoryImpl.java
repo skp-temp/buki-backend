@@ -1,5 +1,6 @@
-package com.example.skptemp.domain.cheer;
+package com.example.skptemp.domain.cheer.repository;
 
+import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
