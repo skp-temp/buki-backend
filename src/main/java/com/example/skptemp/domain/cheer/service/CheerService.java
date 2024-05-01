@@ -2,10 +2,8 @@ package com.example.skptemp.domain.cheer.service;
 
 import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
 import com.example.skptemp.domain.cheer.repository.CheerRepository;
+import com.example.skptemp.global.common.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +13,10 @@ import java.util.List;
 public class CheerService {
 
     private final CheerRepository cheerRepository;
+    private final SecurityUtil securityUtil;
 
     public List<CheerCountResponse> getCheeringFriends(boolean isDesc) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        long userId = Long.parseLong(userDetails.getUsername());
-
+        Long userId = securityUtil.getUserIdFromContext();
         return cheerRepository.getCheerCount(isDesc, userId);
     }
 }
