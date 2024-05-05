@@ -19,17 +19,7 @@ public class Badge extends BaseEntity {
     private String name;
     private String condition;
     private String tipDescription;
-    private LocalDateTime completedAt;
     private boolean isValid;
 
     protected Badge(){}
-
-    public void complete(){
-        this.completedAt = LocalDateTime.now();
-    }
-
-    public void delete(){
-        if(!isValid) throw new GlobalException(GlobalErrorCode.BADGE_ALREADY_DELETED);
-        this.isValid = false;
-    }
 }
