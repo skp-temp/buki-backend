@@ -36,6 +36,7 @@ public enum GlobalErrorCode {
 
     // 뱃지
     BADGE_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "G360", "삭제된 뱃지입니다."),
+    Badge_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G361", "뱃지가 유효하지 않습니다.");
 
     ;
     private final String code;
