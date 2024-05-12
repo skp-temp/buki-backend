@@ -1,12 +1,14 @@
 package com.example.skptemp.domain.cheer;
 
+import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
+import com.example.skptemp.domain.cheer.dto.QCheerCountResponse;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.example.skptemp.domain.cheer.QCheer.cheer;
-import static com.example.skptemp.domain.user.entity.QUser.user;
+import static com.example.skptemp.domain.cheer.entity.QCheer.cheer;
 
 
 @RequiredArgsConstructor

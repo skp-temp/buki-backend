@@ -1,4 +1,4 @@
-package com.example.skptemp.domain.cheer;
+package com.example.skptemp.domain.cheer.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
