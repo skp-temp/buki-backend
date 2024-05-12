@@ -6,7 +6,10 @@ import com.example.skptemp.domain.charm.request.CreateCharmRequest;
 import com.example.skptemp.domain.charm.response.CharmDailyGoalCompleteResponse;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.CreateCharmResponse;
+import com.example.skptemp.domain.statistics.StatisticsCategoryRankingResponse;
 import com.example.skptemp.global.constant.EmotionType;
+
+import java.util.List;
 
 public interface CharmService {
     CreateCharmResponse createCharm(Long userId, CreateCharmRequest request);
@@ -15,4 +18,9 @@ public interface CharmService {
     CharmDetailResponse getCharm(Long charmId, Long userId);
     void updateCharm(Long charmId);
     void updateCharmSetting(Long charmId, CharmSettingUpdateRequest request);
+
+    List<Charm> getOldestCharm(int size);
+
+    StatisticsCategoryRankingResponse getCategoryRanking();
+
 }

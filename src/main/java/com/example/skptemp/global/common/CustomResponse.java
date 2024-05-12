@@ -23,7 +23,7 @@ public class CustomResponse<T> {
 
     @Override
     public String toString() {
-        return "ApiResponse{" +
+        return "CustomResponse{" +
                 "status=" + status +
                 ", message='" + message + '\'' +
                 ", code='" + code + '\'' +

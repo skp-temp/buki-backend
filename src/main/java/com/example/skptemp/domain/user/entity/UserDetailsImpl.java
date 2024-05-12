@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.user.entity;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 @RequiredArgsConstructor
+@Getter
 public class UserDetailsImpl implements UserDetails {
     private static final String ROLE_PREFIX = "ROLE_";
     private final User user;

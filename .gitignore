@@ -38,3 +38,5 @@ out/
 /src/main/generated/
 
 *.yml
+
+/src/main/resources/buki-c97ff-firebase-adminsdk-qucmh-0a6cb245c5.json
