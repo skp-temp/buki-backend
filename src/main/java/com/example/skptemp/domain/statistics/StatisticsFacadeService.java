@@ -1,11 +1,12 @@
 package com.example.skptemp.domain.statistics;
 
+
 import com.example.skptemp.domain.charm.entity.ChallengeHistory;
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.service.ChallengeHistoryService;
 import com.example.skptemp.domain.charm.service.CharmService;
-import com.example.skptemp.domain.cheer.CheerCountResponse;
-import com.example.skptemp.domain.cheer.CheerService;
+import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
+import com.example.skptemp.domain.cheer.service.CheerService;
 import com.example.skptemp.domain.user.dto.UserResponse;
 import com.example.skptemp.domain.user.service.FriendRelationshipService;
 import com.example.skptemp.domain.user.service.UserService;

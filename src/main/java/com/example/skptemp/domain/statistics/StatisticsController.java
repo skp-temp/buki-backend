@@ -1,6 +1,6 @@
 package com.example.skptemp.domain.statistics;
 
-import com.example.skptemp.domain.cheer.CheerCountResponse;
+import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
 import com.example.skptemp.global.common.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
