@@ -15,17 +15,19 @@ public class Cheer {
     @Column(name = "cheer_id", nullable = false)
     private Long id;
     @NotNull
-    private Long from_user;
+    @Column(name = "from_user")
+    private Long fromUser;
     @NotNull
-    private Long to_user;
+    @Column(name = "to_user")
+    private Long toUser;
     @NotNull
     private String message;
 
 
     @PersistenceCreator
-    public Cheer(Long from_user, Long to_user, String message) {
-        this.from_user = from_user;
-        this.to_user = to_user;
+    public Cheer(Long fromUser, Long toUser, String message) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
         this.message = message;
     }
 }
