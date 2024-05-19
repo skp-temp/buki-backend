@@ -9,6 +9,8 @@ import com.example.skptemp.domain.charm.request.CreateCharmRequest;
 import com.example.skptemp.domain.charm.response.CharmDailyGoalCompleteResponse;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.CreateCharmResponse;
+import com.example.skptemp.domain.statistics.StatisticsCategoryRankingResponse;
+import com.example.skptemp.global.common.SecurityStaticUtil;
 import com.example.skptemp.global.constant.EmotionType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Transactional(readOnly = true)
 @Service
@@ -89,5 +92,17 @@ public class CharmServiceImpl implements CharmService {
 
     private void assertCharm(Long charmId){
         charmRepository.findById(charmId);
+    }
+
+    @Override
+    public List<Charm> getOldestCharm(int size) {
+        Long userId = SecurityStaticUtil.getUserId();
+        return charmRepository.getOldestCharm(userId, size);
+    }
+
+    @Override
+    public StatisticsCategoryRankingResponse getCategoryRanking() {
+        Long userId = SecurityStaticUtil.getUserId();
+        return charmRepository.getCategoryRanking(userId);
     }
 }

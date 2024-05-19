@@ -17,8 +17,9 @@ public class CheerCountResponse {
     private String name;
 
     @QueryProjection
-    public CheerCountResponse(Long count, Long from) {
+    public CheerCountResponse(Long count, Long from,String name) {
         this.count = count;
         this.from = from;
+        this.name = name;
     }
 }

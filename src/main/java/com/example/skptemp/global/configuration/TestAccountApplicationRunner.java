@@ -19,10 +19,14 @@ import java.time.LocalDateTime;
 public class TestAccountApplicationRunner implements ApplicationRunner {
     private final UserRepository userRepository;
     private final CharmRepository charmRepository;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        User user1 = userRepository.save(User.createUser(LoginType.KAKAO, "1", "강1", "동훈",".."));
-        User user2 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "강2", "동훈",".."));
+        User user1 = userRepository.save(User.createUser(LoginType.KAKAO, "1", "강1", "동훈", ".."));
+        User user2 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "강2", "동훈", ".."));
+        userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규1", "최", ".."));
+        userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규2", "최", ".."));
+        userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규3", "최", ".."));
 
         Charm charm1 = charmRepository.save(Charm.builder()
                 .userId(user1.getId())

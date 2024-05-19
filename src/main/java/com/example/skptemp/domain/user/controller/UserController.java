@@ -1,7 +1,6 @@
 package com.example.skptemp.domain.user.controller;
 
 import com.example.skptemp.domain.user.dto.*;
-import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.configuration.JwtProvider;
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +59,7 @@ public class UserController {
     @Operation(summary = "createToken100Days", description = "개발 용 access 토큰 발급 (유효 기간 100일)")
     @PostMapping("/create-token-100days")
     public ResponseEntity<CustomResponse<TokenResponse>> createToken100Days(){
-        String jwt = userService.createJwt(1L);
+        String jwt = userService.createJwt(3L);
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(new TokenResponse(jwt)));
     }
