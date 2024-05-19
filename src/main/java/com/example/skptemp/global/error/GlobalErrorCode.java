@@ -34,6 +34,9 @@ public enum GlobalErrorCode {
     // 선물(??)
     USER_ITEM_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G350", "유저 혹은 아이템 정보가 유효하지 않습니다."),
 
+    // 뱃지
+    BADGE_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "G360", "삭제된 뱃지입니다."),
+    Badge_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G361", "뱃지가 유효하지 않습니다.");
 
     ;
     private final String code;
