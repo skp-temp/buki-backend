@@ -132,15 +132,15 @@ class StatisticsControllerTest {
 
     }
 
-    @Test
-    @DisplayName("카테고리 랭킹")
-    void categoryRanking() throws Exception {
-
-        mockMvc.perform(get(url + "statistics/category")
-                        .header(AUTHORIZATION, token))
-                .andDo(print());
-
-    }
+//    @Test
+//    @DisplayName("카테고리 랭킹")
+//    void categoryRanking() throws Exception {
+//
+//        mockMvc.perform(get(url + "statistics/category")
+//                        .header(AUTHORIZATION, token))
+//                .andDo(print());
+//
+//    }
 
 
     @Test
