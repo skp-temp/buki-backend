@@ -1,7 +1,6 @@
 package com.example.skptemp.domain.badge.controller;
 
 import com.example.skptemp.domain.badge.service.BadgeService;
-import com.example.skptemp.domain.badge.service.UserBadgeService;
 
 import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.common.SecurityUtil;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BadgeController {
     private final BadgeService badgeService;
-    private final UserBadgeService userBadgeService;
     private final SecurityUtil securityUtil;
 
     @GetMapping("/status")
