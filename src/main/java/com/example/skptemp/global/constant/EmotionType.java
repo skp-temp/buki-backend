@@ -7,7 +7,7 @@ public enum EmotionType {
     SAD("슬픔"),
     ANGRY("분노");
 
-    String name;
+    final String name;
 
     EmotionType(String name){
         this.name = name;
