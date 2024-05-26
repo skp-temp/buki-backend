@@ -90,12 +90,12 @@ class StatisticsControllerTest {
         );
         challengeHistoryRepository.save(new ChallengeHistory(3L, charm.getId(), LocalDate.now(), EmotionType.JOY, "기록 1"));
 
-        entityManager.persist(new Cheer(3L, 5L, "message 1"));
-        entityManager.persist(new Cheer(3L, 6L, "message 2"));
-        entityManager.persist(new Cheer(3L, 7L, "message 3"));
+        entityManager.persist(new Cheer(3L, 5L, "message 1",1L));
+        entityManager.persist(new Cheer(3L, 6L, "message 2",1L));
+        entityManager.persist(new Cheer(3L, 7L, "message 3",1L));
 
-        entityManager.persist(new Cheer(5L, 3L, "message 4"));
-        entityManager.persist(new Cheer(5L, 3L, "message 5"));
+        entityManager.persist(new Cheer(5L, 3L, "message 4",1L));
+        entityManager.persist(new Cheer(5L, 3L, "message 5",1L));
     }
 
     @Test

@@ -53,7 +53,7 @@ public class BadgeServiceImpl implements BadgeService {
     public void createBadge(String name, String condition, String tipDescription, BadgeType badgeType) {
         Badge badge = Badge.builder()
                 .name(name)
-                .condition(condition)
+                .conditions(condition)
                 .tipDescription(tipDescription)
                 .badgeType(badgeType)
                 .build();

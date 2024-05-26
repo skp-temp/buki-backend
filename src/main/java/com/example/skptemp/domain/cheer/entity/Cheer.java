@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.cheer.entity;
 
+import com.example.skptemp.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -9,7 +10,8 @@ import org.springframework.data.annotation.PersistenceCreator;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Cheer {
+public class Cheer extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cheer_id", nullable = false)
@@ -23,11 +25,15 @@ public class Cheer {
     @NotNull
     private String message;
 
+    @NotNull
+    private Long charmId;
+
 
     @PersistenceCreator
-    public Cheer(Long fromUser, Long toUser, String message) {
+    public Cheer(Long fromUser, Long toUser, String message, Long charmId) {
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.message = message;
+        this.charmId = charmId;
     }
 }

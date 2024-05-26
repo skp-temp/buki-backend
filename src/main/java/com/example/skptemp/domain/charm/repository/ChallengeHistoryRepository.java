@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ChallengeHistoryRepository extends JpaRepository<ChallengeHistory, Long>, ChallengeHistoryCustomRepository {
 
 
@@ -17,6 +19,8 @@ public interface ChallengeHistoryRepository extends JpaRepository<ChallengeHisto
             GROUP BY c.category,ch.emotion_type
             """, nativeQuery = true)
     MostEmotionResponse getMostEmotion(@Param("userId") Long userId);
+
+    List<ChallengeHistory> findByUserIdAndCharmId(Long userId, Long charmId);
 
 
 }
