@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -49,6 +51,8 @@ public class CharmControllerTest {
     @Autowired
     private UserService userService;
     @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
     CharmRepository charmRepository;
     @Autowired
     EntityManager entityManager;
@@ -58,18 +62,22 @@ public class CharmControllerTest {
 
     @Autowired
     private ChallengeHistoryRepository challengeHistoryRepository;
-    private String token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJfaWQiOjMsImlhdCI6MTcxNDk4OTgwMCwiZXhwIjoxNzIzNjI5ODAwLCJzdWIiOiIzIn0.GzMV01hfn1YTJG_DPT-zAr39n3XKY0AfSScjKM_DKv0";
+    private String token;
 
     private String url = "http://localhost:8080/";
     private Charm charm;
 
     @BeforeEach
     void setup() {
-
+        // create charm
         charm = new Charm(3L, Category.DIET, "다이어트 짱짱 걸", false, AlarmDayType.WEEKDAY, LocalDateTime.now());
         entityManager.persist(charm);
         ChallengeHistory challengeHistory = new ChallengeHistory(3L, charm.getId(), LocalDate.now(), EmotionType.JOY, "즐거워!");
         entityManager.persist(challengeHistory);
+
+        // create-token
+        UserDetails userDetails = userDetailsService.loadUserByUsername("1");
+        token = jwtProvider.createTestToken(userDetails);
 
         Cheer cheer = new Cheer(1L, 3L, "안뇽", charm.getId());
         entityManager.persist(cheer);
