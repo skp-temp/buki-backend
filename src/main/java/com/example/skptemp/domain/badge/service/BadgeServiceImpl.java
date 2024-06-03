@@ -50,10 +50,10 @@ public class BadgeServiceImpl implements BadgeService {
 
     @Transactional
     @Override
-    public void createBadge(String name, String condition, String tipDescription, BadgeType badgeType) {
+    public void createBadge(String name, String badgeCondition, String tipDescription, BadgeType badgeType) {
         Badge badge = Badge.builder()
                 .name(name)
-                .conditions(condition)
+                .badgeCondition(badgeCondition)
                 .tipDescription(tipDescription)
                 .badgeType(badgeType)
                 .build();
