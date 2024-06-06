@@ -1,12 +1,11 @@
 package com.example.skptemp.domain.charm.service;
 
-import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
-import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
-import com.example.skptemp.domain.charm.dto.CompleteTodayRequest;
-import com.example.skptemp.domain.charm.dto.StampResponse;
+import com.example.skptemp.domain.charm.dto.*;
 import com.example.skptemp.domain.charm.entity.ChallengeHistory;
 import com.example.skptemp.domain.charm.entity.Charm;
+import com.example.skptemp.domain.charm.entity.CharmItem;
 import com.example.skptemp.domain.charm.repository.ChallengeHistoryRepository;
+import com.example.skptemp.domain.charm.repository.CharmItemRepository;
 import com.example.skptemp.domain.charm.repository.CharmRepository;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.request.CreateCharmRequest;
@@ -36,9 +35,22 @@ import java.util.Optional;
 public class CharmServiceImpl implements CharmService {
 
     private final CharmRepository charmRepository;
+    private final CharmItemRepository charmItemRepository;
     private final ChallengeHistoryRepository challengeHistoryRepository;
     private final UserItemRepository userItemRepository;
     private final CheerRepository cheerRepository;
+
+    @Override
+    public void itemCharmModify(ItemCharmRequest request) {
+//        CharmItem
+        List<Long> itemIdList = request.getItemIdList();
+        charmItemRepository.deleteByCharmId(request.getCharmId());
+        List<CharmItem> charmItemList = itemIdList.stream().map(
+                id -> new CharmItem(request.getCharmId(), id)
+        ).toList();
+
+        charmItemRepository.saveAll(charmItemList);
+    }
 
     @Override
     public List<CheerMessageResponse> getCheerMessage(Long charmId) {

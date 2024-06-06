@@ -1,9 +1,6 @@
 package com.example.skptemp.domain.charm.controller;
 
-import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
-import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
-import com.example.skptemp.domain.charm.dto.CompleteTodayRequest;
-import com.example.skptemp.domain.charm.dto.StampResponse;
+import com.example.skptemp.domain.charm.dto.*;
 import com.example.skptemp.domain.charm.request.CharmDailyGoalCompleteRequest;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.request.CreateCharmRequest;
@@ -102,7 +99,7 @@ public class CharmController {
 
     @GetMapping("/{charmId}/items")
     @Operation(description = "부적이 장착할 수 있는 아이템 목록")
-    public void getCharmEquipableItemList(@PathVariable Long charmId){
+    public void getCharmEquipableItemList(@PathVariable Long charmId) {
 
         charmService.getEquipableItemList();
     }
@@ -112,4 +109,13 @@ public class CharmController {
     public ResponseEntity<CustomResponse<List<CheerMessageResponse>>> getCheeringMessage(@PathVariable Long charmId) {
         return CustomResponse.okResponseEntity(charmService.getCheerMessage(charmId));
     }
+
+    @PatchMapping("/{charmId}/modfiy")
+    @Operation(description = "부적 아이템 장착 편집하기")
+    public ResponseEntity<CustomResponse<Void>> itemCharmModify(@RequestBody ItemCharmRequest request) {
+
+        charmService.itemCharmModify(request);
+        return ResponseEntity.ok(CustomResponse.ok());
+    }
+
 }
