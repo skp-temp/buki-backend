@@ -1,4 +1,4 @@
-package com.example.skptemp.config;
+package com.example.skptemp.global.configuration;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

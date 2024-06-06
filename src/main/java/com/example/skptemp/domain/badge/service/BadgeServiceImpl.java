@@ -32,8 +32,11 @@ public class BadgeServiceImpl implements BadgeService {
         userBadgeRepository.save(userBadge);
     }
 
+    @Transactional
     @Override
     public void refreshUserBadgeInfo(Long userId) {
+        //TODO: 뱃지 획득 조건과 현재 사용자 달성 정보를 비교해서 뱃지 취득 처리
+
 
     }
 
