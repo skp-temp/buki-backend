@@ -26,6 +26,10 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private LoginType loginType;         // authentication 플랫폼 타입
     private String platformProviderId ;  // authentication 플랫폼 제공 identifier
+
+    private boolean gachaStatus;    // 뽑기 상태
+    private int gachaCount = 0;     // 누적 뽑기 횟수
+
     private String authority;
     private boolean isValid;        // 논리적 삭제 처리를 위함
 
@@ -40,6 +44,10 @@ public class User extends BaseEntity {
         this.lastName = lastName;
         this.authority = authority;
         this.pushToken = pushToken;
+
+        this.gachaStatus = false;
+        this.gachaCount = 0;
+
         this.isValid = true;
     }
 
@@ -58,7 +66,7 @@ public class User extends BaseEntity {
         this.lastName = lastName;
     }
 
-    public void changePushToken(String pushToken){
+    public void changePushToken(String pushToken) {
         assertPushToken(pushToken);
         this.pushToken = pushToken;
     }
