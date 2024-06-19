@@ -25,14 +25,16 @@ public class ItemController {
     //TODO: 뽑기 API 개발
     @Operation(summary = "doGacha", description = "뽑기 API")
     @PostMapping("/gacha")
-    public ResponseEntity<CustomResponse<Void>> doGacha(){
-        return ResponseEntity.ok(CustomResponse.ok());
+    public ResponseEntity<CustomResponse<Long>> doGacha(){
+        Long itemId = itemService.gacha();
+        return ResponseEntity.ok(CustomResponse.ok(itemId));
     }
 
     //TODO: 뽑기 가능 여부 조회 API 개발
     @Operation(summary = "getGachaCondition", description = "뽑기 가능 여부 조회")
     @GetMapping("/gacha-condition")
     public ResponseEntity<CustomResponse<Void>> getGachaCondition(){
+
         return ResponseEntity.ok(CustomResponse.ok());
     }
 
