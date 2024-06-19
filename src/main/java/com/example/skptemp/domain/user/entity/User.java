@@ -17,7 +17,7 @@ public class User extends BaseEntity {
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String code; // 친구 추가 용도 발급 코드를 의미
+    private String code; // 친구 추가 용도 발급 코드를 의미 TODO: 복사하고 싶은 코드로 개선 필요
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
