@@ -26,8 +26,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private LoginType loginType;         // authentication 플랫폼 타입
     private String platformProviderId ;  // authentication 플랫폼 제공 identifier
-
-    private boolean gachaStatus;    // 뽑기 상태
+    private boolean gachaEnable;    // 뽑기 상태
     private int gachaCount = 0;     // 누적 뽑기 횟수
 
     private String authority;
@@ -45,7 +44,7 @@ public class User extends BaseEntity {
         this.authority = authority;
         this.pushToken = pushToken;
 
-        this.gachaStatus = false;
+        this.gachaEnable = true;
         this.gachaCount = 0;
 
         this.isValid = true;

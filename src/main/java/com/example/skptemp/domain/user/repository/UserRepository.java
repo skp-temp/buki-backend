@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByCodeAndIsValidIsTrue(String code);
     @Modifying
     @Transactional
-    @Query("UPDATE User u SET u.gachaStatus = false")
+    @Query("UPDATE User u SET u.gachaEnable = false")
     void updateAllGachaStatusToFalse();
 }

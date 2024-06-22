@@ -115,6 +115,10 @@ public class ItemServiceImpl implements ItemService {
 
     private Long getRandomItemId(){
         long count = itemRepository.count();
+        if(count == 0){
+            throw new GlobalException(GlobalErrorCode.OTHER);
+        }
+
         Random random = new Random();
         return random.nextLong(count) + 1;
     }
