@@ -40,7 +40,7 @@ public class StatisticsFacadeService {
     // 디자인 컴포 1번
     public StatisticsUserResponse getUserStatistics() {
         Long userId = SecurityStaticUtil.getUserId();
-        UserResponse user = userService.findById(userId);
+        UserResponse user = userService.findByUserId(userId);
         LocalDateTime createdAt = user.getCreatedAt();
         long days = (Duration.between(createdAt, LocalDateTime.now()).getSeconds()) / 86400;
         return new StatisticsUserResponse(days);

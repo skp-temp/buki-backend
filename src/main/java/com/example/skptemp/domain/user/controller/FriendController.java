@@ -37,7 +37,7 @@ public class FriendController {
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = securityUtil.getUserIdFromContext();
-        UserResponse userResponse = userService.findById(userId);
+        UserResponse userResponse = userService.findByUserId(userId);
 
         // 자기 자신과 친구 관계 생성 불가.
         if(userResponse.getCode().equals(request.getUserCode())){

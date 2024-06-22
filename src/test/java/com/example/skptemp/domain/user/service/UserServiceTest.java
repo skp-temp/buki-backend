@@ -94,7 +94,7 @@ class UserServiceTest {
         userService.deleteUser(userId);
 
         //then
-        Assertions.assertThrows(GlobalException.class, () -> userService.findById(userId));
+        Assertions.assertThrows(GlobalException.class, () -> userService.findByUserId(userId));
     }
 
     @Test
