@@ -2,7 +2,7 @@ package com.example.skptemp.domain.cheer.service;
 
 import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
 import com.example.skptemp.domain.cheer.repository.CheerRepository;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,10 @@ public class CheerService {
     public List<CheerCountResponse> getCheeringFriends() {
 
 
-        return cheerRepository.getCheerCount(SecurityStaticUtil.getUserId());
+        return cheerRepository.getCheerCount(SecurityUtil.getUserId());
     }
 
     public List<CheerCountResponse> getCheeredFriends() {
-        return cheerRepository.getCheeredCount(SecurityStaticUtil.getUserId());
+        return cheerRepository.getCheeredCount(SecurityUtil.getUserId());
     }
 }

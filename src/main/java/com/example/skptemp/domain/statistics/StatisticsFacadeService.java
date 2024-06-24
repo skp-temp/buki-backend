@@ -10,7 +10,7 @@ import com.example.skptemp.domain.cheer.service.CheerService;
 import com.example.skptemp.domain.user.dto.UserResponse;
 import com.example.skptemp.domain.user.service.FriendRelationshipService;
 import com.example.skptemp.domain.user.service.UserService;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +39,7 @@ public class StatisticsFacadeService {
 
     // 디자인 컴포 1번
     public StatisticsUserResponse getUserStatistics() {
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         UserResponse user = userService.findByUserId(userId);
         LocalDateTime createdAt = user.getCreatedAt();
         long days = (Duration.between(createdAt, LocalDateTime.now()).getSeconds()) / 86400;

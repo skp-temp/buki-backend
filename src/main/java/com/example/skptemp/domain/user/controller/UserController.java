@@ -3,7 +3,7 @@ package com.example.skptemp.domain.user.controller;
 import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.CustomResponse;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import com.example.skptemp.global.configuration.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -105,7 +105,7 @@ public class UserController {
     @Operation(summary = "getGachaCondition", description = "뽑기 가능 여부 조회")
     @GetMapping("/gacha-condition")
     public ResponseEntity<CustomResponse<GetGachaStatusResponse>> getGachaCondition(){
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         GetGachaStatusResponse response = userService.getGachaStatus(userId);
 
         return ResponseEntity.ok(CustomResponse.ok(response));

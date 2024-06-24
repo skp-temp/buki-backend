@@ -5,7 +5,7 @@ import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.service.FriendRelationshipService;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.CustomResponse;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +35,7 @@ public class FriendController {
     @Operation(summary = "createFriend", description = "친구 추가 API")
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         UserResponse userResponse = userService.findByUserId(userId);
 
         // 자기 자신과 친구 관계 생성 불가.
@@ -51,7 +51,7 @@ public class FriendController {
     @Operation(summary = "deleteFriend", description = "친구 삭제 API")
     @DeleteMapping("/{friend-id}")
     ResponseEntity<CustomResponse<Void>> deleteFriend(@RequestBody FriendDeleteRequest request){
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         friendRelationshipService.deleteFriendRelationship(userId, request.getFriendId());
         return ResponseEntity.ok(CustomResponse.ok());
     }
