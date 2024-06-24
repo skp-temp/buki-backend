@@ -24,8 +24,9 @@ public class FriendController {
     private final UserService userService;
 
     @Operation(summary = "getFriendList", description = "사용자 친구 리스트 조회 API")
-    @GetMapping("/{user-id}")
-    ResponseEntity<CustomResponse<FriendResponse>> getFriendList(@Valid Long userId){
+    @GetMapping
+    ResponseEntity<CustomResponse<FriendResponse>> getFriendList(){
+        Long userId = SecurityUtil.getUserId();
         List<FriendResult> friendRelationshipList = friendRelationshipService.findFriendRelationshipList(userId);
 
         return ResponseEntity.ok()
