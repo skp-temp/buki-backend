@@ -16,7 +16,7 @@ import com.example.skptemp.domain.charm.response.CreateCharmResponse;
 import com.example.skptemp.domain.cheer.repository.CheerRepository;
 import com.example.skptemp.domain.item.repository.UserItemRepository;
 import com.example.skptemp.domain.statistics.StatisticsCategoryRankingResponse;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import com.example.skptemp.global.constant.EmotionType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -58,14 +58,14 @@ public class CharmServiceImpl implements CharmService {
 
     @Override
     public void completeToday(CompleteTodayRequest request) {
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         challengeHistoryRepository.save(new ChallengeHistory(userId, request.getCharmId(), LocalDate.now(), request.getEmotionType(), request.getComment()));
     }
 
     @Override
     public List<StampResponse> getStamp(Long charmId) {
 
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         List<ChallengeHistory> historyList = challengeHistoryRepository.findByUserIdAndCharmId(userId, charmId);
 
         List<StampResponse> stampResponsesList = new ArrayList<>(Collections.nCopies(21, new StampResponse()));
@@ -150,13 +150,13 @@ public class CharmServiceImpl implements CharmService {
 
     @Override
     public List<Charm> getOldestCharm(int size) {
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         return charmRepository.getOldestCharm(userId, size);
     }
 
     @Override
     public StatisticsCategoryRankingResponse getCategoryRanking() {
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         return charmRepository.getCategoryRanking(userId);
     }
 }

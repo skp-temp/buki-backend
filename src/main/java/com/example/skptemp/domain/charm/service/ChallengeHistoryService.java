@@ -3,7 +3,7 @@ package com.example.skptemp.domain.charm.service;
 import com.example.skptemp.domain.charm.entity.ChallengeHistory;
 import com.example.skptemp.domain.charm.repository.ChallengeHistoryRepository;
 import com.example.skptemp.domain.statistics.MostEmotionResponse;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class ChallengeHistoryService {
 
     public MostEmotionResponse getMostEmotionsStatistics() {
 
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         return challengeHistoryRepository.getMostEmotion(userId);
 
     }
