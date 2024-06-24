@@ -3,6 +3,7 @@ package com.example.skptemp.domain.user.controller;
 import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.CustomResponse;
+import com.example.skptemp.global.common.SecurityStaticUtil;
 import com.example.skptemp.global.configuration.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final JwtProvider jwtProvider;
-
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "로그인 성공"),
@@ -75,7 +75,7 @@ public class UserController {
     @Operation(summary = "getUser", description = "사용자 정보 조회")
     @GetMapping("/{userId}")
     public ResponseEntity<CustomResponse<UserResponse>> getUser(@PathVariable Long userId){
-        UserResponse userResponse = userService.findById(userId);
+        UserResponse userResponse = userService.findByUserId(userId);
 
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(userResponse));
@@ -101,5 +101,13 @@ public class UserController {
 
         return ResponseEntity.ok()
                 .body(CustomResponse.ok());
+    }
+    @Operation(summary = "getGachaCondition", description = "뽑기 가능 여부 조회")
+    @GetMapping("/gacha-condition")
+    public ResponseEntity<CustomResponse<GetGachaStatusResponse>> getGachaCondition(){
+        Long userId = SecurityStaticUtil.getUserId();
+        GetGachaStatusResponse response = userService.getGachaStatus(userId);
+
+        return ResponseEntity.ok(CustomResponse.ok(response));
     }
 }

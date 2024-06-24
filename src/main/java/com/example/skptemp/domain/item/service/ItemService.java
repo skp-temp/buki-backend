@@ -10,4 +10,5 @@ public interface ItemService {
     int getTotalItemCount(Long userId);
     void transferItem(Long userId, Long friendId, Long itemId, int count);
     void giveItem(GiveItemRequest request);
+    Long gacha();
 }

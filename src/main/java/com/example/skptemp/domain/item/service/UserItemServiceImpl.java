@@ -1,6 +1,7 @@
 package com.example.skptemp.domain.item.service;
 
 import com.example.skptemp.domain.item.entity.UserItem;
+import com.example.skptemp.domain.item.repository.ItemRepository;
 import com.example.skptemp.domain.item.repository.UserItemRepository;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Service
 public class UserItemServiceImpl implements UserItemService{
     private final UserItemRepository userItemRepository;
+    private final ItemRepository itemRepository;
     @Override
     public Optional<UserItem> findByUserIdAndItemId(Long userId, Long itemId) {
         return userItemRepository.findByUserIdAndItemId(userId, itemId); // find: 존재하지 않는 경우 존재
@@ -28,6 +30,7 @@ public class UserItemServiceImpl implements UserItemService{
         return userItemOpt.get();
     }
 
+    @Transactional
     @Override
     public UserItem createUserItem(Long userId, Long itemId, int count) {
         UserItem userItem = UserItem.create(userId, itemId);

@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SecurityStaticUtil {
+public class SecurityStaticUtil { //TODO: 기존 SecurityUtil 코드와 중복됩니다. (통합 필요)
 
     public static Long getUserId(){
 

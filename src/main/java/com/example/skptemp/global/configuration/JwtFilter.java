@@ -40,11 +40,15 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         Long userId = jwtProvider.getUserId(token);
-        userService.validateUserOrThrow(userId);
+        validateUserOrThrow(userId);
 
         Authentication authentication = jwtProvider.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
+    }
+
+    private void validateUserOrThrow(Long id){
+        userService.findByUserId(id);
     }
 }

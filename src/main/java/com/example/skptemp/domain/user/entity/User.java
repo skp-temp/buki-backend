@@ -17,7 +17,7 @@ public class User extends BaseEntity {
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String code; // 친구 추가 용도 발급 코드를 의미
+    private String code; // 친구 추가 용도 발급 코드를 의미 TODO: 복사하고 싶은 코드로 개선 필요
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -26,8 +26,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private LoginType loginType;         // authentication 플랫폼 타입
     private String platformProviderId ;  // authentication 플랫폼 제공 identifier
-
-    private boolean gachaStatus;    // 뽑기 상태
+    private boolean gachaEnable;    // 뽑기 상태
     private int gachaCount = 0;     // 누적 뽑기 횟수
 
     private String authority;
@@ -45,7 +44,7 @@ public class User extends BaseEntity {
         this.authority = authority;
         this.pushToken = pushToken;
 
-        this.gachaStatus = false;
+        this.gachaEnable = true;
         this.gachaCount = 0;
 
         this.isValid = true;
