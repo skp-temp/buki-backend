@@ -12,7 +12,7 @@ import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.CreateCharmResponse;
 import com.example.skptemp.domain.charm.service.CharmService;
 import com.example.skptemp.global.common.CustomResponse;
-import com.example.skptemp.global.common.SecurityUtil;
+import com.example.skptemp.global.common.SecurityStaticUtil;
 import com.example.skptemp.global.constant.EmotionType;
 import com.example.skptemp.global.error.GlobalSuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,12 +29,11 @@ import java.util.List;
 public class CharmController {
 
     private final CharmService charmService;
-    private final SecurityUtil securityUtil;
 
     @Operation(summary = "create charm", description = "부적 생성 API")
     @PostMapping
     public ResponseEntity<CustomResponse<CreateCharmResponse>> createCharm(@Valid @RequestBody CreateCharmRequest request) {
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityStaticUtil.getUserId();
 
         CreateCharmResponse response = charmService.createCharm(userId, request);
         return new ResponseEntity<>(
@@ -45,7 +44,7 @@ public class CharmController {
     @Operation(summary = "daily goal complete", description = "일일 목표 달성 처리 API")
     @PostMapping("/complete")
     public ResponseEntity<CustomResponse<CharmDailyGoalCompleteResponse>> dailyGoalComplete(@RequestBody CharmDailyGoalCompleteRequest request) {
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityStaticUtil.getUserId();
 
         CharmDailyGoalCompleteResponse response = charmService.dailyGoalComplete(
                 request.getCharmId(),
@@ -60,7 +59,7 @@ public class CharmController {
     @Operation(summary = "getMyCharm", description = "부적 정보 조회 API")
     @GetMapping("/{charmId}")
     public ResponseEntity<CustomResponse<CharmDetailResponse>> getMyCharm(@PathVariable Long charmId) {
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityStaticUtil.getUserId();
         CharmDetailResponse response = charmService.getCharm(charmId, userId);
 
         return ResponseEntity.ok(CustomResponse.ok(response));

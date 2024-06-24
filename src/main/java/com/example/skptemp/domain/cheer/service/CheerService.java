@@ -3,7 +3,6 @@ package com.example.skptemp.domain.cheer.service;
 import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
 import com.example.skptemp.domain.cheer.repository.CheerRepository;
 import com.example.skptemp.global.common.SecurityStaticUtil;
-import com.example.skptemp.global.common.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

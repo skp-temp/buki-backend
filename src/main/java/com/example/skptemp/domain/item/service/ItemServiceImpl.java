@@ -7,7 +7,7 @@ import com.example.skptemp.domain.item.entity.Item;
 import com.example.skptemp.domain.item.entity.UserItem;
 import com.example.skptemp.domain.item.repository.ItemRepository;
 import com.example.skptemp.domain.item.repository.UserItemRepository;
-import com.example.skptemp.global.common.SecurityUtil;
+import com.example.skptemp.global.common.SecurityStaticUtil;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,6 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserItemRepository userItemRepository;
     private final UserItemService userItemService;
-    private final SecurityUtil securityUtil;
     @Override
     public GetUserItemResponse findItemListByUserId(Long userId) {
         List<UserItem> userItemList = userItemRepository.findByUserId(userId);
@@ -108,7 +107,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Long gacha(){
         Long itemId = getRandomItemId();
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityStaticUtil.getUserId();
         userItemService.createUserItem(userId, itemId, 1);
         return itemId;
     }

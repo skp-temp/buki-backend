@@ -4,7 +4,7 @@ import com.example.skptemp.domain.item.dto.GetUserItemResponse;
 import com.example.skptemp.domain.item.dto.GiveItemRequest;
 import com.example.skptemp.domain.item.service.ItemService;
 import com.example.skptemp.global.common.CustomResponse;
-import com.example.skptemp.global.common.SecurityUtil;
+import com.example.skptemp.global.common.SecurityStaticUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ItemController {
     private final ItemService itemService;
-    private final SecurityUtil securityUtil;
 
     @Operation(summary = "getUserItemList", description = "특정 사용자가 보유한 아이템 정보 조회 API")
     @GetMapping("/user-item-list") //TODO: paging 적용 필요
     public ResponseEntity<CustomResponse<GetUserItemResponse>> getUserItemList(){
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityStaticUtil.getUserId();
         GetUserItemResponse response = itemService.findItemListByUserId(userId);
 
         return ResponseEntity.ok(CustomResponse.ok(response));

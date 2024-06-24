@@ -3,7 +3,7 @@ package com.example.skptemp.domain.badge.controller;
 import com.example.skptemp.domain.badge.service.BadgeService;
 
 import com.example.skptemp.global.common.CustomResponse;
-import com.example.skptemp.global.common.SecurityUtil;
+import com.example.skptemp.global.common.SecurityStaticUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BadgeController {
     private final BadgeService badgeService;
-    private final SecurityUtil securityUtil;
 
     @GetMapping("/status")
     public ResponseEntity<CustomResponse<Void>> getBadgeStatus(){
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityStaticUtil.getUserId();
 
         return null;
     }
@@ -34,7 +33,7 @@ public class BadgeController {
     @Operation(description = "refreshBadgeStatus", summary = "badge 달성 정보 갱신")
     @PostMapping("/status")
     public ResponseEntity<CustomResponse<Void>> refreshBadgeStatus(){
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityStaticUtil.getUserId();
         return null;
     }
 }
