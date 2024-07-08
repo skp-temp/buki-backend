@@ -7,12 +7,12 @@ import com.example.skptemp.global.constant.LoginType;
 public interface UserService {
     LoginResponse doLogin(LoginType loginType, String authProviderId, String pushToken);
     SignUpResponse doSignup(SignupRequest request);
-    UserResponse findById(Long id);
+    UserResponse findByUserId(Long id);
     User findByLoginTypeAndAuthProviderId(LoginType loginType, String platformProviderId);
     User findByCode(String code);
     String createJwt(Long id);
     String createTestJwt();
     UserResponse changeUserName(UserChangeNameRequest request);
     void deleteUser(Long id);
-    void validateUserOrThrow(Long id);
+    GetGachaStatusResponse getGachaStatus(Long id);
 }

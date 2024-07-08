@@ -1,8 +1,11 @@
 package com.example.skptemp.domain.charm.controller;
 
+import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
+import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
+import com.example.skptemp.domain.charm.dto.CompleteTodayRequest;
+import com.example.skptemp.domain.charm.dto.StampResponse;
 import com.example.skptemp.domain.charm.request.CharmDailyGoalCompleteRequest;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
-import com.example.skptemp.domain.charm.request.CharmUpdateRequest;
 import com.example.skptemp.domain.charm.request.CreateCharmRequest;
 import com.example.skptemp.domain.charm.response.CharmDailyGoalCompleteResponse;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
@@ -18,18 +21,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/charms")
 @RequiredArgsConstructor
 public class CharmController {
 
     private final CharmService charmService;
-    private final SecurityUtil securityUtil;
 
     @Operation(summary = "create charm", description = "부적 생성 API")
     @PostMapping
     public ResponseEntity<CustomResponse<CreateCharmResponse>> createCharm(@Valid @RequestBody CreateCharmRequest request) {
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityUtil.getUserId();
 
         CreateCharmResponse response = charmService.createCharm(userId, request);
         return new ResponseEntity<>(
@@ -40,7 +44,7 @@ public class CharmController {
     @Operation(summary = "daily goal complete", description = "일일 목표 달성 처리 API")
     @PostMapping("/complete")
     public ResponseEntity<CustomResponse<CharmDailyGoalCompleteResponse>> dailyGoalComplete(@RequestBody CharmDailyGoalCompleteRequest request) {
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityUtil.getUserId();
 
         CharmDailyGoalCompleteResponse response = charmService.dailyGoalComplete(
                 request.getCharmId(),
@@ -55,7 +59,7 @@ public class CharmController {
     @Operation(summary = "getMyCharm", description = "부적 정보 조회 API")
     @GetMapping("/{charmId}")
     public ResponseEntity<CustomResponse<CharmDetailResponse>> getMyCharm(@PathVariable Long charmId) {
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityUtil.getUserId();
         CharmDetailResponse response = charmService.getCharm(charmId, userId);
 
         return ResponseEntity.ok(CustomResponse.ok(response));
@@ -70,13 +74,41 @@ public class CharmController {
         return ResponseEntity.ok(CustomResponse.ok());
     }
 
-    @PutMapping("/{charmId}")
-    @Operation(summary = "updateCharm", description = "부적 아이템 장착 API")
-    @Deprecated
-    //TODO 이미지는 클라이언트에서 저장, 서버는 장착 아이템 리스트 정보 만을 저장
-    public ResponseEntity<Object> updateCharm(@Valid @RequestBody CharmUpdateRequest request) {
+    @GetMapping("/{charmId}/summary")
+    @Operation(summary = "부적 요약 정보 조회", description = "요약 정보")
 
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CustomResponse<CharmSummaryResponse>> getSummary(@PathVariable Long charmId) {
+
+        return ResponseEntity.ok(CustomResponse.ok(charmService.getSummary(charmId)));
+
     }
 
+    @GetMapping("/{charmId}/stamp")
+    @Operation(summary = "목표 달성 스탬프 조회하기")
+
+    public ResponseEntity<CustomResponse<List<StampResponse>>> getStamp(@PathVariable Long charmId) {
+
+        return CustomResponse.okResponseEntity(charmService.getStamp(charmId));
+    }
+
+    @PostMapping("/today")
+    @Operation(description = "오늘 목표 완료 하기")
+    public ResponseEntity<CustomResponse<Void>> completeTodayGoal(@RequestBody CompleteTodayRequest request) {
+
+        charmService.completeToday(request);
+        return ResponseEntity.ok(CustomResponse.ok());
+    }
+
+    @GetMapping("/{charmId}/items")
+    @Operation(description = "부적이 장착할 수 있는 아이템 목록")
+    public void getCharmEquipableItemList(@PathVariable Long charmId){
+
+        charmService.getEquipableItemList();
+    }
+
+    @GetMapping("/{charmId}/message")
+    @Operation(description = "부적에 있는 응원 메시지 조회하기")
+    public ResponseEntity<CustomResponse<List<CheerMessageResponse>>> getCheeringMessage(@PathVariable Long charmId) {
+        return CustomResponse.okResponseEntity(charmService.getCheerMessage(charmId));
+    }
 }

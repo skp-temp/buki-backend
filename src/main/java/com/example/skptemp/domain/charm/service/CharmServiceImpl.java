@@ -1,5 +1,9 @@
 package com.example.skptemp.domain.charm.service;
 
+import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
+import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
+import com.example.skptemp.domain.charm.dto.CompleteTodayRequest;
+import com.example.skptemp.domain.charm.dto.StampResponse;
 import com.example.skptemp.domain.charm.entity.ChallengeHistory;
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.repository.ChallengeHistoryRepository;
@@ -9,6 +13,10 @@ import com.example.skptemp.domain.charm.request.CreateCharmRequest;
 import com.example.skptemp.domain.charm.response.CharmDailyGoalCompleteResponse;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.CreateCharmResponse;
+import com.example.skptemp.domain.cheer.repository.CheerRepository;
+import com.example.skptemp.domain.item.repository.UserItemRepository;
+import com.example.skptemp.domain.statistics.StatisticsCategoryRankingResponse;
+import com.example.skptemp.global.common.SecurityUtil;
 import com.example.skptemp.global.constant.EmotionType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -17,6 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @Service
@@ -25,7 +37,52 @@ public class CharmServiceImpl implements CharmService {
 
     private final CharmRepository charmRepository;
     private final ChallengeHistoryRepository challengeHistoryRepository;
+    private final UserItemRepository userItemRepository;
+    private final CheerRepository cheerRepository;
 
+    @Override
+    public List<CheerMessageResponse> getCheerMessage(Long charmId) {
+        return cheerRepository.findCheerMessage(charmId);
+    }
+
+    @Override
+    public void getEquipableItemList() {
+
+//
+//        // TODO Item user 테이블 개발 후 작업
+//        Long userId = SecurityStaticUtil.getUserId();
+//        List<UserItem> byUserId = userItemRepository.findByUserId(userId);
+
+
+    }
+
+    @Override
+    public void completeToday(CompleteTodayRequest request) {
+        Long userId = SecurityUtil.getUserId();
+        challengeHistoryRepository.save(new ChallengeHistory(userId, request.getCharmId(), LocalDate.now(), request.getEmotionType(), request.getComment()));
+    }
+
+    @Override
+    public List<StampResponse> getStamp(Long charmId) {
+
+        Long userId = SecurityUtil.getUserId();
+        List<ChallengeHistory> historyList = challengeHistoryRepository.findByUserIdAndCharmId(userId, charmId);
+
+        List<StampResponse> stampResponsesList = new ArrayList<>(Collections.nCopies(21, new StampResponse()));
+        for (int i = 0; i < historyList.size(); i++) {
+            ChallengeHistory challengeHistory = historyList.get(i);
+            stampResponsesList.set(i, new StampResponse(Optional.ofNullable(challengeHistory.getHistoryDate()).map(LocalDate::toString).orElse(""), challengeHistory.getEmotionType()));
+        }
+
+        return stampResponsesList;
+    }
+
+    @Override
+    public CharmSummaryResponse getSummary(Long charmId) {
+        Charm charm = charmRepository.findById(charmId).orElseThrow();
+        return new CharmSummaryResponse(charm.getCategory(), charm.getGoal(), charm.getAlarmTime(), charm.getAlarmDayType());
+
+    }
 
     @Override
     @Transactional
@@ -87,7 +144,19 @@ public class CharmServiceImpl implements CharmService {
         charmRepository.settingUpdate(charmId, request);
     }
 
-    private void assertCharm(Long charmId){
+    private void assertCharm(Long charmId) {
         charmRepository.findById(charmId);
+    }
+
+    @Override
+    public List<Charm> getOldestCharm(int size) {
+        Long userId = SecurityUtil.getUserId();
+        return charmRepository.getOldestCharm(userId, size);
+    }
+
+    @Override
+    public StatisticsCategoryRankingResponse getCategoryRanking() {
+        Long userId = SecurityUtil.getUserId();
+        return charmRepository.getCategoryRanking(userId);
     }
 }

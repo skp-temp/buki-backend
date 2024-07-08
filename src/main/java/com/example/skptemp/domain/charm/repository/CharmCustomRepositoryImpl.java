@@ -1,6 +1,7 @@
 package com.example.skptemp.domain.charm.repository;
 
 import com.example.skptemp.domain.charm.dto.ChallengeHistoryResult;
+import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.QCharmDetailResponse;
@@ -16,12 +17,14 @@ import java.util.List;
 import static com.example.skptemp.domain.charm.entity.QChallengeHistory.challengeHistory;
 import static com.example.skptemp.domain.charm.entity.QCharm.charm;
 
+
 @Repository
 @RequiredArgsConstructor
-public class QuerydslCharmRepositoryImpl implements QuerydslCharmRepository {
+public class CharmCustomRepositoryImpl implements CharmCustomRepository {
 
 
     private final JPAQueryFactory queryFactory;
+
 
     @Override
     public CharmDetailResponse getDetail(Long charmId, Long userId) {
@@ -57,4 +60,13 @@ public class QuerydslCharmRepositoryImpl implements QuerydslCharmRepository {
                 .execute();
     }
 
+    @Override
+    public List<Charm> getOldestCharm(Long userId, int size) {
+        return queryFactory.selectFrom(charm)
+                .orderBy(charm.createdAt.asc())
+                .where(charm.userId.eq(userId))
+                .limit(size)
+                .fetch();
+
+    }
 }

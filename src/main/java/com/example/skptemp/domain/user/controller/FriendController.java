@@ -22,11 +22,11 @@ import java.util.List;
 public class FriendController {
     private final FriendRelationshipService friendRelationshipService;
     private final UserService userService;
-    private final SecurityUtil securityUtil;
 
     @Operation(summary = "getFriendList", description = "사용자 친구 리스트 조회 API")
-    @GetMapping("/{user-id}")
-    ResponseEntity<CustomResponse<FriendResponse>> getFriendList(@Valid Long userId){
+    @GetMapping
+    ResponseEntity<CustomResponse<FriendResponse>> getFriendList(){
+        Long userId = SecurityUtil.getUserId();
         List<FriendResult> friendRelationshipList = friendRelationshipService.findFriendRelationshipList(userId);
 
         return ResponseEntity.ok()
@@ -36,8 +36,8 @@ public class FriendController {
     @Operation(summary = "createFriend", description = "친구 추가 API")
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
-        Long userId = securityUtil.getUserIdFromContext();
-        UserResponse userResponse = userService.findById(userId);
+        Long userId = SecurityUtil.getUserId();
+        UserResponse userResponse = userService.findByUserId(userId);
 
         // 자기 자신과 친구 관계 생성 불가.
         if(userResponse.getCode().equals(request.getUserCode())){
@@ -52,7 +52,7 @@ public class FriendController {
     @Operation(summary = "deleteFriend", description = "친구 삭제 API")
     @DeleteMapping("/{friend-id}")
     ResponseEntity<CustomResponse<Void>> deleteFriend(@RequestBody FriendDeleteRequest request){
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityUtil.getUserId();
         friendRelationshipService.deleteFriendRelationship(userId, request.getFriendId());
         return ResponseEntity.ok(CustomResponse.ok());
     }

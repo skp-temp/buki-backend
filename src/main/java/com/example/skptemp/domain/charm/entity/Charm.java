@@ -35,10 +35,11 @@ public class Charm extends BaseEntity {
     private Long id;
     // 부적 정보
     private Long userId;
+    @Enumerated(EnumType.STRING)
     private Category category;
     private int charmLevel;
     private String goal;
-    
+
     // 부적 알림 정보
     private Boolean alarmOn;
     private LocalDateTime alarmTime;

@@ -11,6 +11,7 @@ import com.example.skptemp.global.error.GlobalException;
 import com.example.skptemp.global.util.GlobalConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +44,18 @@ public class UserServiceImpl implements UserService{
         User user = User.createUser(loginType, platformProviderId, firstName, lastName, pushToken);
 
         assertDuplicateUser(loginType, platformProviderId);
-        userRepository.save(user);
 
+        boolean saved = false;
+        while(!saved) {
+            try {
+                userRepository.save(user);
+                saved = true;
+            } catch (DataIntegrityViolationException e) {
+                System.out.println("unique constraint violation for friend code field");
+                user.renewFriendCode();
+                userRepository.save(user); // 친구 코드 중복 발급 시 재발급 처리 한다. (다시 발급했을 때에도 중복된 경우에 대한 대비 필요)
+            }
+        }
         User findUser = findByLoginTypeAndAuthProviderId(loginType, platformProviderId);
         String jwt = createJwt(findUser.getId());
 
@@ -52,14 +63,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse findById(Long id) {
+    public UserResponse findByUserId(Long id) {
         assertUserId(id);
-        User user = userRepository.findByIdAndIsValidIsTrue(id)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        User user = findById(id);
         return new UserResponse(user);
     }
-
-
     @Override
     public User findByLoginTypeAndAuthProviderId(LoginType loginType, String platformProviderId){
         return userRepository.findByLoginTypeAndPlatformProviderIdAndIsValidIsTrue(loginType, platformProviderId)
@@ -75,17 +83,17 @@ public class UserServiceImpl implements UserService{
     @Override
     public String createJwt(Long id){
         assertUserId(id);
-        User user = userRepository.findByIdAndIsValidIsTrue(id)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        User user = findById(id);
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
+
         return jwtProvider.createDefaultToken(userDetails);
     }
 
     @Override
     public String createTestJwt() {
-        User user = userRepository.findByIdAndIsValidIsTrue(GlobalConstants.TEST_ACCOUNT_ID)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.TEST_ACCOUNT_INVALID));
+        User user = findById(GlobalConstants.TEST_ACCOUNT_ID);
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
+
         return jwtProvider.createTestToken(userDetails);
     }
 
@@ -93,8 +101,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponse changeUserName(UserChangeNameRequest request) {
         assertUserId(request.getUserId());
-        User user = userRepository.findByIdAndIsValidIsTrue(request.getUserId())
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        User user = findById(request.getUserId());
         user.changeName(request.getFirstName(), request.getLastName());
         return new UserResponse(user);
     }
@@ -103,27 +110,24 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteUser(Long id){
         assertUserId(id);
-        User user = userRepository.findByIdAndIsValidIsTrue(id)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+        User user = findById(id);
         user.deleteUser();
     }
-
     @Override
-    public void validateUserOrThrow(Long id){
-        assertUserId(id);
-        User findUser = userRepository.findById(id)
+    public GetGachaStatusResponse getGachaStatus(Long id) {
+        User findUser = userRepository.findByIdAndIsValidIsTrue(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
-
-        if(!findUser.isValid())
-            throw new GlobalException(GlobalErrorCode.USER_DELETED_EXCEPTION);
+        return new GetGachaStatusResponse(findUser.isGachaEnable());
     }
-
+    private User findById(Long id){
+        return userRepository.findByIdAndIsValidIsTrue(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
+    }
     private void assertDuplicateUser(LoginType loginType, String platformProviderId){
         if(userRepository.findByLoginTypeAndPlatformProviderIdAndIsValidIsTrue(loginType, platformProviderId).isPresent()){
             throw new GlobalException(GlobalErrorCode.USER_CONFLICT);
         }
     }
-
     private void assertUserId(Long userId){
         if(userId == null){
             throw new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION);

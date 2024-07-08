@@ -4,11 +4,10 @@ import com.example.skptemp.domain.common.BaseEntity;
 import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
+import com.example.skptemp.global.util.FriendCodeGenerator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
@@ -17,6 +16,7 @@ public class User extends BaseEntity {
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "code", nullable = false, unique = true, length = FriendCodeGenerator.CODE_LENGTH)
     private String code; // 친구 추가 용도 발급 코드를 의미
     @Column(name = "first_name")
     private String firstName;
@@ -26,6 +26,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private LoginType loginType;         // authentication 플랫폼 타입
     private String platformProviderId ;  // authentication 플랫폼 제공 identifier
+    private boolean gachaEnable;    // 뽑기 상태
+    private int gachaCount = 0;     // 누적 뽑기 횟수
+
     private String authority;
     private boolean isValid;        // 논리적 삭제 처리를 위함
 
@@ -40,12 +43,19 @@ public class User extends BaseEntity {
         this.lastName = lastName;
         this.authority = authority;
         this.pushToken = pushToken;
+
+        this.gachaEnable = true;
+        this.gachaCount = 0;
+
         this.isValid = true;
     }
 
     public static User createUser(LoginType loginType, String platformProviderId, String firstName, String lastName, String pushToken){
-        String uuid = makeUuid(false);
+        String uuid = FriendCodeGenerator.generateRandomCode();
         return new User(uuid, loginType, platformProviderId, firstName, lastName, "USER", pushToken);
+    }
+    public void renewFriendCode(){
+        this.code = FriendCodeGenerator.generateRandomCode();
     }
 
     public void deleteUser(){
@@ -58,17 +68,17 @@ public class User extends BaseEntity {
         this.lastName = lastName;
     }
 
-    public void changePushToken(String pushToken){
+    public void changePushToken(String pushToken) {
         assertPushToken(pushToken);
         this.pushToken = pushToken;
     }
 
-    private static String makeUuid(boolean hasHypen){
-        if(hasHypen)
-            return UUID.randomUUID().toString();
-        else
-            return UUID.randomUUID().toString().replace("-", "");
-    }
+//    private static String makeUuid(boolean hasHypen){
+//        if(hasHypen)
+//            return UUID.randomUUID().toString();
+//        else
+//            return UUID.randomUUID().toString().replace("-", "");
+//    }
 
     private void assertName(String firstName, String lastName){
         if(firstName.isEmpty() || lastName.isEmpty()){

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 @Getter
@@ -23,7 +24,7 @@ public class CustomResponse<T> {
 
     @Override
     public String toString() {
-        return "ApiResponse{" +
+        return "CustomResponse{" +
                 "status=" + status +
                 ", message='" + message + '\'' +
                 ", code='" + code + '\'' +
@@ -37,6 +38,10 @@ public class CustomResponse<T> {
 
     public static <T> CustomResponse<T> ok(T result){
         return new CustomResponse<>(result);
+    }
+
+    public static <T> ResponseEntity<CustomResponse<T>> okResponseEntity(T result){
+        return ResponseEntity.ok(new CustomResponse<>(result));
     }
 
     public static <T> CustomResponse<T> created(T result) {return new CustomResponse<>(GlobalSuccessCode.CREATED, result);}

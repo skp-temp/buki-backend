@@ -13,10 +13,14 @@ import java.util.List;
 public class CheerService {
 
     private final CheerRepository cheerRepository;
-    private final SecurityUtil securityUtil;
 
-    public List<CheerCountResponse> getCheeringFriends(boolean isDesc) {
-        Long userId = securityUtil.getUserIdFromContext();
-        return cheerRepository.getCheerCount(isDesc, userId);
+    public List<CheerCountResponse> getCheeringFriends() {
+
+
+        return cheerRepository.getCheerCount(SecurityUtil.getUserId());
+    }
+
+    public List<CheerCountResponse> getCheeredFriends() {
+        return cheerRepository.getCheeredCount(SecurityUtil.getUserId());
     }
 }

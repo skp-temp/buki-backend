@@ -84,7 +84,7 @@ public class GlobalControllerAdvice {
      * 처리되지 않은 에러를 여기서 처리 한다.
      *
      * @param e 발생한 에러
-     * @return ApiResponse로 메시지를 감춰서 반환한다.
+     * @return CustomResponse로 메시지를 감춰서 반환한다.
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

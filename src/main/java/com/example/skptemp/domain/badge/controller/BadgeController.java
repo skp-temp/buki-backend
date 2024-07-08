@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BadgeController {
     private final BadgeService badgeService;
-    private final SecurityUtil securityUtil;
 
     @GetMapping("/status")
     public ResponseEntity<CustomResponse<Void>> getBadgeStatus(){
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityUtil.getUserId();
 
         return null;
     }
@@ -34,7 +33,7 @@ public class BadgeController {
     @Operation(description = "refreshBadgeStatus", summary = "badge 달성 정보 갱신")
     @PostMapping("/status")
     public ResponseEntity<CustomResponse<Void>> refreshBadgeStatus(){
-        Long userId = securityUtil.getUserIdFromContext();
+        Long userId = SecurityUtil.getUserId();
         return null;
     }
 }
