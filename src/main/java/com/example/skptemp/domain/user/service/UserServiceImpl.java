@@ -11,6 +11,7 @@ import com.example.skptemp.global.error.GlobalException;
 import com.example.skptemp.global.util.GlobalConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +44,18 @@ public class UserServiceImpl implements UserService{
         User user = User.createUser(loginType, platformProviderId, firstName, lastName, pushToken);
 
         assertDuplicateUser(loginType, platformProviderId);
-        userRepository.save(user);
 
+        boolean saved = false;
+        while(!saved) {
+            try {
+                userRepository.save(user);
+                saved = true;
+            } catch (DataIntegrityViolationException e) {
+                System.out.println("unique constraint violation for friend code field");
+                user.renewFriendCode();
+                userRepository.save(user); // 친구 코드 중복 발급 시 재발급 처리 한다. (다시 발급했을 때에도 중복된 경우에 대한 대비 필요)
+            }
+        }
         User findUser = findByLoginTypeAndAuthProviderId(loginType, platformProviderId);
         String jwt = createJwt(findUser.getId());
 
