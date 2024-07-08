@@ -4,11 +4,10 @@ import com.example.skptemp.domain.common.BaseEntity;
 import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
+import com.example.skptemp.global.util.FriendCodeGenerator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
@@ -17,7 +16,8 @@ public class User extends BaseEntity {
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String code; // 친구 추가 용도 발급 코드를 의미 TODO: 복사하고 싶은 코드로 개선 필요
+    @Column(name = "code", nullable = false, unique = true, length = FriendCodeGenerator.CODE_LENGTH)
+    private String code; // 친구 추가 용도 발급 코드를 의미
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -51,8 +51,11 @@ public class User extends BaseEntity {
     }
 
     public static User createUser(LoginType loginType, String platformProviderId, String firstName, String lastName, String pushToken){
-        String uuid = makeUuid(false);
+        String uuid = FriendCodeGenerator.generateRandomCode();
         return new User(uuid, loginType, platformProviderId, firstName, lastName, "USER", pushToken);
+    }
+    public void renewFriendCode(){
+        this.code = FriendCodeGenerator.generateRandomCode();
     }
 
     public void deleteUser(){
@@ -70,12 +73,12 @@ public class User extends BaseEntity {
         this.pushToken = pushToken;
     }
 
-    private static String makeUuid(boolean hasHypen){
-        if(hasHypen)
-            return UUID.randomUUID().toString();
-        else
-            return UUID.randomUUID().toString().replace("-", "");
-    }
+//    private static String makeUuid(boolean hasHypen){
+//        if(hasHypen)
+//            return UUID.randomUUID().toString();
+//        else
+//            return UUID.randomUUID().toString().replace("-", "");
+//    }
 
     private void assertName(String firstName, String lastName){
         if(firstName.isEmpty() || lastName.isEmpty()){
