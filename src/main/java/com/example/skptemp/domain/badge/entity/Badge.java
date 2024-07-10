@@ -9,8 +9,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Entity
 public class Badge extends BaseEntity {
@@ -21,18 +19,18 @@ public class Badge extends BaseEntity {
     private String name;
     //TODO: condition, tipDescription 동일한지 확인 필요
     //TODO: 뱃지 달성 조건 확인하는 로직 고민 필요
-    private String badgeCondition;
-    private String tipDescription;
+    private String description;
+    private String tip;
     private BadgeType badgeType;
     private boolean isValid = true;
 
     protected Badge(){}
 
     @Builder
-    public Badge(String name, String badgeCondition, String tipDescription, BadgeType badgeType){
+    public Badge(String name, String description, String tip, BadgeType badgeType){
         this.name = name;
-        this.badgeCondition = badgeCondition;
-        this.tipDescription = tipDescription;
+        this.description = description;
+        this.tip = tip;
         this.badgeType = badgeType;
     }
 

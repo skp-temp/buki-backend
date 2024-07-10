@@ -53,11 +53,11 @@ public class BadgeServiceImpl implements BadgeService {
 
     @Transactional
     @Override
-    public void createBadge(String name, String badgeCondition, String tipDescription, BadgeType badgeType) {
+    public void createBadge(String name, String description, String tip, BadgeType badgeType) {
         Badge badge = Badge.builder()
                 .name(name)
-                .badgeCondition(badgeCondition)
-                .tipDescription(tipDescription)
+                .description(description)
+                .tip(tip)
                 .badgeType(badgeType)
                 .build();
         badgeRepository.save(badge);
