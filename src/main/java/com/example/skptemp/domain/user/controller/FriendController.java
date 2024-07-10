@@ -6,10 +6,7 @@ import com.example.skptemp.domain.user.service.FriendRelationshipService;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.common.SecurityUtil;
-import com.example.skptemp.global.error.GlobalErrorCode;
-import com.example.skptemp.global.error.GlobalException;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +34,7 @@ public class FriendController {
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = SecurityUtil.getUserId();
-        UserResponse userResponse = userService.findByUserId(userId);
 
-        // 자기 자신과 친구 관계 생성 불가.
-        if(userResponse.getCode().equals(request.getUserCode())){
-            throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
-        }
         User friendUser = userService.findByCode(request.getUserCode());
 
         friendRelationshipService.enrollFriendRelationship(userId, friendUser.getId());
