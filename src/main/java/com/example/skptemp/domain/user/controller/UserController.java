@@ -55,7 +55,7 @@ public class UserController {
                 .body(CustomResponse.ok(response));
     }
 
-    //TODO: 삭제 예정
+    //TODO: 개발자만 사용할 수 있도록 처리 필요하다.
     @Operation(summary = "createToken100Days", description = "개발 용 access 토큰 발급 (유효 기간 100일)")
     @PostMapping("/create-token-100days")
     public ResponseEntity<CustomResponse<TokenResponse>> createToken100Days(){
