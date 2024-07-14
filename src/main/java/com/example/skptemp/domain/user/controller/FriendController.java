@@ -30,6 +30,12 @@ public class FriendController {
                 .body(CustomResponse.ok(new FriendResponse(friendRelationshipList)));
     }
 
+    //TODO: 친구 추가 알림 전송 API
+    @PostMapping
+    ResponseEntity<CustomResponse<Void>> requestFriend(Long userId){
+        return null;
+    }
+
     @Operation(summary = "createFriend", description = "친구 추가 API")
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
