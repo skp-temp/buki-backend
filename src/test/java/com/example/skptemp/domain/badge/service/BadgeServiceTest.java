@@ -5,7 +5,6 @@ import com.example.skptemp.domain.badge.dto.UserBadgeResult;
 import com.example.skptemp.domain.badge.entity.Badge;
 import com.example.skptemp.domain.badge.repository.BadgeRepository;
 import com.example.skptemp.global.constant.BadgeType;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +40,13 @@ class BadgeServiceTest {
         //given
         Badge badge1 = Badge.builder()
                 .name(TestConstants.TEST_BADGE_NAME_1)
-                .badgeCondition(TestConstants.TEST_BADGE_CONDITION_1)
+                .condition(TestConstants.TEST_BADGE_CONDITION_1)
                 .tipDescription(TestConstants.TEST_BADGE_TIP_DESCRIPTION_1)
                 .badgeType(BadgeType.CHEER)
                 .build();
         Badge badge2 = Badge.builder()
                 .name(TestConstants.TEST_BADGE_NAME_2)
-                .badgeCondition(TestConstants.TEST_BADGE_CONDITION_2)
+                .condition(TestConstants.TEST_BADGE_CONDITION_2)
                 .tipDescription(TestConstants.TEST_BADGE_TIP_DESCRIPTION_2)
                 .badgeType(BadgeType.CHEER)
                 .build();

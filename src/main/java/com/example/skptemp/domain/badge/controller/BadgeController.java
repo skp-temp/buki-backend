@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/badge")
+@RequestMapping("/api/v1/badges")
 @RestController
 public class BadgeController {
     private final BadgeService badgeService;
@@ -27,6 +27,8 @@ public class BadgeController {
 
     @GetMapping
     public ResponseEntity<CustomResponse<Void>> getAllBadges(){
+        
+
         return null;
     }
 
