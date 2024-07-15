@@ -30,15 +30,14 @@ public enum GlobalErrorCode {
 
     // 친구
     FRIEND_RELATIONSHIP_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G340", "친구 관계가 유효하지 않습니다."),
-
-    // 선물(??)
+    FRIEND_RELATIONSHIP_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "G341", "해당 유저와 이미 친구 관계입니다."),
+    // 선물
     USER_ITEM_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G350", "유저 혹은 아이템 정보가 유효하지 않습니다."),
 
     // 뱃지
     BADGE_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "G360", "삭제된 뱃지입니다."),
     Badge_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G361", "뱃지가 유효하지 않습니다.");
 
-    ;
     private final String code;
     private final String message;
     private final HttpStatus status;

@@ -24,6 +24,8 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     @Override
     public void enrollFriendRelationship(Long userA, Long userB) {
         validateUserId(userA, userB);
+        validateNotFriend(userA, userB);
+
         // 쌍방으로 친구 관계를 저장한다.
         friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userA, userB));
         friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userB, userA));
@@ -50,6 +52,11 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
         friendRelationshipRepository.delete(relationship2);
     }
 
+    private void validateNotFriend(Long userId, Long friendId){
+        if(!friendRelationshipRepository.findByUserAAndUserB(userId, friendId).isEmpty())
+            throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_ALREADY_EXIST);
+    }
+
     private void validateFriendRelationship(Long userId, Long friendId){
         if(friendRelationshipRepository.findByUserAAndUserB(userId, friendId).isEmpty())
             throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
@@ -61,7 +68,7 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     }
     private void validateUserId(Long userA, Long userB){
         if(userA.equals(userB))
-            throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
+            throw new GlobalException("요청자의 사용자 코드를 이용한 친구 추가 요청입니다.", GlobalErrorCode.FRIEND_RELATIONSHIP_VALID_EXCEPTION);
         validateUserId(userA);
         validateUserId(userB);
     }

@@ -40,14 +40,14 @@ class BadgeServiceTest {
         //given
         Badge badge1 = Badge.builder()
                 .name(TestConstants.TEST_BADGE_NAME_1)
-                .condition(TestConstants.TEST_BADGE_CONDITION_1)
-                .tipDescription(TestConstants.TEST_BADGE_TIP_DESCRIPTION_1)
+                .description(TestConstants.TEST_BADGE_CONDITION_1)
+                .tip(TestConstants.TEST_BADGE_TIP_DESCRIPTION_1)
                 .badgeType(BadgeType.CHEER)
                 .build();
         Badge badge2 = Badge.builder()
                 .name(TestConstants.TEST_BADGE_NAME_2)
-                .condition(TestConstants.TEST_BADGE_CONDITION_2)
-                .tipDescription(TestConstants.TEST_BADGE_TIP_DESCRIPTION_2)
+                .description(TestConstants.TEST_BADGE_CONDITION_2)
+                .tip(TestConstants.TEST_BADGE_TIP_DESCRIPTION_2)
                 .badgeType(BadgeType.CHEER)
                 .build();
 

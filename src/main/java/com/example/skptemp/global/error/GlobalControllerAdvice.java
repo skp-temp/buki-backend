@@ -74,7 +74,6 @@ public class GlobalControllerAdvice {
     protected ResponseEntity<CustomResponse<Void>> handleGlobalBaseException(final GlobalException e) {
         log.error("{} Exception {}: {}", e.getErrorCode(), e.getErrorCode().getCode(), e.getErrorCode().getMessage());
 
-        // TODO: Exception type에 따라 HTTP status code 정리 필요
         return ResponseEntity.status(e.getErrorCode().getStatus())
                 .body(CustomResponse.error(e.getErrorCode(), e.getMessage()));
     }

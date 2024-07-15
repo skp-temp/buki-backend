@@ -1,8 +1,7 @@
 package com.example.skptemp.domain.user.dto;
 
 import lombok.Getter;
-
 @Getter
-public class FriendCreateRequest {
-    Long userId;
+public class FriendRequestRequest {
+    String userCode;
 }

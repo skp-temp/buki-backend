@@ -32,6 +32,7 @@ public class BadgeServiceImpl implements BadgeService {
                 .build();
         userBadgeRepository.save(userBadge);
     }
+
     @Transactional
     @Override
     public void refreshUserBadgeInfo(Long userId) {
@@ -41,7 +42,7 @@ public class BadgeServiceImpl implements BadgeService {
 
         //2. badge는 부적 완성 관련 / 응원 메시지 보내기 / 뽑기 실행 / 연속 접속 기록 / 친구 수
 
-        //3. 
+        //3.
     }
 
     private void refreshCheerBadge(Long userId){ // 응원 관련 뱃지
@@ -54,13 +55,13 @@ public class BadgeServiceImpl implements BadgeService {
 
     }
     private void refreshDayBadge(Long userId){ // 연속 접속 기록
-        
+
     }
 
     private void refreshCharmBadge(Category category){
         // 부적 유형 별로 완성 상태 확인해서 뱃지 획득 정보를 갱신한다.
 
-        
+
     }
 
     @Override
@@ -75,13 +76,14 @@ public class BadgeServiceImpl implements BadgeService {
                                 .build()
                 ).toList();
     }
+
     @Transactional
     @Override
-    public void createBadge(String name, String badgeCondition, String tipDescription, BadgeType badgeType) {
+    public void createBadge(String name, String description, String tip, BadgeType badgeType) {
         Badge badge = Badge.builder()
                 .name(name)
-                .condition(badgeCondition)
-                .tipDescription(tipDescription)
+                .description(description)
+                .tip(tip)
                 .badgeType(badgeType)
                 .build();
         badgeRepository.save(badge);
