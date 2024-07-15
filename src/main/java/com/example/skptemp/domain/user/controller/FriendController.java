@@ -32,7 +32,13 @@ public class FriendController {
 
     //TODO: 친구 추가 알림 전송 API
     @PostMapping
-    ResponseEntity<CustomResponse<Void>> requestFriend(Long userId){
+    ResponseEntity<CustomResponse<Void>> requestFriend(@RequestBody FriendRequestRequest request){
+        User friendUser = userService.findByCode(request.getUserCode());
+        Long userId = SecurityUtil.getUserId();
+        // 친구 추가 알림 생성 로직 필요
+
+
+
         return null;
     }
 
@@ -40,10 +46,8 @@ public class FriendController {
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = SecurityUtil.getUserId();
+        friendRelationshipService.enrollFriendRelationship(userId, request.getUserId());
 
-        User friendUser = userService.findByCode(request.getUserCode());
-
-        friendRelationshipService.enrollFriendRelationship(userId, friendUser.getId());
         return ResponseEntity.ok(CustomResponse.ok());
     }
 
