@@ -31,7 +31,7 @@ public class FriendController {
     }
 
     //TODO: 친구 추가 알림 전송 API
-    @PostMapping
+    @PostMapping("/request")
     ResponseEntity<CustomResponse<Void>> requestFriend(@RequestBody FriendRequestRequest request){
         User friendUser = userService.findByCode(request.getUserCode());
         Long userId = SecurityUtil.getUserId();
