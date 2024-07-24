@@ -166,7 +166,7 @@ public class CharmServiceImpl implements CharmService {
     }
 
     @Override
-    public StatisticsCategoryRankingResponse getCategoryRanking() {
+    public List<StatisticsCategoryRankingResponse> getCategoryRanking() {
         Long userId = SecurityUtil.getUserId();
         return charmRepository.getCategoryRanking(userId);
     }

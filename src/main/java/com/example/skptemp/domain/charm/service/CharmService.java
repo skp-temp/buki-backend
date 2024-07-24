@@ -37,6 +37,6 @@ public interface CharmService {
 
     List<Charm> getOldestCharm(int size);
 
-    StatisticsCategoryRankingResponse getCategoryRanking();
+    List<StatisticsCategoryRankingResponse> getCategoryRanking();
 
 }

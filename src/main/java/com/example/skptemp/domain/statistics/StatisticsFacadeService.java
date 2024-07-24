@@ -73,7 +73,7 @@ public class StatisticsFacadeService {
     }
 
     // 디자인 컴포 3번
-    public StatisticsCategoryRankingResponse getCategoryRanking() {
+    public List<StatisticsCategoryRankingResponse> getCategoryRanking() {
         return charmService.getCategoryRanking();
     }
 

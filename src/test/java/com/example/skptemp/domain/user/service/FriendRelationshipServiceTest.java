@@ -1,23 +1,29 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.notification.event.EventPublisher;
 import com.example.skptemp.domain.user.entity.FriendRelationship;
 import com.example.skptemp.domain.user.repository.FriendRelationshipRepository;
 import com.example.skptemp.global.error.GlobalException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 class FriendRelationshipServiceTest {
 
     @Autowired FriendRelationshipService friendRelationshipService;
     @Autowired FriendRelationshipRepository friendRelationshipRepository;
+    @MockBean
+    EventPublisher eventPublisher;
 
     final Long TEST_USER_ID1 = 1L;
     final Long TEST_USER_ID2 = 2L;
