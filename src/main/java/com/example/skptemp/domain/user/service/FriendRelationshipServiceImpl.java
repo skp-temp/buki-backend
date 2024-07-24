@@ -1,23 +1,30 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.notification.dto.NotificationEventRequest;
+import com.example.skptemp.domain.notification.dto.NotificationType;
+import com.example.skptemp.domain.notification.event.EventPublisher;
+import com.example.skptemp.domain.notification.util.NotificationUtil;
 import com.example.skptemp.domain.user.dto.FriendResult;
 import com.example.skptemp.domain.user.entity.FriendRelationship;
+import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.repository.FriendRelationshipRepository;
 import com.example.skptemp.domain.user.repository.UserRepository;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class FriendRelationshipServiceImpl implements FriendRelationshipService {
 
     private final FriendRelationshipRepository friendRelationshipRepository;
+    private final EventPublisher eventPublisher;
     private final UserRepository userRepository;
 
     @Transactional
@@ -29,6 +36,19 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
         // 쌍방으로 친구 관계를 저장한다.
         friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userA, userB));
         friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userB, userA));
+        User userBEntity = userRepository.findById(userB).orElseThrow();
+        String firstName = userBEntity.getFirstName();
+        String lastName = userBEntity.getLastName();
+
+
+        NotificationEventRequest notificationEventRequest = new NotificationEventRequest(
+                NotificationUtil.FRIEND_ACCEPTED_FORMAT,
+                "친구 맺기",
+                NotificationType.FRIEND,
+                userB,
+                Strings.concat(lastName, firstName)
+        );
+        eventPublisher.publishNotification(notificationEventRequest);
     }
 
     @Override

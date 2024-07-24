@@ -1,7 +1,6 @@
 package com.example.skptemp.domain.charm.service;
 
-import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
-import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
+import com.example.skptemp.domain.charm.dto.*;
 import com.example.skptemp.domain.charm.dto.CompleteTodayRequest;
 import com.example.skptemp.domain.charm.dto.StampResponse;
 import com.example.skptemp.domain.charm.entity.Charm;
@@ -16,6 +15,8 @@ import com.example.skptemp.global.constant.EmotionType;
 import java.util.List;
 
 public interface CharmService {
+
+    void itemCharmModify(ItemCharmRequest request);
 
     List<CheerMessageResponse> getCheerMessage(Long charmId);
 

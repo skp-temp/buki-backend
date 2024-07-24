@@ -34,8 +34,15 @@ public class ItemController {
 
     @Operation(summary = "giveItem for dev, manager", description = "개발 및 운영자용 아이템 지급 API")
     @PostMapping
-    public ResponseEntity<CustomResponse<Void>> giveItem(@RequestBody GiveItemRequest request){
+    public ResponseEntity<CustomResponse<Void>> giveItem(@RequestBody GiveItemRequest request) {
         itemService.giveItem(request);
         return ResponseEntity.ok(CustomResponse.ok());
     }
+
+    @GetMapping("/cheer")
+    @Operation(summary = "응원할때 보내기 가능한 아이템 목록")
+    public ResponseEntity<CustomResponse<Object>> cheerItems(@RequestParam Long charmId) {
+        return CustomResponse.okResponseEntity(itemService.getCheerItemList(charmId));
+    }
+
 }

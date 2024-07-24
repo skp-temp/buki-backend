@@ -6,6 +6,7 @@ import com.example.skptemp.global.error.GlobalException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class UserItem extends BaseEntity {
     private Long id;
     private Long userId;
     private Long itemId;
+    @Setter
     private int count;
     private int equippedItemCount; //TODO: 장착 중인 아이템의 수를 별도로 관리해줘야 한다.
 

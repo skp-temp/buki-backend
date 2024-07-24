@@ -7,7 +7,8 @@ import com.example.skptemp.domain.item.entity.Item;
 import com.example.skptemp.domain.item.entity.UserItem;
 import com.example.skptemp.domain.item.repository.ItemRepository;
 import com.example.skptemp.domain.item.repository.UserItemRepository;
-import com.example.skptemp.global.common.SecurityUtil;
+import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.constant.Category;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +18,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserItemRepository userItemRepository;
     private final UserItemService userItemService;
+    private final CharmRepository charmRepository;
+
+
+    @Override
+    public List<CheerItemResponse> getCheerItemList(Long charmId) {
+        Category category = charmRepository.findById(charmId).orElseThrow().getCategory();
+
+        return userItemRepository.getCheerItemList(SecurityStaticUtil.getUserId(), category);
+
+    }
+
     @Override
     public GetUserItemResponse findItemListByUserId(Long userId) {
         List<UserItem> userItemList = userItemRepository.findByUserId(userId);
