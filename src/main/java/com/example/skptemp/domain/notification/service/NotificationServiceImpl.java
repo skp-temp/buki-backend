@@ -8,7 +8,7 @@ import com.example.skptemp.domain.notification.entity.NotificationEntity;
 import com.example.skptemp.domain.notification.repository.NotificationRepository;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.repository.UserRepository;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
@@ -67,7 +67,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Page<NotificationMessageResponse> getNotificationMessage(NotificationType type, Pageable pageable) {
 
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
 
         Page<NotificationEntity> notificationMessageList = notificationRepository.getNotificationMessageList(pageable, type, userId);
         List<NotificationMessageResponse> responseList = notificationMessageList.getContent().stream().map(

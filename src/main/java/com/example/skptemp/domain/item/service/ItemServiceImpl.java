@@ -1,5 +1,7 @@
 package com.example.skptemp.domain.item.service;
 
+import com.example.skptemp.domain.charm.repository.CharmRepository;
+import com.example.skptemp.domain.item.dto.CheerItemResponse;
 import com.example.skptemp.domain.item.dto.GetUserItemResponse;
 import com.example.skptemp.domain.item.dto.GiveItemRequest;
 import com.example.skptemp.domain.item.dto.UserItemResult;
@@ -7,7 +9,7 @@ import com.example.skptemp.domain.item.entity.Item;
 import com.example.skptemp.domain.item.entity.UserItem;
 import com.example.skptemp.domain.item.repository.ItemRepository;
 import com.example.skptemp.domain.item.repository.UserItemRepository;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import com.example.skptemp.global.constant.Category;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Transactional
@@ -33,7 +36,7 @@ public class ItemServiceImpl implements ItemService {
     public List<CheerItemResponse> getCheerItemList(Long charmId) {
         Category category = charmRepository.findById(charmId).orElseThrow().getCategory();
 
-        return userItemRepository.getCheerItemList(SecurityStaticUtil.getUserId(), category);
+        return userItemRepository.getCheerItemList(SecurityUtil.getUserId(), category);
 
     }
 

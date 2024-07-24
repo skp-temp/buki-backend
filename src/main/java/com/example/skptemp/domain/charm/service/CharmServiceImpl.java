@@ -1,6 +1,9 @@
 package com.example.skptemp.domain.charm.service;
 
-import com.example.skptemp.domain.charm.dto.*;
+import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
+import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
+import com.example.skptemp.domain.charm.dto.ItemCharmRequest;
+import com.example.skptemp.domain.charm.dto.StampResponse;
 import com.example.skptemp.domain.charm.entity.ChallengeHistory;
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.entity.CharmItem;
@@ -15,7 +18,7 @@ import com.example.skptemp.domain.charm.response.CreateCharmResponse;
 import com.example.skptemp.domain.cheer.repository.CheerRepository;
 import com.example.skptemp.domain.item.repository.UserItemRepository;
 import com.example.skptemp.domain.statistics.StatisticsCategoryRankingResponse;
-import com.example.skptemp.global.common.SecurityStaticUtil;
+import com.example.skptemp.global.common.SecurityUtil;
 import com.example.skptemp.global.constant.EmotionType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -62,7 +65,7 @@ public class CharmServiceImpl implements CharmService {
 
 //
 //        // TODO Item user 테이블 개발 후 작업
-//        Long userId = SecurityStaticUtil.getUserId();
+//        Long userId = SecurityUtil.getUserId();
 //        List<UserItem> byUserId = userItemRepository.findByUserId(userId);
 
 
@@ -73,7 +76,7 @@ public class CharmServiceImpl implements CharmService {
 
     public List<StampResponse> getStamp(Long charmId) {
 
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         List<ChallengeHistory> historyList = challengeHistoryRepository.findByUserIdAndCharmId(userId, charmId);
 
         List<StampResponse> stampResponsesList = new ArrayList<>(Collections.nCopies(21, new StampResponse()));
@@ -158,13 +161,13 @@ public class CharmServiceImpl implements CharmService {
 
     @Override
     public List<Charm> getOldestCharm(int size) {
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         return charmRepository.getOldestCharm(userId, size);
     }
 
     @Override
     public StatisticsCategoryRankingResponse getCategoryRanking() {
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         return charmRepository.getCategoryRanking(userId);
     }
 }

@@ -13,7 +13,6 @@ import com.example.skptemp.domain.notification.event.EventPublisher;
 import com.example.skptemp.domain.notification.util.NotificationUtil;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.repository.UserRepository;
-import com.example.skptemp.global.common.SecurityStaticUtil;
 import com.example.skptemp.global.common.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class CheerService {
 
 
     public void sendCheer( SendCheerRequest request) {
-        Long userId = SecurityStaticUtil.getUserId();
+        Long userId = SecurityUtil.getUserId();
         Charm charm = charmRepository.findById(request.getCharmId()).orElseThrow();
         Long cheeredUserId = charm.getUserId();
         User cheeredUser = userRepository.findById(cheeredUserId).orElseThrow();

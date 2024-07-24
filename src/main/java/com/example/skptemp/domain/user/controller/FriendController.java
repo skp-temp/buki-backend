@@ -8,7 +8,6 @@ import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.service.FriendRelationshipService;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.CustomResponse;
-import com.example.skptemp.global.common.SecurityStaticUtil;
 import com.example.skptemp.global.common.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -35,24 +34,13 @@ public class FriendController {
                 .body(CustomResponse.ok(new FriendResponse(friendRelationshipList)));
     }
 
-    //TODO: 친구 추가 알림 전송 API
-    @PostMapping("/request")
-    ResponseEntity<CustomResponse<Void>> requestFriend(@RequestBody FriendRequestRequest request){
-        User friendUser = userService.findByCode(request.getUserCode());
-        Long userId = SecurityUtil.getUserId();
-        // 친구 추가 알림 생성 로직 필요
-
-
-
-        return null;
-    }
-
-    @Operation(summary = "createFriend", description = "친구 추가 API")
+    @Operation(summary = "createFriend", description = "친구 수락 API 내가 요청한 사람의 친구 요청을 수락함 ")
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = SecurityUtil.getUserId();
         friendRelationshipService.enrollFriendRelationship(userId, request.getUserId());
-
+        UserResponse friendUser = userService.findByUserId(request.getUserId());
+        notificationService.sendNotification(new NotificationRequest(friendUser.getUserId(), "친구 수락", NotificationUtil.FRIEND_ACCEPTED_FORMAT));
         return ResponseEntity.ok(CustomResponse.ok());
     }
 
@@ -64,12 +52,11 @@ public class FriendController {
         return ResponseEntity.ok(CustomResponse.ok());
     }
 
-    @Operation(summary = "친구 요청 전송 API")
+    @Operation(summary = "친구 요청 전송 API",description = "내가 user Code로 친구 요청을 보냄 ")
     @PostMapping("/request")
-    public ResponseEntity<CustomResponse<Void>> requestFriend(@RequestBody FriendCreateRequest request){
+    public ResponseEntity<CustomResponse<Void>> requestFriend(@RequestBody FriendSendRequest request){
         User friendUser = userService.findByCode(request.getUserCode());
-        UserResponse userResponse = userService.findById(SecurityStaticUtil.getUserId());
-        notificationService.sendNotification(new NotificationRequest(friendUser.getId(), "친구 요청", NotificationUtil.FRIEND_REQUESTED_FORMAT.formatted(userResponse.getFirstName())));
+        notificationService.sendNotification(new NotificationRequest(friendUser.getId(), "친구 요청", NotificationUtil.FRIEND_REQUESTED_FORMAT));
         return ResponseEntity.ok(CustomResponse.ok());
     }
 
