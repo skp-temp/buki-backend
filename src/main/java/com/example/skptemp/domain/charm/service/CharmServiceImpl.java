@@ -2,11 +2,13 @@ package com.example.skptemp.domain.charm.service;
 
 import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
 import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
-import com.example.skptemp.domain.charm.dto.CompleteTodayRequest;
+import com.example.skptemp.domain.charm.dto.ItemCharmRequest;
 import com.example.skptemp.domain.charm.dto.StampResponse;
 import com.example.skptemp.domain.charm.entity.ChallengeHistory;
 import com.example.skptemp.domain.charm.entity.Charm;
+import com.example.skptemp.domain.charm.entity.CharmItem;
 import com.example.skptemp.domain.charm.repository.ChallengeHistoryRepository;
+import com.example.skptemp.domain.charm.repository.CharmItemRepository;
 import com.example.skptemp.domain.charm.repository.CharmRepository;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.request.CreateCharmRequest;
@@ -30,15 +32,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional(readOnly = true)
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class CharmServiceImpl implements CharmService {
 
     private final CharmRepository charmRepository;
+    private final CharmItemRepository charmItemRepository;
     private final ChallengeHistoryRepository challengeHistoryRepository;
     private final UserItemRepository userItemRepository;
     private final CheerRepository cheerRepository;
+
+    @Override
+    public void itemCharmModify(ItemCharmRequest request) {
+//        CharmItem
+        List<Long> itemIdList = request.getItemIdList();
+        charmItemRepository.deleteByCharmId(request.getCharmId());
+        List<CharmItem> charmItemList = itemIdList.stream().map(
+                id -> new CharmItem(request.getCharmId(), id)
+        ).toList();
+
+        charmItemRepository.saveAll(charmItemList);
+    }
 
     @Override
     public List<CheerMessageResponse> getCheerMessage(Long charmId) {
@@ -50,19 +65,15 @@ public class CharmServiceImpl implements CharmService {
 
 //
 //        // TODO Item user 테이블 개발 후 작업
-//        Long userId = SecurityStaticUtil.getUserId();
+//        Long userId = SecurityUtil.getUserId();
 //        List<UserItem> byUserId = userItemRepository.findByUserId(userId);
 
 
     }
 
     @Override
-    public void completeToday(CompleteTodayRequest request) {
-        Long userId = SecurityUtil.getUserId();
-        challengeHistoryRepository.save(new ChallengeHistory(userId, request.getCharmId(), LocalDate.now(), request.getEmotionType(), request.getComment()));
-    }
+    @Transactional
 
-    @Override
     public List<StampResponse> getStamp(Long charmId) {
 
         Long userId = SecurityUtil.getUserId();
@@ -144,7 +155,7 @@ public class CharmServiceImpl implements CharmService {
         charmRepository.settingUpdate(charmId, request);
     }
 
-    private void assertCharm(Long charmId) {
+    private void assertCharm(Long charmId){
         charmRepository.findById(charmId);
     }
 
@@ -155,7 +166,7 @@ public class CharmServiceImpl implements CharmService {
     }
 
     @Override
-    public StatisticsCategoryRankingResponse getCategoryRanking() {
+    public List<StatisticsCategoryRankingResponse> getCategoryRanking() {
         Long userId = SecurityUtil.getUserId();
         return charmRepository.getCategoryRanking(userId);
     }

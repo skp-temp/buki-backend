@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/statistics")
+@RequestMapping("/api/v1/statistics")
 @Tag(name = "Statistics Controller", description = "분석 페이지 API")
 public class StatisticsController {
 
@@ -39,7 +39,7 @@ public class StatisticsController {
 
     @GetMapping("/category")
     @Operation(description = "카테고리 랭킹 가져오기")
-    public ResponseEntity<CustomResponse<StatisticsCategoryRankingResponse>> getCategoryRanking() {
+    public ResponseEntity<CustomResponse<List<StatisticsCategoryRankingResponse>>> getCategoryRanking() {
 
         return ResponseEntity.ok(CustomResponse.ok(statisticsFacadeService.getCategoryRanking()));
     }

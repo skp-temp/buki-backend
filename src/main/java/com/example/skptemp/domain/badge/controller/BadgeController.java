@@ -1,7 +1,6 @@
 package com.example.skptemp.domain.badge.controller;
 
 import com.example.skptemp.domain.badge.service.BadgeService;
-
 import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.common.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;

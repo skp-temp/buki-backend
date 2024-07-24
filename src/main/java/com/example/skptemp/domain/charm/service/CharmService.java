@@ -2,7 +2,7 @@ package com.example.skptemp.domain.charm.service;
 
 import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
 import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
-import com.example.skptemp.domain.charm.dto.CompleteTodayRequest;
+import com.example.skptemp.domain.charm.dto.ItemCharmRequest;
 import com.example.skptemp.domain.charm.dto.StampResponse;
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
@@ -17,12 +17,11 @@ import java.util.List;
 
 public interface CharmService {
 
+    void itemCharmModify(ItemCharmRequest request);
+
     List<CheerMessageResponse> getCheerMessage(Long charmId);
 
     void getEquipableItemList();
-
-
-    void completeToday(CompleteTodayRequest charmId);
 
     List<StampResponse> getStamp(Long charmId);
 
@@ -38,6 +37,6 @@ public interface CharmService {
 
     List<Charm> getOldestCharm(int size);
 
-    StatisticsCategoryRankingResponse getCategoryRanking();
+    List<StatisticsCategoryRankingResponse> getCategoryRanking();
 
 }
