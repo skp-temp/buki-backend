@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/statistics")
+@RequestMapping("/api/v1/statistics")
 @Tag(name = "Statistics Controller", description = "분석 페이지 API")
 public class StatisticsController {
 
