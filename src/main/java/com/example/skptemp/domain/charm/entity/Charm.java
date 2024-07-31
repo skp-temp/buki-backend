@@ -52,6 +52,8 @@ public class Charm extends BaseEntity {
     // 논리적 삭제 처리 여부 판단
     private boolean isValid;
 
+    private LocalDateTime completeAt;
+
     private void assertionAlarm(boolean alarmOn, LocalDateTime alarmTime){
         if(alarmOn && alarmTime == null){
             throw new GlobalException(GlobalErrorCode.CHARM_VALID_EXCEPTION);
