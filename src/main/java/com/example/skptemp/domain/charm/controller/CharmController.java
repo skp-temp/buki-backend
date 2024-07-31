@@ -1,9 +1,6 @@
 package com.example.skptemp.domain.charm.controller;
 
-import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
-import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
-import com.example.skptemp.domain.charm.dto.ItemCharmRequest;
-import com.example.skptemp.domain.charm.dto.StampResponse;
+import com.example.skptemp.domain.charm.dto.*;
 import com.example.skptemp.domain.charm.request.CharmDailyGoalCompleteRequest;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.request.CreateCharmRequest;
@@ -93,7 +90,7 @@ public class CharmController {
 
     @GetMapping("/{charmId}/items")
     @Operation(description = "부적이 장착할 수 있는 아이템 목록")
-    public void getCharmEquipableItemList(@PathVariable Long charmId){
+    public void getCharmEquipableItemList(@PathVariable Long charmId) {
 
         charmService.getEquipableItemList();
     }
@@ -112,4 +109,14 @@ public class CharmController {
         return ResponseEntity.ok(CustomResponse.ok());
     }
 
+    @GetMapping("/list")
+    @Operation(description = "부적 전체 조회",summary = "전체 조회")
+    public ResponseEntity<CustomResponse<CharmAllListResponse>> getCharmList(
+            CharmSort sort
+    ){
+
+        CharmAllListResponse charmList = charmService.getCharmList(sort);
+
+        return CustomResponse.okResponseEntity(charmList);
+    }
 }

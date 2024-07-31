@@ -1,12 +1,16 @@
 package com.example.skptemp.domain.charm.repository;
 
 import com.example.skptemp.domain.charm.dto.ChallengeHistoryResult;
+import com.example.skptemp.domain.charm.dto.CharmListResponse;
+import com.example.skptemp.domain.charm.dto.CharmSort;
+import com.example.skptemp.domain.charm.dto.QCharmListResponse;
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.QCharmDetailResponse;
 import com.example.skptemp.global.constant.EmotionType;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +49,7 @@ public class CharmCustomRepositoryImpl implements CharmCustomRepository {
 
         response.setCount(challengeHistoryList.size());
         response.setChallengeHistoryResultList(challengeHistoryList);
-        
+
         return response;
 
     }
@@ -67,6 +71,29 @@ public class CharmCustomRepositoryImpl implements CharmCustomRepository {
                 .where(charm.userId.eq(userId))
                 .limit(size)
                 .fetch();
+    }
 
+    @Override
+    public List<CharmListResponse> getCharmList(Long userId, CharmSort sort) {
+
+
+        OrderSpecifier<?> order = charm.createdAt.asc();
+        switch (sort) {
+            case CREATE -> order = charm.createdAt.asc();
+            case RECENT -> order = charm.completeAt.desc();
+            case CATEGORY -> order = charm.category.asc();
+        }
+
+
+        return queryFactory
+                .select(new QCharmListResponse(charm.id.count().intValue(),
+                        charm.id.count().eq(21L),
+                        charm.category,
+                        charm.goal))
+                .orderBy(order)
+                .from(charm)
+                .join(challengeHistory).on(challengeHistory.charmId.eq(charm.id))
+                .groupBy(charm.id)
+                .fetch();
     }
 }
