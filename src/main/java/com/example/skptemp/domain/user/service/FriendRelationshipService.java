@@ -1,7 +1,6 @@
 package com.example.skptemp.domain.user.service;
 
 import com.example.skptemp.domain.user.dto.FriendResult;
-import com.example.skptemp.domain.user.entity.FriendRelationship;
 
 import java.util.List;
 

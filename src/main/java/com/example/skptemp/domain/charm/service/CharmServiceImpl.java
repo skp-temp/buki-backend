@@ -1,12 +1,11 @@
 package com.example.skptemp.domain.charm.service;
 
-import com.example.skptemp.domain.charm.dto.CharmSummaryResponse;
-import com.example.skptemp.domain.charm.dto.CheerMessageResponse;
-import com.example.skptemp.domain.charm.dto.CompleteTodayRequest;
-import com.example.skptemp.domain.charm.dto.StampResponse;
+import com.example.skptemp.domain.charm.dto.*;
 import com.example.skptemp.domain.charm.entity.ChallengeHistory;
 import com.example.skptemp.domain.charm.entity.Charm;
+import com.example.skptemp.domain.charm.entity.CharmItem;
 import com.example.skptemp.domain.charm.repository.ChallengeHistoryRepository;
+import com.example.skptemp.domain.charm.repository.CharmItemRepository;
 import com.example.skptemp.domain.charm.repository.CharmRepository;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.request.CreateCharmRequest;
@@ -17,6 +16,7 @@ import com.example.skptemp.domain.cheer.repository.CheerRepository;
 import com.example.skptemp.domain.item.repository.UserItemRepository;
 import com.example.skptemp.domain.statistics.StatisticsCategoryRankingResponse;
 import com.example.skptemp.global.common.SecurityUtil;
+import com.example.skptemp.global.constant.AlarmDayType;
 import com.example.skptemp.global.constant.EmotionType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -25,20 +25,35 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional(readOnly = true)
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class CharmServiceImpl implements CharmService {
 
     private final CharmRepository charmRepository;
+    private final CharmItemRepository charmItemRepository;
     private final ChallengeHistoryRepository challengeHistoryRepository;
     private final UserItemRepository userItemRepository;
     private final CheerRepository cheerRepository;
+
+    @Override
+    public void itemCharmModify(ItemCharmRequest request) {
+//        CharmItem
+        List<Long> itemIdList = request.getItemIdList();
+        charmItemRepository.deleteByCharmId(request.getCharmId());
+        List<CharmItem> charmItemList = itemIdList.stream().map(
+                id -> new CharmItem(request.getCharmId(), id)
+        ).toList();
+
+        charmItemRepository.saveAll(charmItemList);
+    }
 
     @Override
     public List<CheerMessageResponse> getCheerMessage(Long charmId) {
@@ -50,19 +65,15 @@ public class CharmServiceImpl implements CharmService {
 
 //
 //        // TODO Item user 테이블 개발 후 작업
-//        Long userId = SecurityStaticUtil.getUserId();
+//        Long userId = SecurityUtil.getUserId();
 //        List<UserItem> byUserId = userItemRepository.findByUserId(userId);
 
 
     }
 
     @Override
-    public void completeToday(CompleteTodayRequest request) {
-        Long userId = SecurityUtil.getUserId();
-        challengeHistoryRepository.save(new ChallengeHistory(userId, request.getCharmId(), LocalDate.now(), request.getEmotionType(), request.getComment()));
-    }
+    @Transactional
 
-    @Override
     public List<StampResponse> getStamp(Long charmId) {
 
         Long userId = SecurityUtil.getUserId();
@@ -92,7 +103,7 @@ public class CharmServiceImpl implements CharmService {
                 .goal(request.goal())
                 .alarmDayType(request.alarmDayType())
                 .alarmOn(request.alarmOn())
-                .alarmTime(request.alarmTime())
+                .alarmTime(request.alarmTime().truncatedTo(ChronoUnit.MINUTES))
                 .build();
         charmRepository.save(charm);
         return new CreateCharmResponse(charm.getId());
@@ -144,7 +155,7 @@ public class CharmServiceImpl implements CharmService {
         charmRepository.settingUpdate(charmId, request);
     }
 
-    private void assertCharm(Long charmId) {
+    private void assertCharm(Long charmId){
         charmRepository.findById(charmId);
     }
 
@@ -155,8 +166,29 @@ public class CharmServiceImpl implements CharmService {
     }
 
     @Override
-    public StatisticsCategoryRankingResponse getCategoryRanking() {
+    public List<StatisticsCategoryRankingResponse> getCategoryRanking() {
         Long userId = SecurityUtil.getUserId();
         return charmRepository.getCategoryRanking(userId);
+    }
+
+    @Override
+    public CharmAllListResponse getCharmList(CharmSort sort) {
+
+        List<CharmListResponse> allCharmList = charmRepository.getCharmList(SecurityUtil.getUserId(), sort);
+        List<CharmListResponse> complete = allCharmList.stream().filter(CharmListResponse::getIsComplete).toList();
+        List<CharmListResponse> notComplete = allCharmList.stream().filter(response -> !response.getIsComplete()).toList();
+
+        return new CharmAllListResponse(complete, notComplete);
+
+
+    }
+
+    @Override
+    public List<Charm> findByAlarmTime(LocalDateTime time, List<AlarmDayType> dayType) {
+
+        return charmRepository.findByAlarmOnTrueAndAlarmTimeAndAlarmDayTypeIn(
+                time,
+                dayType
+        );
     }
 }
