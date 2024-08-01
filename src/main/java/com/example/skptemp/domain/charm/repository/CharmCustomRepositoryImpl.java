@@ -86,7 +86,9 @@ public class CharmCustomRepositoryImpl implements CharmCustomRepository {
 
 
         return queryFactory
-                .select(new QCharmListResponse(charm.id.count().intValue(),
+                .select(new QCharmListResponse(
+                        charm.id.count(),
+                        charm.id,
                         charm.id.count().eq(21L),
                         charm.category,
                         charm.goal))
