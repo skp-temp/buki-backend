@@ -87,14 +87,14 @@ public class CharmCustomRepositoryImpl implements CharmCustomRepository {
 
         return queryFactory
                 .select(new QCharmListResponse(
-                        charm.id.count(),
+                        challengeHistory.id.count(),
                         charm.id,
                         charm.id.count().eq(21L),
                         charm.category,
                         charm.goal))
                 .orderBy(order)
                 .from(charm)
-                .join(challengeHistory).on(challengeHistory.charmId.eq(charm.id))
+                .leftJoin(challengeHistory).on(challengeHistory.charmId.eq(charm.id))
                 .groupBy(charm.id)
                 .fetch();
     }
