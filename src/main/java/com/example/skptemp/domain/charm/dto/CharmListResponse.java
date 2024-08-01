@@ -10,13 +10,16 @@ import lombok.NoArgsConstructor;
 public class CharmListResponse {
 
     private long completeCount;
+
+    private Long charmId;
     private Boolean isComplete;
     private Category category;
     private String goal;
 
     @QueryProjection
-    public CharmListResponse(int completeCount, Boolean isComplete, Category category, String goal) {
+    public CharmListResponse(long completeCount, Long charmId, Boolean isComplete, Category category, String goal) {
         this.completeCount = completeCount;
+        this.charmId = charmId;
         this.isComplete = isComplete;
         this.category = category;
         this.goal = goal;
