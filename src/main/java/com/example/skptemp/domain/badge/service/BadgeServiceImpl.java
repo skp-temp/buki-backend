@@ -3,9 +3,9 @@ package com.example.skptemp.domain.badge.service;
 import com.example.skptemp.domain.badge.dto.UserBadgeResult;
 import com.example.skptemp.domain.badge.entity.Badge;
 import com.example.skptemp.domain.badge.entity.UserBadge;
-import com.example.skptemp.domain.badge.repository.BadgeRepository;
 import com.example.skptemp.domain.badge.repository.UserBadgeRepository;
-import com.example.skptemp.global.constant.BadgeType;
+import com.example.skptemp.domain.charm.entity.Charm;
+import com.example.skptemp.domain.charm.repository.CharmRepository;
 import com.example.skptemp.global.constant.Category;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -19,15 +19,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class BadgeServiceImpl implements BadgeService {
-    private final BadgeRepository badgeRepository;
     private final UserBadgeRepository userBadgeRepository;
+    private final CharmRepository charmRepository;
 
     @Transactional
     @Override
-    public void completeBadge(Long userId, Long badgeId) {
-        validate(userId, badgeId);
+    public void completeBadge(Long userId, Badge badge) {
+        validate(userId, badge);
         UserBadge userBadge = UserBadge.builder()
-                .badgeId(badgeId)
+                .badge(badge)
                 .userId(userId)
                 .build();
         userBadgeRepository.save(userBadge);
@@ -42,10 +42,9 @@ public class BadgeServiceImpl implements BadgeService {
 
         //2. badge는 부적 완성 관련 / 응원 메시지 보내기 / 뽑기 실행 / 연속 접속 기록 / 친구 수
 
-        //3.
     }
 
-    private void refreshCheerBadge(Long userId){ // 응원 관련 뱃지
+    private void refreshCheerBadge(Category category, Long userId){ // 응원 관련 뱃지
 
     }
     private void refreshGachaBadge(Long userId){ // 뽑기 관련 뱃지
@@ -58,8 +57,9 @@ public class BadgeServiceImpl implements BadgeService {
 
     }
 
-    private void refreshCharmBadge(Category category){
+    private void refreshCharmBadge(Category category, Long userId){
         // 부적 유형 별로 완성 상태 확인해서 뱃지 획득 정보를 갱신한다.
+        List<Charm> charmList = charmRepository.findByUserIdAndCategoryAndIsValidIsTrue(userId, category);
 
 
     }
@@ -77,23 +77,11 @@ public class BadgeServiceImpl implements BadgeService {
                 ).toList();
     }
 
-    @Transactional
-    @Override
-    public void createBadge(String name, String description, String tip, BadgeType badgeType) {
-        Badge badge = Badge.builder()
-                .name(name)
-                .description(description)
-                .tip(tip)
-                .badgeType(badgeType)
-                .build();
-        badgeRepository.save(badge);
-    }
     @Override
     public List<Badge> getAllBadges() {
-        return badgeRepository.findByIsValidIsTrue();
+        return null;
     }
-    private void validate(Long userId, Long badgeId){
-        if(userId == null || badgeId == null) throw new GlobalException(GlobalErrorCode.VALID_EXCEPTION);
-        if(badgeRepository.findByIdAndIsValidIsTrue(badgeId).isEmpty()) throw new GlobalException("존재하지 않는 뱃지 정보입니다.", GlobalErrorCode.Badge_VALID_EXCEPTION);
+    private void validate(Long userId, Badge badge){
+        if(userId == null || badge == null) throw new GlobalException(GlobalErrorCode.VALID_EXCEPTION);
     }
 }
