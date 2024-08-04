@@ -30,4 +30,7 @@ public enum Badge {
         this.badgeType = badgeType;
     }
 
+    public String toString(){
+        return "id: " + id + " name: " + name + " description: " + description + " tip: " + tip + " badgeType: " + badgeType.toString();
+    }
 }
