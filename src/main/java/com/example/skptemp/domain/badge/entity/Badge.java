@@ -1,7 +1,9 @@
 package com.example.skptemp.domain.badge.entity;
 
 import com.example.skptemp.global.constant.BadgeType;
+import lombok.Getter;
 
+@Getter
 public enum Badge {
     CheerLeader(0,"치어리더", "응원메시지 10회 보내기", "Tip. 응원 메시지를 10번 이상 보내보세요.", BadgeType.CHEER),
     GachaKing(1,"뽑기왕", "뽑기 5회 실행", "Tip. 뽑기 5회 실행", BadgeType.GACHA),

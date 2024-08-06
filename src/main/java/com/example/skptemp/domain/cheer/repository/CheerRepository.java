@@ -18,5 +18,5 @@ public interface CheerRepository extends JpaRepository<Cheer, Long>, CheerCustom
             WHERE cheer.charmId = :charmId
                 """)
     List<CheerMessageResponse> findCheerMessage(@Param("charmId") Long charmId);
-
+    List<Cheer> findByFromUser(Long fromUserId);
 }

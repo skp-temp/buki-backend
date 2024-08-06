@@ -1,6 +1,7 @@
 package com.example.skptemp.domain.badge.service;
 
 import com.example.skptemp.common.TestConstants;
+import com.example.skptemp.domain.badge.dto.BadgeResult;
 import com.example.skptemp.domain.badge.dto.UserBadgeResult;
 import com.example.skptemp.domain.badge.entity.Badge;
 import com.example.skptemp.domain.badge.entity.UserBadge;
@@ -26,7 +27,7 @@ class BadgeServiceTest {
     void afterEach() {
     }
     @Test
-    void 뱃지_생성_성공(){
+    void 뱃지_생성_성공(){ //TODO: service 객체는 뱃지 부여를 위한 수단을 제공하지 않는다. (필요할까??)
         //given
         //when
         //then
@@ -54,9 +55,9 @@ class BadgeServiceTest {
     void 전체_뱃지_조회(){
         //given
         //when
-        List<Badge> badgeList = badgeService.getAllBadges();
+        List<BadgeResult> resultList = badgeService.getAllBadges();
         //then
-        for(var badge : badgeList)
-            log.info(badge.toString());
+        for(var badgeResult : resultList)
+            log.info(badgeResult.toString());
     }
 }
