@@ -111,4 +111,6 @@ public class UserController {
 
         return ResponseEntity.ok(CustomResponse.ok(response));
     }
+    
+    //TODO: 대표 뱃지 조회 API 개발 필요
 }
