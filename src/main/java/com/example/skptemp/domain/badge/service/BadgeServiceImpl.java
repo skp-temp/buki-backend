@@ -16,6 +16,7 @@ import com.example.skptemp.global.constant.Category;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -137,6 +139,7 @@ public class BadgeServiceImpl implements BadgeService {
                 completeBadge(userId, Badge.GodSang);
             }
         }
+        log.info("[Badge] give " + category.name() + " charm badge to " + userId + " user");
     }
     private void completeBadge(Long userId, Badge badge) {
         validate(userId, badge);

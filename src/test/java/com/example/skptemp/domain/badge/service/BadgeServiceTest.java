@@ -52,6 +52,19 @@ class BadgeServiceTest {
     }
 
     @Test
+    void 갓생_부적_뱃지_부여_성공(){
+        //given
+        //when
+        badgeService.refreshUserBadgeInfo(TestConstants.TEST_USER_ID); // data.sql을 통해 갓생 부적 5개의 완성된 부적 추가한 상태
+
+        //then
+        List<UserBadgeResult> userBadgeInfo = badgeService.getUserBadgeInfo(TestConstants.TEST_USER_ID);
+        for(var userBadge : userBadgeInfo){
+            log.info("badge 정보" + userBadge.badge().toString());
+        }
+    }
+
+    @Test
     void 전체_뱃지_조회(){
         //given
         //when

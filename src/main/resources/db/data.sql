@@ -1,1 +1,0 @@
-INSERT INTO user_badge VALUES (null, 'GachaKing', 3, true, null);
