@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.badge.controller;
 
+import com.example.skptemp.domain.badge.dto.*;
 import com.example.skptemp.domain.badge.service.BadgeService;
 import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.common.SecurityUtil;
@@ -11,28 +12,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/badge")
+@RequestMapping("/api/v1/badges")
 @RestController
 public class BadgeController {
     private final BadgeService badgeService;
 
+    @Operation(description = "사용자가 현재 보유 중인 뱃지 상태 정보를 조회합니다.", summary = "GetBadgeStatus")
     @GetMapping("/status")
-    public ResponseEntity<CustomResponse<Void>> getBadgeStatus(){
+    public ResponseEntity<CustomResponse<GetBadgeStatusResponse>> getBadgeStatus(){
         Long userId = SecurityUtil.getUserId();
+        List<UserBadgeResult> resultList = badgeService.getUserBadgeInfo(userId);
 
-        return null;
+        var response = new GetBadgeStatusResponse(resultList);
+
+        return ResponseEntity.ok(CustomResponse.ok(response));
     }
 
+    @Operation(description = "부키 서비스의 전체 뱃지 정보를 조회합니다.", summary = "GetAllBadges")
     @GetMapping
-    public ResponseEntity<CustomResponse<Void>> getAllBadges(){
-        return null;
+    public ResponseEntity<CustomResponse<GetAllBadgesResponse>> getAllBadges(){
+        List<BadgeResult> list = badgeService.getAllBadges();
+        var response = new GetAllBadgesResponse(list);
+
+        return ResponseEntity.ok(CustomResponse.ok(response));
     }
 
-    @Operation(description = "refreshBadgeStatus", summary = "badge 달성 정보 갱신")
+    @Operation(description = "사용자의 뱃지 획득 정보를 갱신합니다.", summary = "RefreshBadgeStatus")
     @PostMapping("/status")
     public ResponseEntity<CustomResponse<Void>> refreshBadgeStatus(){
         Long userId = SecurityUtil.getUserId();
-        return null;
+        badgeService.refreshUserBadgeInfo(userId);
+
+        return ResponseEntity.ok(CustomResponse.ok());
     }
 }

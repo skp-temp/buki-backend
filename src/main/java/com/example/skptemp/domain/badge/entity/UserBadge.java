@@ -15,7 +15,8 @@ public class UserBadge extends BaseEntity {
     @Id @Column(name = "user_badge_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long badgeId;
+    @Enumerated(EnumType.STRING)
+    private Badge badge;
     private Long userId;
     private boolean isValid = true;
     private LocalDate completedAt;
@@ -29,8 +30,8 @@ public class UserBadge extends BaseEntity {
     }
 
     @Builder
-    public UserBadge(Long badgeId, Long userId){
-        this.badgeId = badgeId;
+    public UserBadge(Badge badge, Long userId){
+        this.badge = badge;
         this.userId = userId;
         this.completedAt = LocalDate.now();
     }
