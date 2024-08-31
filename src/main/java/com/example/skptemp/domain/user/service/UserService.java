@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.badge.entity.Badge;
 import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.global.constant.LoginType;
@@ -15,4 +16,5 @@ public interface UserService {
     UserResponse changeUserName(UserChangeNameRequest request);
     void deleteUser(Long id);
     GetGachaStatusResponse getGachaStatus(Long id);
+    void changeProfileBadge(Long id, Badge badge);
 }

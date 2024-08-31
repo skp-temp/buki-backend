@@ -1,5 +1,8 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.badge.entity.Badge;
+import com.example.skptemp.domain.badge.entity.UserBadge;
+import com.example.skptemp.domain.badge.repository.UserBadgeRepository;
 import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.entity.UserDetailsImpl;
@@ -15,12 +18,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
+    private final UserBadgeRepository userBadgeRepository;
     private final JwtProvider jwtProvider;
 
     @Transactional
@@ -74,7 +81,6 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
     }
 
-
     @Override
     public User findByCode(String code) {
         return userRepository.findByCodeAndIsValidIsTrue(code).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
@@ -119,6 +125,25 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
         return new GetGachaStatusResponse(findUser.isGachaEnable());
     }
+
+    @Override
+    public void changeProfileBadge(Long id, Badge badge){
+        User findUser = findById(id);
+        assertValidBadge(id, badge);
+
+        findUser.changeProfileBadge(badge);
+    }
+
+    private void assertValidBadge(Long id, Badge badge){
+        List<UserBadge> userBadgeList = userBadgeRepository.findByUserIdAndIsValidIsTrue(id);
+
+        Optional<UserBadge> userBadge1 = userBadgeList.stream().filter(userBadge -> userBadge.getBadge().equals(badge)).findAny();
+        if(userBadge1.isEmpty()){
+            throw new GlobalException(GlobalErrorCode.USER_NO_BADGE_EXCEPTION);
+        }
+    }
+
+
     private User findById(Long id){
         return userRepository.findByIdAndIsValidIsTrue(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));

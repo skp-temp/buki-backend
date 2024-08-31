@@ -19,6 +19,7 @@ public enum GlobalErrorCode {
     USER_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G310", "유저가 유효하지 않습니다."),
     USER_DELETED_EXCEPTION(HttpStatus.BAD_REQUEST, "G311", "삭제된 계정입니다."),
     TEST_ACCOUNT_INVALID(HttpStatus.INTERNAL_SERVER_ERROR, "G312", "테스트용 계정 오류입니다."),
+    USER_NO_BADGE_EXCEPTION(HttpStatus.BAD_REQUEST, "G313", "유저가 보유하지 않은 뱃지입니다."),
 
     // 아이템
     ITEM_VALID_EXCEPTION(HttpStatus.BAD_REQUEST, "G320", "아이템이 유효하지 않습니다."),
