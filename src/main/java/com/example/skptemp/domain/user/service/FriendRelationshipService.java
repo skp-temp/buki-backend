@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface FriendRelationshipService {
     void enrollFriendRelationship(Long userA, Long userB);
-    List<FriendResult> findFriendRelationshipList(Long userId);
+    List<FriendResult> findFriendList(Long userId);
     void deleteFriendRelationship(Long userId, Long friendId);
 }

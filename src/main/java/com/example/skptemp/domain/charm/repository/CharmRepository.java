@@ -28,4 +28,5 @@ public interface CharmRepository extends JpaRepository<Charm, Long>, CharmCustom
 
     List<Charm> findByAlarmOnTrueAndAlarmTimeAndAlarmDayTypeIn(LocalDateTime alarmTime, Collection<AlarmDayType> alarmDayTypes);
     List<Charm> findByUserIdAndCategoryAndIsValidIsTrue(Long userId, Category category);
+    List<Charm> findByUserIdInAndIsValidIsTrue(List<Long> userIdList);
 }

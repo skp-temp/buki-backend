@@ -7,12 +7,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByLoginTypeAndPlatformProviderIdAndIsValidIsTrue(LoginType loginType, String authProviderId);
     Optional<User> findByIdAndIsValidIsTrue(Long id);
     Optional<User> findByCodeAndIsValidIsTrue(String code);
+    List<User> findByIdInAndIsValidIsTrue(List<Long> userIdList);
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.gachaEnable = false")

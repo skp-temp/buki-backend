@@ -28,7 +28,7 @@ public class FriendController {
     @GetMapping
     ResponseEntity<CustomResponse<FriendResponse>> getFriendList(){
         Long userId = SecurityUtil.getUserId();
-        List<FriendResult> friendRelationshipList = friendRelationshipService.findFriendRelationshipList(userId);
+        List<FriendResult> friendRelationshipList = friendRelationshipService.findFriendList(userId);
 
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(new FriendResponse(friendRelationshipList)));

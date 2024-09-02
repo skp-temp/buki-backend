@@ -1,5 +1,7 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.charm.entity.Charm;
+import com.example.skptemp.domain.charm.repository.CharmRepository;
 import com.example.skptemp.domain.notification.dto.NotificationEventRequest;
 import com.example.skptemp.domain.notification.dto.NotificationType;
 import com.example.skptemp.domain.notification.event.EventPublisher;
@@ -9,6 +11,7 @@ import com.example.skptemp.domain.user.entity.FriendRelationship;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.repository.FriendRelationshipRepository;
 import com.example.skptemp.domain.user.repository.UserRepository;
+import com.example.skptemp.global.constant.BukiConstant;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @Transactional
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     private final FriendRelationshipRepository friendRelationshipRepository;
     private final EventPublisher eventPublisher;
     private final UserRepository userRepository;
+    private final CharmRepository charmRepository;
 
     @Transactional
     @Override
@@ -52,12 +56,46 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     }
 
     @Override
-    public List<FriendResult> findFriendRelationshipList(Long userId) {
+    public List<FriendResult> findFriendList(Long userId) {
         validateUserId(userId);
+
+        List<FriendResult> friendResultList = new ArrayList<>();
+
         // userA 기준으로 친구 관계를 리스트로 조회한다.
-        return friendRelationshipRepository.findByUserA(userId).stream()
-                .map(FriendResult::new)
-                .toList();
+        List<FriendRelationship> friendList = friendRelationshipRepository.findByUserA(userId);
+        List<Long> friendIdList = friendList.stream().map(FriendRelationship::getUserB).toList();
+
+        List<User> friendInfoList = userRepository.findByIdInAndIsValidIsTrue(friendIdList);
+        Map<Long, FriendResult> friendResultMap = new HashMap<>();
+
+        // 친구의 사용자 정보를 담은 result 객체를 미리 만든다.
+        for(var friend : friendInfoList) {
+            FriendResult result = FriendResult.builder()
+                    .friendId(friend.getId())
+                    .firstName(friend.getFirstName())
+                    .lastName(friend.getLastName())
+                    .profileBadge(friend.getProfileBadge())
+                    .set(new HashSet<>())
+                    .build();
+            friendResultList.add(result);
+
+            friendResultMap.put(friend.getId(), result);
+        }
+
+        // 진행 중인 부적 category 정보를 찾는다.
+        List<Charm> allCharmFriendsOwn = charmRepository.findByUserIdInAndIsValidIsTrue(friendIdList);
+
+        for(var charm : allCharmFriendsOwn) {
+            //TODO: 현재 만들고 있는 부적을 구분하기 위한 수단이 필요하다. (일단 레벨로만 판단한다.)
+            // 부키의 부적은 21 레벨이 되어도 완성 상태가 아닐 수 있어, 별도 필드를 통한 상태 구분이 필수적이다.
+            if(charm.getCharmLevel() == BukiConstant.CHARM_FINAL_COMPLETE_DAY)
+                continue;
+
+            FriendResult friendResult = friendResultMap.get(charm.getUserId());
+            friendResult.getCategorySet().add(charm.getCategory());
+        }
+
+        return friendResultList;
     }
     @Transactional
     @Override
@@ -73,7 +111,7 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
     }
 
     private void validateNotFriend(Long userId, Long friendId){
-        if(!friendRelationshipRepository.findByUserAAndUserB(userId, friendId).isEmpty())
+        if(friendRelationshipRepository.findByUserAAndUserB(userId, friendId).isPresent())
             throw new GlobalException(GlobalErrorCode.FRIEND_RELATIONSHIP_ALREADY_EXIST);
     }
 
