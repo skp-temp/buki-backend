@@ -26,6 +26,7 @@ import java.util.Random;
 @Transactional
 @Service
 public class ItemServiceImpl implements ItemService {
+    public static final Random RANDOM = new Random();
     private final ItemRepository itemRepository;
     private final UserItemRepository userItemRepository;
     private final UserItemService userItemService;
@@ -42,20 +43,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public GetUserItemResponse findItemListByUserId(Long userId) {
-        List<UserItem> userItemList = userItemRepository.findByUserId(userId);
-        List<Item> itemList = itemRepository.findByIdIn(userItemList.stream()
-                .map(UserItem::getItemId)
-                .toList());
+        List<UserItem> userItemList = userItemRepository.getUserItemList(userId);
 
         List<UserItemResult> userItemResultList = new ArrayList<>();
 
         for(UserItem userItem : userItemList){
-            Item findItem = itemList.stream()
-                    .filter((Item item) -> item.getId().equals(userItem.getItemId()))
-                    .findAny()
-                    .get();
-
-
+            Item findItem = userItem.getItem();
             UserItemResult userItemResult =
                     UserItemResult.builder()
                             .itemType(findItem.getItemType())
@@ -132,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
             throw new GlobalException(GlobalErrorCode.OTHER);
         }
 
-        Random random = new Random();
+        Random random = RANDOM;
         return random.nextLong(count) + 1;
     }
 }
