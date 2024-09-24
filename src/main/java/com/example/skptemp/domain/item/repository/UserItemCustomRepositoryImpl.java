@@ -2,6 +2,7 @@ package com.example.skptemp.domain.item.repository;
 
 import com.example.skptemp.domain.item.dto.CheerItemResponse;
 import com.example.skptemp.domain.item.dto.QCheerItemResponse;
+import com.example.skptemp.domain.item.entity.UserItem;
 import com.example.skptemp.global.constant.Category;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,20 @@ public class UserItemCustomRepositoryImpl implements UserItemCustomRepository {
                                 item.category,
                                 item.itemType))
                 .from(userItem)
+                .fetchJoin()
                 .innerJoin(item)
-                .on(item.id.eq(userItem.itemId))
+                .on(item.id.eq(userItem.item.id))
                 .where(userItem.userId.eq(userId), item.category.eq(category), userItem.count.gt(0))
+                .fetch();
+    }
+
+    @Override
+    public List<UserItem> getUserItemList(Long userId) {
+
+        return jpaQueryFactory.selectFrom(userItem)
+                .join(userItem.item,item)
+                .fetchJoin()
+                .where(userItem.userId.eq(userId))
                 .fetch();
     }
 }

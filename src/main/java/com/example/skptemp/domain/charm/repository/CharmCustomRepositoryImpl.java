@@ -5,6 +5,7 @@ import com.example.skptemp.domain.charm.dto.CharmListResponse;
 import com.example.skptemp.domain.charm.dto.CharmSort;
 import com.example.skptemp.domain.charm.dto.QCharmListResponse;
 import com.example.skptemp.domain.charm.entity.Charm;
+import com.example.skptemp.domain.charm.entity.QCharmItem;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.QCharmDetailResponse;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static com.example.skptemp.domain.charm.entity.QChallengeHistory.challengeHistory;
 import static com.example.skptemp.domain.charm.entity.QCharm.charm;
+import static com.example.skptemp.domain.charm.entity.QCharmItem.charmItem;
 
 
 @Repository
@@ -95,6 +97,7 @@ public class CharmCustomRepositoryImpl implements CharmCustomRepository {
                 .orderBy(order)
                 .from(charm)
                 .leftJoin(challengeHistory).on(challengeHistory.charmId.eq(charm.id))
+                .innerJoin(charmItem).on(charmItem.charmId.eq(charm.id))
                 .groupBy(charm.id)
                 .fetch();
     }

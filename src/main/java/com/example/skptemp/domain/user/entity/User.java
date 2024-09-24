@@ -2,6 +2,7 @@ package com.example.skptemp.domain.user.entity;
 
 import com.example.skptemp.domain.badge.entity.Badge;
 import com.example.skptemp.domain.common.BaseEntity;
+import com.example.skptemp.domain.item.entity.UserItem;
 import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
@@ -9,6 +10,8 @@ import com.example.skptemp.global.util.FriendCodeGenerator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -30,10 +33,12 @@ public class User extends BaseEntity {
     private boolean gachaEnable;    // 뽑기 상태
     private int gachaCount = 0;     // 누적 뽑기 횟수
     private Badge profileBadge;     // 대표 뱃지
-
     private String authority;
     private boolean isValid;        // 논리적 삭제 처리를 위함
 
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<UserItem> userItemList;
     protected User(){
     }
 
