@@ -46,7 +46,7 @@ public class CharmController {
         CharmDailyGoalCompleteResponse response = charmService.dailyGoalComplete(
                 request.getCharmId(),
                 userId,
-                EmotionType.get(request.getEmotionIndex()),
+                request.getEmotion(),
                 request.getComment());
 
         return ResponseEntity.ok(

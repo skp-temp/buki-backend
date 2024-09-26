@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "ChallengeHistory", indexes = {
+@Table(name = "challenge_history", indexes = {
         @Index(name = "idx_challenge_history_user_id_charm_id", columnList = "user_id, charm_id")
 })
 public class ChallengeHistory {
