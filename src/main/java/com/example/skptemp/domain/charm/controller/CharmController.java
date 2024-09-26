@@ -101,7 +101,7 @@ public class CharmController {
         return CustomResponse.okResponseEntity(charmService.getCheerMessage(charmId));
     }
 
-    @PatchMapping("/{charmId}/modfiy")
+    @PatchMapping("/modfiy")
     @Operation(description = "부적 아이템 장착 편집하기")
     public ResponseEntity<CustomResponse<Void>> itemCharmModify(@RequestBody ItemCharmRequest request) {
 
