@@ -15,9 +15,7 @@ public class CharmItem extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
     private Long charmId;
-
     private Long itemId;
 
 

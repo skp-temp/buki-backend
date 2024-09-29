@@ -25,6 +25,7 @@ public class SecurityConfiguration {
     private final UserService userService;
     private final String[] permittedPatterns = {
             "/api/v1/users/login",
+            "/api/v1/users/logout",
             "/api/v1/users/sign-up",
             "/api/v1/users/create-token-100days",
             "/api/v1/users/create-token-10min",

@@ -25,6 +25,8 @@ public class JwtProvider {
     private final SecretKey secretKey;
     private final UserDetailsService userDetailsService;
 
+    public static final String JWT_LOGOUT = "logout";
+
     public JwtProvider(@Value("${jwt.password}") String secretKey, UserDetailsService userDetailsService){
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
         this.userDetailsService = userDetailsService;

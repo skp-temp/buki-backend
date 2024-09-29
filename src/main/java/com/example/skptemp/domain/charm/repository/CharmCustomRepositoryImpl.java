@@ -1,10 +1,8 @@
 package com.example.skptemp.domain.charm.repository;
 
-import com.example.skptemp.domain.charm.dto.ChallengeHistoryResult;
-import com.example.skptemp.domain.charm.dto.CharmListResponse;
-import com.example.skptemp.domain.charm.dto.CharmSort;
-import com.example.skptemp.domain.charm.dto.QCharmListResponse;
+import com.example.skptemp.domain.charm.dto.*;
 import com.example.skptemp.domain.charm.entity.Charm;
+import com.example.skptemp.domain.charm.entity.QCharmItem;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.QCharmDetailResponse;
@@ -20,6 +18,7 @@ import java.util.List;
 
 import static com.example.skptemp.domain.charm.entity.QChallengeHistory.challengeHistory;
 import static com.example.skptemp.domain.charm.entity.QCharm.charm;
+import static com.example.skptemp.domain.charm.entity.QCharmItem.charmItem;
 
 
 @Repository
@@ -33,19 +32,15 @@ public class CharmCustomRepositoryImpl implements CharmCustomRepository {
     @Override
     public CharmDetailResponse getDetail(Long charmId, Long userId) {
 
-        JPAQuery<Tuple> results = queryFactory.select(challengeHistory.id, challengeHistory.emotionType, challengeHistory.comment)
+        List<ChallengeHistoryResult> challengeHistoryList = queryFactory.select(new QChallengeHistoryResult(challengeHistory.id, challengeHistory.emotionType, challengeHistory.comment, challengeHistory.historyDate))
                 .from(challengeHistory)
                 .where(challengeHistory.charmId.eq(charmId), challengeHistory.userId.eq(userId))
-                .fetchAll();
+                .fetch();
         CharmDetailResponse response = queryFactory.select(new QCharmDetailResponse(charm.category, charm.goal))
                 .from(charm)
                 .where(charm.id.eq(charmId))
                 .fetchOne();
 
-        List<ChallengeHistoryResult> challengeHistoryList = results.stream()
-                .map(result -> {
-                    return new ChallengeHistoryResult(result.get(1, Long.class), result.get(2, EmotionType.class), result.get(3, String.class));
-                }).toList();
 
         response.setCount(challengeHistoryList.size());
         response.setChallengeHistoryResultList(challengeHistoryList);
@@ -95,6 +90,7 @@ public class CharmCustomRepositoryImpl implements CharmCustomRepository {
                 .orderBy(order)
                 .from(charm)
                 .leftJoin(challengeHistory).on(challengeHistory.charmId.eq(charm.id))
+                .innerJoin(charmItem).on(charmItem.charmId.eq(charm.id))
                 .groupBy(charm.id)
                 .fetch();
     }

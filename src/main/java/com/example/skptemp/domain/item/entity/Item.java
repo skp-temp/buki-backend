@@ -13,8 +13,10 @@ public class Item extends BaseEntity {
     @Id @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(value = EnumType.STRING)
     private Category category;
     private String itemName;
+    @Enumerated(value = EnumType.STRING)
     private ItemType itemType;
 
     private Item(Category category, String itemName, ItemType itemType){

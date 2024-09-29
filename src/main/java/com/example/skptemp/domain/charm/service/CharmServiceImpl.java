@@ -27,10 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -175,6 +173,15 @@ public class CharmServiceImpl implements CharmService {
     public CharmAllListResponse getCharmList(CharmSort sort) {
 
         List<CharmListResponse> allCharmList = charmRepository.getCharmList(SecurityUtil.getUserId(), sort);
+        List<Long> charmIdList = allCharmList.stream().map(CharmListResponse::getCharmId).toList();
+        Map<Long, List<CharmItemDetailResponse>> collect = charmItemRepository.getCharmItemList(charmIdList)
+                .stream()
+                .collect(Collectors.groupingBy(CharmItemDetailResponse::getCharmId));
+        for (CharmListResponse charmListResponse : allCharmList) {
+            Long charmId = charmListResponse.getCharmId();
+            List<CharmItemDetailResponse> charmItemDetailResponses = collect.get(charmId);
+            charmListResponse.setItemList(charmItemDetailResponses);
+        }
         List<CharmListResponse> complete = allCharmList.stream().filter(CharmListResponse::getIsComplete).toList();
         List<CharmListResponse> notComplete = allCharmList.stream().filter(response -> !response.getIsComplete()).toList();
 

@@ -6,6 +6,7 @@ import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.global.constant.LoginType;
 
 public interface UserService {
+    void logout();
     LoginResponse doLogin(LoginType loginType, String authProviderId, String pushToken);
     SignUpResponse doSignup(SignupRequest request);
     UserResponse findByUserId(Long id);
@@ -17,4 +18,6 @@ public interface UserService {
     void deleteUser(Long id);
     GetGachaStatusResponse getGachaStatus(Long id);
     void changeProfileBadge(Long id, Badge badge);
+
+    boolean checkTokenValid();
 }

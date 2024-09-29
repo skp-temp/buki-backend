@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final JwtProvider jwtProvider;
+
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "로그인 성공"),
@@ -29,7 +30,7 @@ public class UserController {
     )
     @Operation(summary = "login", description = "Login 작업을 수행합니다.")
     @PostMapping("/login")
-    public ResponseEntity<CustomResponse<LoginResponse>> doLogin(@RequestBody LoginRequest request){
+    public ResponseEntity<CustomResponse<LoginResponse>> doLogin(@RequestBody LoginRequest request) {
         userService.findByLoginTypeAndAuthProviderId(request.loginType(), request.platformProviderId());
 
         LoginResponse loginResponse = userService.doLogin(request.loginType(), request.platformProviderId(), request.pushToken());
@@ -40,16 +41,17 @@ public class UserController {
 
     @Operation(summary = "signup", description = "카카오 연동 회원 가입 API")
     @PostMapping("/sign-up")
-    public ResponseEntity<CustomResponse<SignUpResponse>> doSignup(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<CustomResponse<SignUpResponse>> doSignup(@RequestBody SignupRequest signupRequest) {
         SignUpResponse signUpResponse = userService.doSignup(signupRequest);
         userService.findByLoginTypeAndAuthProviderId(signupRequest.loginType(), signupRequest.platformProviderId());
 
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(signUpResponse));
     }
+
     @Operation(summary = "changeUserName", description = "사용자 이름 변경 API")
     @PostMapping("/name")
-    public ResponseEntity<CustomResponse<UserResponse>> changeUserName(@RequestBody UserChangeNameRequest request){
+    public ResponseEntity<CustomResponse<UserResponse>> changeUserName(@RequestBody UserChangeNameRequest request) {
         UserResponse response = userService.changeUserName(request);
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(response));
@@ -66,7 +68,7 @@ public class UserController {
 
     @Operation(summary = "createToken10Min", description = "테스트 용 access 토큰 발급 (유효 기간 3시간)")
     @PostMapping("/create-token-10min")
-    public ResponseEntity<CustomResponse<TokenResponse>> createToken3Hours(){
+    public ResponseEntity<CustomResponse<TokenResponse>> createToken3Hours() {
         String jwt = userService.createTestJwt();
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(new TokenResponse(jwt)));
@@ -74,7 +76,7 @@ public class UserController {
 
     @Operation(summary = "getUser", description = "사용자 정보 조회")
     @GetMapping
-    public ResponseEntity<CustomResponse<UserResponse>> getUser(){
+    public ResponseEntity<CustomResponse<UserResponse>> getUser() {
         Long userId = SecurityUtil.getUserId();
         UserResponse userResponse = userService.findByUserId(userId);
 
@@ -84,7 +86,7 @@ public class UserController {
 
     @Operation(summary = "deleteUserForDev", description = "사용자 삭제, 개발용 입니다.")
     @DeleteMapping("/delete-for-dev")
-    public ResponseEntity<CustomResponse<Void>> deleteUserForDev(@RequestBody Long userId){
+    public ResponseEntity<CustomResponse<Void>> deleteUserForDev(@RequestBody Long userId) {
         userService.deleteUser(userId);
 
         return ResponseEntity.ok()
@@ -93,7 +95,7 @@ public class UserController {
 
     @Operation(summary = "deleteUser", description = "사용자 계정 탈퇴")
     @DeleteMapping
-    public ResponseEntity<CustomResponse<Void>> deleteUser(HttpServletRequest request){
+    public ResponseEntity<CustomResponse<Void>> deleteUser(HttpServletRequest request) {
         final String authorization = jwtProvider.resolveTokenFromRequest(request);
         String token = jwtProvider.bearerRemove(authorization);
 
@@ -103,14 +105,28 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(CustomResponse.ok());
     }
+
     @Operation(summary = "getGachaCondition", description = "뽑기 가능 여부 조회")
     @GetMapping("/gacha-condition")
-    public ResponseEntity<CustomResponse<GetGachaStatusResponse>> getGachaCondition(){
+    public ResponseEntity<CustomResponse<GetGachaStatusResponse>> getGachaCondition() {
         Long userId = SecurityUtil.getUserId();
         GetGachaStatusResponse response = userService.getGachaStatus(userId);
 
         return ResponseEntity.ok(CustomResponse.ok(response));
     }
-    
+
+    @PostMapping("/logout")
+    @Operation(summary = "로그아웃")
+    public ResponseEntity<CustomResponse<Object>> userLogout(){
+        userService.logout();
+        return CustomResponse.okResponseEntity(null);
+    }
+
+    @PostMapping("/valid")
+    @Operation(summary = "현재 가지고있는 토큰 유효한지 판별")
+    public ResponseEntity<CustomResponse<Object>> checkTokenValid(){
+        return CustomResponse.okResponseEntity(userService.checkTokenValid());
+    }
+
     //TODO: 대표 뱃지 조회 API 개발 필요
 }

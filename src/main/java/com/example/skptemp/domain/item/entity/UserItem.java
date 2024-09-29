@@ -15,8 +15,13 @@ public class UserItem extends BaseEntity {
     @Id @Column(name = "user_item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "user_id")
     private Long userId;
-    private Long itemId;
+
+
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
     @Setter
     private int count;
     private int equippedItemCount; //TODO: 장착 중인 아이템의 수를 별도로 관리해줘야 한다.
@@ -29,14 +34,14 @@ public class UserItem extends BaseEntity {
         this.count -= count;
     }
 
-    private UserItem(Long userId, Long itemId, int count){
+    private UserItem(Long userId, Item item, int count){
         this.userId = userId;
-        this.itemId = itemId;
+        this.item = item;
         this.count = count;
     }
 
-    public static UserItem create(Long userId, Long itemId){
-        return new UserItem(userId, itemId, 0);
+    public static UserItem create(Long userId, Item item){
+        return new UserItem(userId, item, 0);
     }
 
     private void validate(int count){

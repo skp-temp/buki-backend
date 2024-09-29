@@ -7,19 +7,26 @@ import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.entity.UserDetailsImpl;
 import com.example.skptemp.domain.user.repository.UserRepository;
+import com.example.skptemp.global.common.RedisComponent;
 import com.example.skptemp.global.configuration.JwtProvider;
 import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import com.example.skptemp.global.util.GlobalConstants;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,7 +35,19 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final UserBadgeRepository userBadgeRepository;
+    private final RedisComponent redisComponent;
     private final JwtProvider jwtProvider;
+
+    @Override
+    public void logout() {
+
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.
+                getRequestAttributes();
+        assert requestAttributes != null;
+        HttpServletRequest request = requestAttributes.getRequest();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        redisComponent.setValueWithExpire(token, "false", 30, TimeUnit.DAYS);
+    }
 
     @Transactional
     @Override
@@ -80,6 +99,7 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByLoginTypeAndPlatformProviderIdAndIsValidIsTrue(loginType, platformProviderId)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_VALID_EXCEPTION));
     }
+
 
     @Override
     public User findByCode(String code) {
@@ -143,6 +163,19 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+
+
+    @Override
+    public boolean checkTokenValid() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.
+                getRequestAttributes();
+        assert requestAttributes != null;
+        HttpServletRequest request = requestAttributes.getRequest();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+
+        return Boolean.parseBoolean(redisComponent.getValue(token));
+
+    }
 
     private User findById(Long id){
         return userRepository.findByIdAndIsValidIsTrue(id)
