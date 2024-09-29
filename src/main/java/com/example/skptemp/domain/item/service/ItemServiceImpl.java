@@ -51,11 +51,11 @@ public class ItemServiceImpl implements ItemService {
             Item findItem = userItem.getItem();
             UserItemResult userItemResult =
                     UserItemResult.builder()
-                            .itemType(findItem.getItemType())
+                            .itemType(findItem.getItemType().ordinal())
                             .itemName(findItem.getItemName())
                             .count(userItem.getCount())
                             .itemId(findItem.getId())
-                            .category(findItem.getCategory())
+                            .categoryId(findItem.getCategory().ordinal())
                             .build();
             userItemResultList.add(userItemResult);
         }
