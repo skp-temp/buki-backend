@@ -1,7 +1,5 @@
 package com.example.skptemp.domain.charm.dto;
 
-import com.example.skptemp.domain.charm.entity.CharmItem;
-import com.example.skptemp.domain.item.entity.UserItem;
 import com.example.skptemp.global.constant.Category;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;

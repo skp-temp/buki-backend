@@ -2,14 +2,10 @@ package com.example.skptemp.domain.charm.repository;
 
 import com.example.skptemp.domain.charm.dto.*;
 import com.example.skptemp.domain.charm.entity.Charm;
-import com.example.skptemp.domain.charm.entity.QCharmItem;
 import com.example.skptemp.domain.charm.request.CharmSettingUpdateRequest;
 import com.example.skptemp.domain.charm.response.CharmDetailResponse;
 import com.example.skptemp.domain.charm.response.QCharmDetailResponse;
-import com.example.skptemp.global.constant.EmotionType;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

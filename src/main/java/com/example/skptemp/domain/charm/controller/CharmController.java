@@ -10,7 +10,6 @@ import com.example.skptemp.domain.charm.response.CreateCharmResponse;
 import com.example.skptemp.domain.charm.service.CharmService;
 import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.common.SecurityUtil;
-import com.example.skptemp.global.constant.EmotionType;
 import com.example.skptemp.global.error.GlobalSuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

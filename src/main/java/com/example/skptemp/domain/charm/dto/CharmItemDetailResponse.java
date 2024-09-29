@@ -5,7 +5,6 @@ import com.example.skptemp.global.constant.Category;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 
 @Getter
 @NoArgsConstructor

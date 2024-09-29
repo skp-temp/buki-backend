@@ -53,6 +53,7 @@ public class CheerService {
         if (Optional.ofNullable(request.getItemId()).isEmpty()) {
             notificationEventRequest = new NotificationEventRequest(
                     String.format(NotificationUtil.CHEER_MESSAGE_WITH_ITEM_FORMAT, name, subStringMessage),
+                    String.format(NotificationUtil.CHEER_MESSAGE_WITH_ITEM_FORMAT, name, subStringMessage),
                     "응원 메시지",
                     NotificationType.CHEER,
                     cheeredUserId,
@@ -63,6 +64,7 @@ public class CheerService {
         } else {
             cheerRepository.save(new Cheer(userId, request.getUserId(), message, request.getCharmId()));
             notificationEventRequest = new NotificationEventRequest(
+                    String.format(NotificationUtil.CHEER_MESSAGE_FORMAT, name, subStringMessage),
                     String.format(NotificationUtil.CHEER_MESSAGE_FORMAT, name, subStringMessage),
                     "응원 메시지",
                     NotificationType.CHEER,

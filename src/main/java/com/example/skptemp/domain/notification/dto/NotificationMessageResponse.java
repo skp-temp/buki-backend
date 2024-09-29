@@ -17,4 +17,8 @@ public class NotificationMessageResponse {
     private Long userId;
 
     private boolean read;
+
+    private String friendName;
+
+    private Boolean isAccepted;
 }

@@ -38,7 +38,7 @@ public class FriendController {
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = SecurityUtil.getUserId();
-        friendRelationshipService.enrollFriendRelationship(userId, request.getUserId());
+        friendRelationshipService.enrollFriendRelationship(userId, request.getUserId(), request.getNotificationId());
         UserResponse friendUser = userService.findByUserId(request.getUserId());
         notificationService.sendNotification(new NotificationRequest(friendUser.getUserId(), "친구 수락", NotificationUtil.FRIEND_ACCEPTED_FORMAT));
         return ResponseEntity.ok(CustomResponse.ok());
@@ -56,6 +56,7 @@ public class FriendController {
     @PostMapping("/request")
     public ResponseEntity<CustomResponse<Void>> requestFriend(@RequestBody FriendSendRequest request){
         User friendUser = userService.findByCode(request.getUserCode());
+        friendRelationshipService.sendFriendRequest(friendUser);
         notificationService.sendNotification(new NotificationRequest(friendUser.getId(), "친구 요청", NotificationUtil.FRIEND_REQUESTED_FORMAT));
         return ResponseEntity.ok(CustomResponse.ok());
     }

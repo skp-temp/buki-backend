@@ -98,4 +98,9 @@ public class User extends BaseEntity {
         if(pushToken == null)
             throw new GlobalException("push token이 유효하지 않습니다.", GlobalErrorCode.VALID_EXCEPTION);
     }
+
+    public String getFullName(){
+        return getLastName() + getFirstName();
+    }
 }
+
