@@ -24,15 +24,13 @@ public class NotificationEntity extends BaseEntity {
     private Long userId;
 
     private Boolean isRead;
-
     @Setter
     private boolean isAccepted;
-
     private Long friendId;
-
     @Setter
     private String friendName;
-
+    private boolean friendAccepted;
+    private String friendProfileImg;
 
 
     @Builder

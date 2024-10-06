@@ -1,6 +1,8 @@
 package com.example.skptemp.domain.badge.entity;
 
 import com.example.skptemp.global.constant.BadgeType;
+import com.example.skptemp.global.error.GlobalErrorCode;
+import com.example.skptemp.global.error.GlobalException;
 import lombok.Getter;
 
 @Getter

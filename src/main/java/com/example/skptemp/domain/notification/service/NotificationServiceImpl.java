@@ -71,7 +71,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         Page<NotificationEntity> notificationMessageList = notificationRepository.getNotificationMessageList(pageable, type, userId);
         List<NotificationMessageResponse> responseList = notificationMessageList.getContent().stream().map(
-                entity -> new NotificationMessageResponse(entity.getId(), entity.getNotificationType(), entity.getMessage(), entity.getUserId(), entity.getIsRead(), entity.getFriendName(), entity.isAccepted())
+                entity -> new NotificationMessageResponse(entity.getId(), entity.getNotificationType(), entity.getMessage(), entity.getUserId(), entity.getIsRead(), entity.getFriendName(), entity.isFriendAccepted(), entity.getFriendProfileImg())
         ).toList();
 
 

@@ -8,7 +8,6 @@ import com.example.skptemp.domain.charm.service.CharmService;
 import com.example.skptemp.domain.cheer.dto.CheerCountResponse;
 import com.example.skptemp.domain.cheer.service.CheerService;
 import com.example.skptemp.domain.user.dto.UserResponse;
-import com.example.skptemp.domain.user.service.FriendRelationshipService;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class StatisticsFacadeService {
-
-    private final FriendRelationshipService friendRelationshipService;
 
     private final CharmService charmService;
 

@@ -32,6 +32,7 @@ class UserServiceTest {
     final String TEST_PUSH_TOKEN_AFTER_CHANGE = "changed_token";
     final String TEST_FIRST_NAME = "강";
     final String TEST_LAST_NAME = "동훈";
+    final String profileImage = "프사";
     @Test
     void 토큰_발급_성공(){
         //given
@@ -57,7 +58,7 @@ class UserServiceTest {
         //given
         //when
         SignUpResponse signUpResponse = userService.doSignup(
-                new SignupRequest(LoginType.KAKAO, TEST_AUTH_PROVIDER_ID_KAKAO, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
+                new SignupRequest(LoginType.KAKAO, TEST_AUTH_PROVIDER_ID_KAKAO, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN,profileImage)
         );
 
         //then
@@ -69,7 +70,7 @@ class UserServiceTest {
     void 로그인_성공(){
         //given
         userService.doSignup(
-                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
+                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN,profileImage)
         );
 
         //when
@@ -85,7 +86,7 @@ class UserServiceTest {
     void 사용자_삭제_성공(){
         //given
         SignUpResponse signUpResponse = userService.doSignup(
-                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
+                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN,profileImage)
         );
         String jwt = signUpResponse.jwt();
         Long userId = jwtProvider.getUserId(jwt);
@@ -101,7 +102,7 @@ class UserServiceTest {
     void 사용자_삭제_중복_삭제_실패(){
         //given
         SignUpResponse signUpResponse = userService.doSignup(
-                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN)
+                new SignupRequest(LoginType.APPLE, TEST_AUTH_PROVIDER_ID_APPLE_FOR_DEV, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN,profileImage)
         );
         String jwt = signUpResponse.jwt();
         Long userId = jwtProvider.getUserId(jwt);

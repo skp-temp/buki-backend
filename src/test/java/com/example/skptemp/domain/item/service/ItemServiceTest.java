@@ -29,6 +29,7 @@ class ItemServiceTest {
     private static final String TEST_FIRST_NAME = "강";
     private static final String TEST_LAST_NAME = "동훈";
     private static final String TEST_PUSH_TOKEN = "..";
+    private String profileImg = "profile_img";
     @BeforeEach
     void beforeEach(){
 
@@ -37,7 +38,7 @@ class ItemServiceTest {
     @Test
     void 사용자_아이템_조회(){
         //given
-        User user1 = userRepository.save(User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN));
+        User user1 = userRepository.save(User.createUser(TEST_LOGIN_TYPE, TEST_AUTH_PROVIDER_ID, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_PUSH_TOKEN, profileImg));
 
         Item 테스트_아이템1 = itemRepository.save(Item.create(Category.BEAUTY, "테스트 아이템", ItemType.CLOTHE));
         Item 테스트_아이템2 = itemRepository.save(Item.create(Category.DIET, "테스트 아이템", ItemType.EQUIPMENT));

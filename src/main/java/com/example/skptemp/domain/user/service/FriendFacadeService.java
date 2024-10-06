@@ -1,5 +1,6 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.badge.dto.BadgeDto;
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.repository.CharmRepository;
 import com.example.skptemp.domain.notification.dto.NotificationEventRequest;
@@ -27,9 +28,10 @@ import static com.example.skptemp.domain.notification.util.NotificationUtil.*;
 @Transactional
 @RequiredArgsConstructor
 @Service
-public class FriendRelationshipService {
+public class FriendFacadeService {
 
     private final FriendRelationshipRepository friendRelationshipRepository;
+    private final FriendService friendService;
     private final EventPublisher eventPublisher;
     private final UserRepository userRepository;
     private final CharmRepository charmRepository;
@@ -54,8 +56,8 @@ public class FriendRelationshipService {
         validateNotFriend(userA, userB);
 
         // 쌍방으로 친구 관계를 저장한다.
-        friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userA, userB));
-        friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userB, userA));
+        friendService.save(userA, userB);
+        friendService.save(userB, userA);
         User userAEntity = userRepository.findById(userA).orElseThrow();
 
 
@@ -91,7 +93,7 @@ public class FriendRelationshipService {
                     .friendId(friend.getId())
                     .firstName(friend.getFirstName())
                     .lastName(friend.getLastName())
-                    .profileBadge(friend.getProfileBadge())
+                    .badge(Optional.ofNullable(friend.getProfileBadge()).map(BadgeDto::new).orElse(null))
                     .set(new HashSet<>())
                     .build();
             friendResultList.add(result);
