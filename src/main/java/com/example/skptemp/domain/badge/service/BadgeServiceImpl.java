@@ -1,7 +1,9 @@
 package com.example.skptemp.domain.badge.service;
 
-import com.example.skptemp.domain.badge.dto.*;
-import com.example.skptemp.domain.badge.entity.*;
+import com.example.skptemp.domain.badge.dto.BadgeResult;
+import com.example.skptemp.domain.badge.dto.UserBadgeResult;
+import com.example.skptemp.domain.badge.entity.Badge;
+import com.example.skptemp.domain.badge.entity.UserBadge;
 import com.example.skptemp.domain.badge.repository.UserBadgeRepository;
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.repository.CharmRepository;

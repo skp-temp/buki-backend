@@ -2,18 +2,13 @@ package com.example.skptemp.domain.notification.entity;
 
 import com.example.skptemp.domain.common.BaseEntity;
 import com.example.skptemp.domain.notification.dto.NotificationType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "notification")
 public class NotificationEntity extends BaseEntity {
 
 
@@ -21,6 +16,7 @@ public class NotificationEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
 
     private String message;
@@ -28,9 +24,13 @@ public class NotificationEntity extends BaseEntity {
     private Long userId;
 
     private Boolean isRead;
-
-    private Boolean isAccepted;
-
+    @Setter
+    private boolean isAccepted;
+    private Long friendId;
+    @Setter
+    private String friendName;
+    private boolean friendAccepted;
+    private String friendProfileImg;
 
 
     @Builder

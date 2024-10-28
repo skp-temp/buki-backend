@@ -5,7 +5,7 @@ import com.example.skptemp.domain.notification.service.NotificationService;
 import com.example.skptemp.domain.notification.util.NotificationUtil;
 import com.example.skptemp.domain.user.dto.*;
 import com.example.skptemp.domain.user.entity.User;
-import com.example.skptemp.domain.user.service.FriendRelationshipService;
+import com.example.skptemp.domain.user.service.FriendFacadeService;
 import com.example.skptemp.domain.user.service.UserService;
 import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.common.SecurityUtil;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/v1/friends")
 @RestController
 public class FriendController {
-    private final FriendRelationshipService friendRelationshipService;
+    private final FriendFacadeService friendFacadeService;
     private final NotificationService notificationService;
     private final UserService userService;
 
@@ -28,7 +28,7 @@ public class FriendController {
     @GetMapping
     ResponseEntity<CustomResponse<FriendResponse>> getFriendList(){
         Long userId = SecurityUtil.getUserId();
-        List<FriendResult> friendRelationshipList = friendRelationshipService.findFriendList(userId);
+        List<FriendResult> friendRelationshipList = friendFacadeService.findFriendList(userId);
 
         return ResponseEntity.ok()
                 .body(CustomResponse.ok(new FriendResponse(friendRelationshipList)));
@@ -38,7 +38,7 @@ public class FriendController {
     @PostMapping
     ResponseEntity<CustomResponse<Void>> createFriend(@RequestBody FriendCreateRequest request){
         Long userId = SecurityUtil.getUserId();
-        friendRelationshipService.enrollFriendRelationship(userId, request.getUserId());
+        friendFacadeService.enrollFriendRelationship(userId, request.getUserId(), request.getNotificationId());
         UserResponse friendUser = userService.findByUserId(request.getUserId());
         notificationService.sendNotification(new NotificationRequest(friendUser.getUserId(), "친구 수락", NotificationUtil.FRIEND_ACCEPTED_FORMAT));
         return ResponseEntity.ok(CustomResponse.ok());
@@ -48,7 +48,7 @@ public class FriendController {
     @DeleteMapping("/{friend-id}")
     ResponseEntity<CustomResponse<Void>> deleteFriend(@RequestBody FriendDeleteRequest request){
         Long userId = SecurityUtil.getUserId();
-        friendRelationshipService.deleteFriendRelationship(userId, request.getFriendId());
+        friendFacadeService.deleteFriendRelationship(userId, request.getFriendId());
         return ResponseEntity.ok(CustomResponse.ok());
     }
 
@@ -56,6 +56,7 @@ public class FriendController {
     @PostMapping("/request")
     public ResponseEntity<CustomResponse<Void>> requestFriend(@RequestBody FriendSendRequest request){
         User friendUser = userService.findByCode(request.getUserCode());
+        friendFacadeService.sendFriendRequest(friendUser);
         notificationService.sendNotification(new NotificationRequest(friendUser.getId(), "친구 요청", NotificationUtil.FRIEND_REQUESTED_FORMAT));
         return ResponseEntity.ok(CustomResponse.ok());
     }

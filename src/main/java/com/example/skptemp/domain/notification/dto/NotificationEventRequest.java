@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NotificationEventRequest {
 
+    // 알림함 저장용 string
     private String message;
+
+    // 노티 보낼때 기기에 출력되는 메시지
+    private String notificationMessage;
 
     private String title;
 

@@ -29,8 +29,10 @@ public class NotificationEventConsumer {
     public void sendNotificationMessage(NotificationEventRequest event) {
 
         NotificationEntity notificationEntity = new NotificationEntity(event.getNotificationType(), event.getMessage(), event.getUserId(), false);
+        notificationEntity.setFriendName(event.getUserName());
+
         notificationRepository.save(notificationEntity);
-        notificationService.sendNotification(new NotificationRequest(event.getUserId(), event.getTitle(), event.getMessage()));
+        notificationService.sendNotification(new NotificationRequest(event.getUserId(), event.getTitle(), event.getNotificationMessage()));
     }
 
     @EventListener

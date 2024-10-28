@@ -6,7 +6,6 @@ import com.example.skptemp.domain.notification.dto.NotificationRequest;
 import com.example.skptemp.domain.notification.service.NotificationService;
 import com.example.skptemp.global.constant.AlarmDayType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;

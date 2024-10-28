@@ -1,61 +1,80 @@
 package com.example.skptemp.domain.user.service;
 
+import com.example.skptemp.domain.badge.dto.BadgeDto;
 import com.example.skptemp.domain.charm.entity.Charm;
 import com.example.skptemp.domain.charm.repository.CharmRepository;
 import com.example.skptemp.domain.notification.dto.NotificationEventRequest;
 import com.example.skptemp.domain.notification.dto.NotificationType;
+import com.example.skptemp.domain.notification.entity.NotificationEntity;
 import com.example.skptemp.domain.notification.event.EventPublisher;
-import com.example.skptemp.domain.notification.util.NotificationUtil;
+import com.example.skptemp.domain.notification.repository.NotificationRepository;
 import com.example.skptemp.domain.user.dto.FriendResult;
 import com.example.skptemp.domain.user.entity.FriendRelationship;
 import com.example.skptemp.domain.user.entity.User;
 import com.example.skptemp.domain.user.repository.FriendRelationshipRepository;
 import com.example.skptemp.domain.user.repository.UserRepository;
+import com.example.skptemp.global.common.SecurityUtil;
 import com.example.skptemp.global.constant.BukiConstant;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.example.skptemp.domain.notification.util.NotificationUtil.*;
+
 @Transactional
 @RequiredArgsConstructor
 @Service
-public class FriendRelationshipServiceImpl implements FriendRelationshipService {
+public class FriendFacadeService {
 
     private final FriendRelationshipRepository friendRelationshipRepository;
+    private final FriendService friendService;
     private final EventPublisher eventPublisher;
     private final UserRepository userRepository;
     private final CharmRepository charmRepository;
+    private final NotificationRepository notificationRepository;
+
+    public void sendFriendRequest(User friendUser) {
+        String myName = userRepository.findById(SecurityUtil.getUserId()).orElseThrow().getFullName();
+        eventPublisher.publishNotification(new NotificationEventRequest(
+                FRIEND_REQUESTED_FORMAT,
+                FRIEND_REQUESTED_MESSAGE_FORMAT.formatted(friendUser.getFullName()),
+                "친구맺기",
+                NotificationType.FRIEND,
+                friendUser.getId(),
+                myName
+        ));
+
+    }
 
     @Transactional
-    @Override
-    public void enrollFriendRelationship(Long userA, Long userB) {
+    public void enrollFriendRelationship(Long userA, Long userB, Long notificationId) {
         validateUserId(userA, userB);
         validateNotFriend(userA, userB);
 
         // 쌍방으로 친구 관계를 저장한다.
-        friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userA, userB));
-        friendRelationshipRepository.save(FriendRelationship.createFriendRelationship(userB, userA));
-        User userBEntity = userRepository.findById(userB).orElseThrow();
-        String firstName = userBEntity.getFirstName();
-        String lastName = userBEntity.getLastName();
+        friendService.save(userA, userB);
+        friendService.save(userB, userA);
+        User userAEntity = userRepository.findById(userA).orElseThrow();
 
+
+        NotificationEntity notificationEntity = notificationRepository.findById(notificationId).orElseThrow();
+        notificationEntity.setAccepted(true);
 
         NotificationEventRequest notificationEventRequest = new NotificationEventRequest(
-                NotificationUtil.FRIEND_ACCEPTED_FORMAT,
+                FRIEND_ACCEPTED_FORMAT,
+                FRIEND_ACCEPTED_FORMAT,
                 "친구 맺기",
                 NotificationType.FRIEND,
                 userB,
-                Strings.concat(lastName, firstName)
+                userAEntity.getFullName()
         );
         eventPublisher.publishNotification(notificationEventRequest);
     }
 
-    @Override
     public List<FriendResult> findFriendList(Long userId) {
         validateUserId(userId);
 
@@ -74,7 +93,7 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
                     .friendId(friend.getId())
                     .firstName(friend.getFirstName())
                     .lastName(friend.getLastName())
-                    .profileBadge(friend.getProfileBadge())
+                    .badge(Optional.ofNullable(friend.getProfileBadge()).map(BadgeDto::new).orElse(null))
                     .set(new HashSet<>())
                     .build();
             friendResultList.add(result);
@@ -98,7 +117,6 @@ public class FriendRelationshipServiceImpl implements FriendRelationshipService 
         return friendResultList;
     }
     @Transactional
-    @Override
     public void deleteFriendRelationship(Long userId, Long friendId) {
         validateUserId(userId, friendId);
         validateFriendRelationship(userId, friendId);

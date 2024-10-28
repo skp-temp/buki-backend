@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(name = "user_item")
 public class UserItem extends BaseEntity {
     @Id @Column(name = "user_item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,6 @@
 package com.example.skptemp.domain.user.dto;
 
-import com.example.skptemp.domain.badge.entity.Badge;
+import com.example.skptemp.domain.badge.dto.BadgeDto;
 import com.example.skptemp.global.constant.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -15,17 +15,18 @@ public class FriendResult {
     private final Long friendId;
     private final String firstName;
     private final String lastName;
-    @Schema(description = "대표 뱃지 id", example = "1")
-    private final int profileBadgeId;
+    private BadgeDto badge;
     @Schema(description = "현재 만들고 있는 부적 카테고리 정보")
     private Set<Category> categorySet;
+    private String profileImg;
 
     @Builder
-    public FriendResult(Long friendId, String firstName, String lastName, Badge profileBadge, Set<Category> set){
+    public FriendResult(Long friendId, String firstName, String lastName, BadgeDto badge, Set<Category> set,String profileImg){
         this.friendId = friendId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.profileBadgeId = profileBadge != null ? profileBadge.getId() : 0;
+        this.badge = badge;
         this.categorySet = set;
+        this.profileImg = profileImg;
     }
 }

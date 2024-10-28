@@ -7,6 +7,7 @@ import com.example.skptemp.global.constant.LoginType;
 import com.example.skptemp.global.error.GlobalErrorCode;
 import com.example.skptemp.global.error.GlobalException;
 import com.example.skptemp.global.util.FriendCodeGenerator;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,9 +33,12 @@ public class User extends BaseEntity {
     private String platformProviderId ;  // authentication 플랫폼 제공 identifier
     private boolean gachaEnable;    // 뽑기 상태
     private int gachaCount = 0;     // 누적 뽑기 횟수
+    @Enumerated(EnumType.STRING)
+    @Nullable
     private Badge profileBadge;     // 대표 뱃지
     private String authority;
     private boolean isValid;        // 논리적 삭제 처리를 위함
+    private String profileImg;
 
     @OneToMany
     @JoinColumn(name = "user_id")
@@ -57,7 +61,7 @@ public class User extends BaseEntity {
         this.isValid = true;
     }
 
-    public static User createUser(LoginType loginType, String platformProviderId, String firstName, String lastName, String pushToken){
+    public static User createUser(LoginType loginType, String platformProviderId, String firstName, String lastName, String pushToken, String profileImg){
         String uuid = FriendCodeGenerator.generateRandomCode();
         return new User(uuid, loginType, platformProviderId, firstName, lastName, "USER", pushToken);
     }
@@ -98,4 +102,9 @@ public class User extends BaseEntity {
         if(pushToken == null)
             throw new GlobalException("push token이 유효하지 않습니다.", GlobalErrorCode.VALID_EXCEPTION);
     }
+
+    public String getFullName(){
+        return getLastName() + getFirstName();
+    }
 }
+

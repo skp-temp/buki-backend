@@ -34,11 +34,12 @@ public class TestAccountApplicationRunner implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        User user1 = userRepository.save(User.createUser(LoginType.KAKAO, "1", "강1", "동훈", ".."));
-        User user2 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "강2", "동훈", ".."));
-        User user3 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규1", "최", ".."));
-        User user4 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규2", "최", ".."));
-        User user5 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규3", "최", ".."));
+        String profileImg = "프로필 이미지 링크";
+        User user1 = userRepository.save(User.createUser(LoginType.KAKAO, "1", "강1", "동훈", "..", profileImg));
+        User user2 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "강2", "동훈", "..", profileImg));
+        User user3 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규1", "최", "..", profileImg));
+        User user4 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규2", "최", "..", profileImg));
+        User user5 = userRepository.save(User.createUser(LoginType.KAKAO, "2", "태규3", "최", "..", profileImg));
 
         Charm charm1 = charmRepository.save(Charm.builder()
                 .userId(user1.getId())

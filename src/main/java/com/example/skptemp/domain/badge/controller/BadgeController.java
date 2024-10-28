@@ -1,6 +1,9 @@
 package com.example.skptemp.domain.badge.controller;
 
-import com.example.skptemp.domain.badge.dto.*;
+import com.example.skptemp.domain.badge.dto.BadgeResult;
+import com.example.skptemp.domain.badge.dto.GetAllBadgesResponse;
+import com.example.skptemp.domain.badge.dto.GetBadgeStatusResponse;
+import com.example.skptemp.domain.badge.dto.UserBadgeResult;
 import com.example.skptemp.domain.badge.service.BadgeService;
 import com.example.skptemp.global.common.CustomResponse;
 import com.example.skptemp.global.common.SecurityUtil;
